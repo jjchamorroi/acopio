@@ -1,6 +1,11 @@
 services:
   db:
-    image: postgis/postgis:16-3.4
+    # La imagen oficial postgis/postgis es SOLO amd64. En un servidor ARM
+    # (Oracle Cloud Always Free, Ampere, Graviton, Raspberry Pi) no arranca.
+    # Para esos casos, poné en el .env:
+    #   POSTGIS_IMAGE=imresamu/postgis:16-3.4
+    # que es el build multiarquitectura del mismo PostGIS.
+    image: ${POSTGIS_IMAGE:-postgis/postgis:16-3.4}
     restart: unless-stopped
     environment:
       POSTGRES_USER: acopio

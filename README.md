@@ -110,6 +110,32 @@ docker compose exec -T db psql -U acopio -d acopio -f /sql/schema.sql
 Es idempotente (`CREATE TABLE IF NOT EXISTS`, `ON CONFLICT DO NOTHING`), así que
 repetirlo no rompe nada.
 
+## Dónde alojarlo
+
+Dokploy es gratis como software, pero **no incluye servidor**: hay que poner uno
+(propio con Dokploy self-hosted, o el panel administrado de Dokploy Cloud a
+4,50 US$/servidor al mes, que igual necesita tu VPS).
+
+| Opción | Costo | Ojo con |
+|---|---|---|
+| Hetzner CX22 (2 vCPU, 4 GB) | ~4,50 €/mes | Nada. Es el camino corto. |
+| Oracle Cloud Always Free (2 vCPU, 12 GB ARM) | 0 | **Es ARM** — ver abajo. Y suele dar "Out of capacity". |
+| DigitalOcean 2 GB, Nueva York | ~12 US$/mes | Menos latencia desde Colombia. |
+
+### Si el servidor es ARM
+
+La imagen oficial `postgis/postgis` es **solo amd64**: en ARM el contenedor de
+la base no levanta. Se resuelve con una variable en el `.env`, sin tocar
+`docker-compose.yml`:
+
+```bash
+POSTGIS_IMAGE=imresamu/postgis:16-3.4
+```
+
+Es el mismo PostGIS compilado también para ARM, mantenido por uno de los
+mantenedores de la imagen oficial. `node:22-alpine` ya es multiarquitectura,
+así que la aplicación no necesita ningún cambio.
+
 ## Desplegar en Dokploy
 
 1. **Base de datos** → *Create Database* → PostgreSQL, cambiando la imagen a
