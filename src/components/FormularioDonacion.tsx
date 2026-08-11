@@ -1,21 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { CATEGORIAS } from "@/lib/categorias";
 import { tipoLugar } from "@/lib/tipos-lugar";
 import { RADIO_DIFUSO_M } from "@/lib/constantes";
 import type { Ciudad } from "@/lib/tipos";
 
-const SelectorUbicacion = dynamic(() => import("./SelectorUbicacion"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-72 w-full items-center justify-center rounded-lg border border-slate-300 bg-slate-100 text-sm text-slate-500">
-      Cargando mapa…
-    </div>
-  ),
-});
+import AsistenteUbicacion from "./AsistenteUbicacion";
 
 type Sugerencia = {
   id: string;
@@ -320,9 +312,10 @@ export default function FormularioDonacion({
           <span className="mb-1 block text-xs font-medium text-slate-600">
             Marcá en el mapa dónde está *
           </span>
-          <SelectorUbicacion
+          <AsistenteUbicacion
             valor={punto}
-            centro={centroMapa}
+            centroInicial={centroMapa}
+            ciudadNombre={ciudad?.nombre}
             onCambio={(lat, lng) => setPunto({ lat, lng })}
           />
           <p className="mt-1 text-xs text-slate-500">

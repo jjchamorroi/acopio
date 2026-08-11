@@ -5,6 +5,7 @@ import { invalidarCache } from "@/lib/cache";
 import { esquemaDonacionNueva } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
 import { difuminarUbicacion } from "@/lib/privacidad";
+import { validarUbicacionEnCiudad } from "@/lib/validacion-ubicacion";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
 
 export const dynamic = "force-dynamic";
@@ -60,6 +61,11 @@ export async function POST(req: Request) {
     );
   }
   const d = parsed.data;
+
+  const incoherencia = await validarUbicacionEnCiudad(d.ciudad_slug, d.lat, d.lng);
+  if (incoherencia) {
+    return NextResponse.json({ error: incoherencia }, { status: 400 });
+  }
 
   // El punto que se publica se calcula acá, una sola vez, y se guarda.
   const aprox = difuminarUbicacion(d.lat, d.lng);

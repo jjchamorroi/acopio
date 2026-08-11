@@ -1,20 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { CATEGORIAS, NIVELES, type NivelId } from "@/lib/categorias";
 import { TIPOS_LUGAR, type TipoLugarId } from "@/lib/tipos-lugar";
 import type { Ciudad } from "@/lib/tipos";
 
-const SelectorUbicacion = dynamic(() => import("./SelectorUbicacion"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-72 w-full items-center justify-center rounded-lg border border-slate-300 bg-slate-100 text-sm text-slate-500">
-      Cargando mapa…
-    </div>
-  ),
-});
+import AsistenteUbicacion from "./AsistenteUbicacion";
 
 type Seleccion = Record<string, NivelId | "">;
 
@@ -309,9 +301,10 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
           <span className="mb-1 block text-xs font-medium text-slate-600">
             Ubicación exacta * — tocá el mapa donde queda la entrada
           </span>
-          <SelectorUbicacion
+          <AsistenteUbicacion
             valor={punto}
-            centro={centroMapa}
+            centroInicial={centroMapa}
+            ciudadNombre={ciudad?.nombre}
             onCambio={(lat, lng) => setPunto({ lat, lng })}
           />
           <p className="mt-1 text-xs text-slate-500">

@@ -5,6 +5,7 @@ import { invalidarCache } from "@/lib/cache";
 import { esquemaCentroNuevo } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
 import { tipoLugar } from "@/lib/tipos-lugar";
+import { validarUbicacionEnCiudad } from "@/lib/validacion-ubicacion";
 import {
   consumirLimite,
   limpiarLimitesVencidos,
@@ -79,6 +80,13 @@ export async function POST(req: Request) {
     );
   }
   const d = parsed.data;
+
+  // El texto de la dirección y el punto del mapa son datos independientes:
+  // si no se comparan, alguien puede escribir una ciudad y marcar otra.
+  const incoherencia = await validarUbicacionEnCiudad(d.ciudad_slug, d.lat, d.lng);
+  if (incoherencia) {
+    return NextResponse.json({ error: incoherencia }, { status: 400 });
+  }
 
   const token = generarToken();
   const cliente = await getPool().connect();
