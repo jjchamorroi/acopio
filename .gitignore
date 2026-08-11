@@ -11,3 +11,7 @@ npm-debug.log*
 next-env.d.ts
 .vercel
 *.tsbuildinfo
+
+# Los respaldos llevan teléfonos y ubicaciones exactas de donantes.
+# Son datos personales: nunca al repositorio.
+respaldos/

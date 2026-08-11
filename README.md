@@ -119,8 +119,8 @@ Si tenés Node, hay atajos en `package.json` (`npm run docker:up`,
 | Ver los logs de la app | `docker compose logs -f web` |
 | Estado de los contenedores | `docker compose ps` |
 | Entrar a la base | `docker compose exec db psql -U acopio -d acopio` |
-| Bajar todo | `docker compose down` |
-| Bajar y **borrar la base** | `docker compose down -v` |
+| Bajar todo (los datos se conservan) | `docker compose down` |
+| ⛔ Bajar y **BORRAR TODOS LOS DATOS** | `docker compose down -v` |
 | Reconstruir tras cambiar código | `docker compose up -d --build` |
 
 La base también queda expuesta en `localhost:5433` por si querés conectarte con
@@ -135,6 +135,53 @@ DBeaver o similar (usuario, clave y base: `acopio`).
 > ```
 >
 > Desde PowerShell, cmd o los `npm run docker:*` no pasa: es solo Git Bash.
+
+### Los datos no se pierden al reconstruir
+
+Verificado: un lugar registrado sobrevive a `docker compose up --build`, a
+`docker compose restart` y a `docker compose down` seguido de `up`. Viven en un
+volumen de Docker, separado de la imagen de la aplicación, y `db/schema.sql`
+—lo único que corre solo en cada arranque— no tiene una sola sentencia
+`DROP`, `TRUNCATE` ni `DELETE`.
+
+**El único comando que borra todo es `docker compose down -v`.** La `-v`
+elimina el volumen. No existe forma de deshacerlo sin un respaldo.
+
+En Railway pasa lo mismo: redesplegar la aplicación no toca la base, que es un
+servicio aparte con su propio volumen. Lo que sí borraría todo es eliminar el
+servicio de Postgres desde el panel.
+
+### Respaldos
+
+```bash
+npm run db:respaldo                                  # la base local
+DATABASE_URL="postgresql://…" npm run db:respaldo    # producción
+```
+
+Deja un `.sql` en `respaldos/` con ciudades, lugares, necesidades y donaciones,
+incluidos los `admin_token_hash` — así los enlaces privados de cada lugar
+siguen funcionando después de restaurar.
+
+Para restaurar:
+
+```bash
+node scripts/run-sql.mjs respaldos/respaldo-XXXX.sql
+```
+
+Es **aditivo**: todo va con `ON CONFLICT DO NOTHING`, así que restaurar sobre
+una base con datos no pisa nada. Se puede correr sin miedo.
+
+Probado de punta a punta: se destruyó el volumen completo, se levantó de cero y
+se restauró — volvieron los 10 municipios, los 9 lugares, las 25 necesidades y
+las geometrías de PostGIS, que Postgres recalcula sola porque las columnas
+generadas se excluyen del respaldo.
+
+No usa `pg_dump` a propósito: eso exigiría instalar las herramientas de
+PostgreSQL en Windows. Con Node basta.
+
+> `respaldos/` está en `.gitignore`. Los archivos llevan teléfonos y
+> ubicaciones exactas de donantes: son datos personales y no deben subirse a
+> ningún repositorio ni compartirse por chat.
 
 ### Desarrollar dentro de Docker
 
