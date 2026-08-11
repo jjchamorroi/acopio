@@ -40,7 +40,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
+# "::" y no "0.0.0.0": con 0.0.0.0 Node abre un socket SOLO IPv4, y la red
+# privada de Railway (por donde pasa el healthcheck) es IPv6 — el chequeo
+# golpea un puerto sin nadie escuchando y el despliegue nunca queda sano.
+# "::" abre el socket en doble pila y atiende IPv6 e IPv4 a la vez.
+ENV HOSTNAME=::
 
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
