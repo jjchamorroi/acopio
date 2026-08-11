@@ -136,6 +136,40 @@ Es el mismo PostGIS compilado también para ARM, mantenido por uno de los
 mantenedores de la imagen oficial. `node:22-alpine` ya es multiarquitectura,
 así que la aplicación no necesita ningún cambio.
 
+## Desplegar en Railway
+
+La vía más corta: no hay servidor que administrar. Requiere el plan **Hobby
+(5 US$/mes)** — el plan gratuito da 1 US$ de crédito mensual, que no alcanza
+para tener algo prendido todo el tiempo.
+
+1. **New Project → Deploy from GitHub repo** y elegí este repositorio.
+   Railway detecta el `Dockerfile` y construye su última etapa (`runner`), que
+   es justamente la imagen de producción.
+2. **New → Database → PostGIS** (buscá "PostGIS" en los templates; usa
+   `postgis/postgis:17-3.5`). **No sirve el Postgres normal**: sin PostGIS
+   fallan todas las consultas de cercanía.
+3. En el servicio web, pestaña **Variables**:
+   ```
+   DATABASE_URL = ${{Postgres.DATABASE_URL}}
+   ADMIN_TOKEN  = <algo largo y aleatorio>
+   ```
+   La primera es una *referencia* a la otra base, no un texto pegado: si
+   Railway rota la contraseña, se actualiza sola.
+4. **Aplicá el esquema una vez.** Copiá la cadena de conexión pública de la
+   base (pestaña *Connect*) y desde tu máquina:
+   ```bash
+   DATABASE_URL="postgresql://…la cadena de Railway…" npm run db:setup
+   ```
+   La variable escrita así tiene prioridad sobre la del `.env`, así que apunta
+   a Railway sin que tengas que tocar el archivo.
+5. **Settings → Networking → Generate Domain** para obtener la URL pública.
+
+`railway.json` ya deja configurado el healthcheck contra `/api/salud`, así que
+Railway no manda tráfico a una instancia que todavía no conectó con la base.
+
+El `docker-compose.yml` no interviene acá: Railway despliega servicios sueltos.
+Sigue siendo el entorno de desarrollo local.
+
 ## Desplegar en Dokploy
 
 1. **Base de datos** → *Create Database* → PostgreSQL, cambiando la imagen a
