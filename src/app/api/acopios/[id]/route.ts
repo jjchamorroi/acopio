@@ -5,6 +5,7 @@ import { invalidarCache } from "@/lib/cache";
 import { esquemaActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
+import { instantanea, describirCambio } from "@/lib/cambios";
 
 export const dynamic = "force-dynamic";
 
@@ -95,6 +96,14 @@ export async function PATCH(
     );
   }
 
+  // Se toma el estado previo ANTES de tocar nada: es lo que queda en el
+  // historial y lo que se reescribe si hay que revertir.
+  const centroAntes = await obtenerCentro(id);
+  if (!centroAntes) {
+    return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+  }
+  const antes = instantanea(centroAntes);
+
   const cliente = await getPool().connect();
   try {
     await cliente.query("BEGIN");
@@ -166,5 +175,25 @@ export async function PATCH(
   invalidarCache();
 
   const centro = await obtenerCentro(id);
+
+  // El registro del cambio va fuera de la transacción y con su propio
+  // try/catch: que falle el historial no puede deshacer una actualización que
+  // el usuario ya dio por buena.
+  if (centro) {
+    try {
+      const despues = instantanea(centro);
+      const resumen = describirCambio(antes, despues);
+      if (resumen !== "Sin cambios visibles") {
+        await query(
+          `INSERT INTO cambio (centro_id, autor, resumen, anterior)
+           VALUES ($1, $2, $3, $4)`,
+          [id, admin ? "admin" : "acopio", resumen, JSON.stringify(antes)]
+        );
+      }
+    } catch (err) {
+      console.error("No se pudo registrar el cambio en el historial:", err);
+    }
+  }
+
   return NextResponse.json({ centro });
 }

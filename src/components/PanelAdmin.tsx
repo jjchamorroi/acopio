@@ -135,6 +135,12 @@ export default function PanelAdmin() {
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
+          <Link
+            href={`/acopio/${c.id}/panel?admin=1`}
+            className="rounded-md border border-slate-300 px-3 py-1.5 font-medium hover:bg-slate-50"
+          >
+            Editar necesidades
+          </Link>
           {c.telefono && (
             <a
               href={`tel:${c.telefono.replace(/\s/g, "")}`}

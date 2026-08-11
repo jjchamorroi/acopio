@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIAS, NIVELES, type NivelId } from "@/lib/categorias";
 import type { CentroPublico } from "@/lib/tipos";
@@ -9,12 +9,24 @@ const input =
   "w-full rounded-md border border-slate-300 px-3 py-2 text-sm " +
   "focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
 
+type Cambio = {
+  id: string;
+  autor: "acopio" | "admin";
+  resumen: string;
+  creado_en: string;
+};
+
+/** Misma clave que guarda /admin en la sesión del navegador. */
+const CLAVE_ADMIN = "acopio_admin_token";
+
 export default function PanelAcopio({
   id,
   token,
+  modoAdmin = false,
 }: {
   id: string;
-  token: string;
+  token: string | null;
+  modoAdmin?: boolean;
 }) {
   const [centro, setCentro] = useState<CentroPublico | null>(null);
   const [cargando, setCargando] = useState(true);
@@ -28,6 +40,7 @@ export default function PanelAcopio({
   const [niveles, setNiveles] = useState<Record<string, NivelId | "">>({});
   const [detalles, setDetalles] = useState<Record<string, string>>({});
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
+  const [historial, setHistorial] = useState<Cambio[]>([]);
 
   useEffect(() => {
     let vivo = true;
@@ -65,6 +78,78 @@ export default function PanelAcopio({
     };
   }, [id]);
 
+
+  /**
+   * En modo administrador va la clave del equipo; si no, el token del propio
+   * lugar. Es lo único que cambia entre los dos modos: el resto del panel y
+   * los permisos los resuelve el servidor.
+   */
+  function cabeceras(): Record<string, string> {
+    const base: Record<string, string> = { "content-type": "application/json" };
+    if (modoAdmin) {
+      const clave =
+        typeof window !== "undefined"
+          ? (sessionStorage.getItem(CLAVE_ADMIN) ?? "")
+          : "";
+      return { ...base, authorization: `Bearer ${clave}` };
+    }
+    return { ...base, "x-acopio-token": token ?? "" };
+  }
+
+  const cargarHistorial = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/acopios/${id}/historial`, {
+        headers: cabeceras(),
+      });
+      if (!res.ok) return;
+      const { cambios } = (await res.json()) as { cambios: Cambio[] };
+      setHistorial(cambios);
+    } catch {
+      // El historial es información de apoyo: si falla, el panel sigue sirviendo.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, token, modoAdmin]);
+
+  // Va DESPUÉS de definir cargarHistorial: al ser una const, referenciarla
+  // antes en el array de dependencias revienta por zona muerta temporal.
+  useEffect(() => {
+    void cargarHistorial();
+  }, [cargarHistorial]);
+
+  async function revertir(cambioId: string) {
+    if (!confirm("¿Restaurar el estado anterior a este cambio?")) return;
+    setGuardando(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/acopios/${id}/historial`, {
+        method: "POST",
+        headers: cabeceras(),
+        body: JSON.stringify({ cambio_id: cambioId }),
+      });
+      const datos = await res.json();
+      if (!res.ok) throw new Error(datos.error ?? "No se pudo revertir");
+      setCentro(datos.centro);
+      setTelefono(datos.centro.telefono ?? "");
+      setHorario(datos.centro.horario ?? "");
+      setNotas(datos.centro.notas ?? "");
+      setAceptaMascotas(datos.centro.acepta_mascotas);
+      setNiveles(
+        Object.fromEntries(
+          datos.centro.necesidades.map((n: { categoria: string; nivel: string }) => [
+            n.categoria,
+            n.nivel,
+          ])
+        )
+      );
+      setGuardado("Estado anterior restaurado.");
+      await cargarHistorial();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error inesperado");
+    } finally {
+      setGuardando(false);
+    }
+  }
+
   async function guardar(cambios: Record<string, unknown>, mensaje: string) {
     setGuardando(true);
     setError(null);
@@ -72,10 +157,7 @@ export default function PanelAcopio({
     try {
       const res = await fetch(`/api/acopios/${id}`, {
         method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-          "x-acopio-token": token,
-        },
+        headers: cabeceras(),
         body: JSON.stringify(cambios),
       });
       const datos = await res.json();
@@ -87,6 +169,7 @@ export default function PanelAcopio({
       }
       setCentro(datos.centro);
       setGuardado(mensaje);
+      void cargarHistorial();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error inesperado");
     } finally {
@@ -144,6 +227,13 @@ export default function PanelAcopio({
           Ver la ficha pública →
         </Link>
       </header>
+
+      {modoAdmin && (
+        <p className="rounded-md border border-blue-300 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+          Estás editando como <strong>equipo</strong>, con la clave de
+          administración. El lugar no necesita reenviarte su enlace privado.
+        </p>
+      )}
 
       {centro.estado === "pendiente" && (
         <p className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -342,6 +432,45 @@ export default function PanelAcopio({
           </button>
         )}
       </div>
+
+      {historial.length > 0 && (
+        <section className="rounded-lg border border-slate-200 bg-white p-4">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Historial de cambios
+          </h2>
+          <p className="mt-0.5 text-xs text-slate-600">
+            Si alguien modificó algo por error, restaurá el estado anterior. La
+            reversión también queda registrada.
+          </p>
+          <ul className="mt-3 divide-y divide-slate-100">
+            {historial.map((c) => (
+              <li
+                key={c.id}
+                className="flex flex-wrap items-start justify-between gap-2 py-2.5"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm text-slate-800">{c.resumen}</p>
+                  <p className="text-xs text-slate-500">
+                    {new Date(c.creado_en).toLocaleString("es-CO", {
+                      timeZone: "America/Bogota",
+                    })}
+                    {" · "}
+                    {c.autor === "admin" ? "equipo" : "el lugar"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={guardando}
+                  onClick={() => revertir(c.id)}
+                  className="shrink-0 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                >
+                  Restaurar lo anterior
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

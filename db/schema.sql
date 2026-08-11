@@ -125,6 +125,34 @@ CREATE TABLE IF NOT EXISTS necesidad (
 CREATE INDEX IF NOT EXISTS necesidad_categoria_idx ON necesidad (categoria, nivel);
 
 -- ---------------------------------------------------------------------------
+-- Historial de cambios de cada lugar.
+--
+-- El enlace privado de un acopio se reenvía por WhatsApp con facilidad, así
+-- que cualquiera que lo tenga puede editar. La respuesta no es quitarle la
+-- edición al acopio —si cada cambio dependiera de un administrador, la
+-- información iría siempre horas atrasada, y un dato viejo en un mapa de
+-- emergencia manda gente a donde ya no hace falta— sino poder DESHACER.
+--
+-- Se guarda la instantánea COMPLETA anterior, no las diferencias campo por
+-- campo: revertir se vuelve "escribir esto de nuevo", sin lógica que pueda
+-- equivocarse al reconstruir un estado a partir de parches encadenados.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS cambio (
+  id         bigserial PRIMARY KEY,
+  centro_id  uuid NOT NULL REFERENCES centro_acopio(id) ON DELETE CASCADE,
+  -- Quién lo hizo: el propio lugar con su enlace, o el equipo desde /admin.
+  autor      text NOT NULL CHECK (autor IN ('acopio', 'admin')),
+  -- Descripción legible, para que el panel no tenga que interpretar el jsonb.
+  resumen    text NOT NULL,
+  -- Estado previo completo. Es lo que se reescribe al revertir.
+  anterior   jsonb NOT NULL,
+  creado_en  timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS cambio_centro_idx
+  ON cambio (centro_id, creado_en DESC);
+
+-- ---------------------------------------------------------------------------
 -- FASE 2 — Donaciones ofrecidas por particulares.
 --
 -- PRIVACIDAD, que acá es lo importante:

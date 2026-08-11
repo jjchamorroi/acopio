@@ -16,14 +16,19 @@ export default async function PaginaPanel({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ t?: string }>;
+  searchParams: Promise<{ t?: string; admin?: string }>;
 }) {
   const { id } = await params;
-  const { t } = await searchParams;
+  const { t, admin } = await searchParams;
 
   if (!UUID.test(id)) notFound();
 
-  if (!t) {
+  // Con ?admin=1 el panel usa la clave del equipo guardada en la sesión del
+  // navegador, para poder actualizar un lugar mientras se habla por teléfono
+  // con él, sin pedirle que reenvíe su enlace privado.
+  const modoAdmin = admin === "1";
+
+  if (!t && !modoAdmin) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-10">
         <h1 className="text-xl font-semibold text-slate-900">
@@ -39,7 +44,7 @@ export default async function PaginaPanel({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <PanelAcopio id={id} token={t} />
+      <PanelAcopio id={id} token={t ?? null} modoAdmin={modoAdmin} />
     </div>
   );
 }
