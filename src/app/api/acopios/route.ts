@@ -3,6 +3,7 @@ import { getPool } from "@/lib/db";
 import { listarCentros } from "@/lib/consultas";
 import { esquemaCentroNuevo } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
+import { tipoLugar } from "@/lib/tipos-lugar";
 import {
   consumirLimite,
   limpiarLimitesVencidos,
@@ -20,9 +21,13 @@ const VENTANA_SEGUNDOS = 3600;
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
+  const modo = searchParams.get("modo");
   const centros = await listarCentros({
     ciudad: searchParams.get("ciudad") ?? undefined,
     categoria: searchParams.get("categoria") ?? undefined,
+    modo: modo === "donar" || modo === "ayuda" ? modo : undefined,
+    tipo: searchParams.get("tipo") ?? undefined,
+    soloAceptaMascotas: searchParams.get("mascotas") === "1",
     incluirCerrados: searchParams.get("todos") === "1" && esAdmin(req),
   });
   return NextResponse.json({ centros });
@@ -70,11 +75,18 @@ export async function POST(req: Request) {
   try {
     await cliente.query("BEGIN");
 
+    // Si quien registra no dice explícitamente si recibe o entrega, se toman
+    // los valores habituales del tipo de lugar. Siguen siendo editables
+    // después: un albergue desbordado puede dejar de recibir donaciones sin
+    // dejar de alojar gente.
+    const porDefecto = tipoLugar(d.tipo);
+
     const { rows } = await cliente.query(
       `INSERT INTO centro_acopio
          (nombre, direccion, ciudad_slug, lat, lng, responsable, telefono,
-          horario, notas, admin_token_hash)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+          horario, notas, admin_token_hash,
+          tipo, recibe_donaciones, entrega_ayuda, acepta_mascotas)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
        RETURNING id`,
       [
         d.nombre,
@@ -87,6 +99,10 @@ export async function POST(req: Request) {
         d.horario || null,
         d.notas || null,
         hashToken(token),
+        d.tipo,
+        d.recibe_donaciones ?? porDefecto?.recibe ?? true,
+        d.entrega_ayuda ?? porDefecto?.entrega ?? false,
+        d.acepta_mascotas ?? null,
       ]
     );
     const id = rows[0].id as string;

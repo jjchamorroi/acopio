@@ -59,6 +59,54 @@ CREATE INDEX IF NOT EXISTS centro_acopio_ciudad_idx ON centro_acopio (ciudad_slu
 CREATE INDEX IF NOT EXISTS centro_acopio_estado_idx ON centro_acopio (estado);
 
 -- ---------------------------------------------------------------------------
+-- Ampliación: la tabla dejó de ser "solo centros de acopio".
+--
+-- Se agrega como ALTER y no dentro del CREATE TABLE de arriba para que este
+-- archivo siga sirviendo tanto en una base nueva como en una que ya está en
+-- producción con datos. `ADD COLUMN IF NOT EXISTS` lo hace repetible.
+--
+-- tipo:
+--   acopio      -> recibe y almacena donaciones
+--   recoleccion -> recibe poco y lo traslada a un acopio
+--   albergue    -> aloja damnificados (y también recibe donaciones)
+--   animales    -> atención veterinaria y acopio para mascotas
+--
+-- recibe_donaciones / entrega_ayuda son los dos ejes con los que se filtra el
+-- mapa ("quiero donar" contra "necesito ayuda"). Son campos propios y no algo
+-- deducido del tipo porque hay excepciones reales: un albergue normalmente
+-- hace las dos cosas, pero uno desbordado puede dejar de recibir donaciones
+-- sin dejar de alojar gente.
+-- ---------------------------------------------------------------------------
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS tipo text NOT NULL DEFAULT 'acopio';
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS recibe_donaciones boolean NOT NULL DEFAULT true;
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS entrega_ayuda boolean NOT NULL DEFAULT false;
+
+-- Tres estados a propósito: true, false y NULL = "no lo informaron".
+-- Mucha gente no evacúa por no abandonar a su animal, así que decir "no
+-- sabemos" es información distinta —y más honesta— que decir "no reciben".
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS acepta_mascotas boolean;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'centro_acopio_tipo_check'
+  ) THEN
+    ALTER TABLE centro_acopio ADD CONSTRAINT centro_acopio_tipo_check
+      CHECK (tipo IN ('acopio', 'recoleccion', 'albergue', 'animales'));
+  END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS centro_acopio_tipo_idx ON centro_acopio (tipo);
+CREATE INDEX IF NOT EXISTS centro_acopio_recibe_idx
+  ON centro_acopio (recibe_donaciones) WHERE recibe_donaciones;
+CREATE INDEX IF NOT EXISTS centro_acopio_entrega_idx
+  ON centro_acopio (entrega_ayuda) WHERE entrega_ayuda;
+
+-- ---------------------------------------------------------------------------
 -- Qué necesita (o le sobra) cada acopio. Esto es el corazón del match:
 -- permite responder "¿quién necesita agua cerca de mí?" y, más adelante,
 -- "¿a qué acopio le llevo lo que acabo de recoger?".

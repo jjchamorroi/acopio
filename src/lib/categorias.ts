@@ -16,8 +16,13 @@ export const CATEGORIAS = [
   { id: "herramientas", label: "Herramientas y palas", emoji: "🛠️" },
   { id: "energia", label: "Linternas, pilas, plantas", emoji: "🔦" },
   { id: "mascotas", label: "Alimento para mascotas", emoji: "🐕" },
+  { id: "veterinario", label: "Insumos veterinarios", emoji: "💉" },
+  { id: "guacales", label: "Guacales, correas y jaulas", emoji: "🦮" },
   { id: "otros", label: "Otros", emoji: "📦" },
 ] as const;
+
+/** Las que tienen que ver con animales, para el filtro de mascotas. */
+export const CATEGORIAS_ANIMALES = ["mascotas", "veterinario", "guacales"];
 
 export type CategoriaId = (typeof CATEGORIAS)[number]["id"];
 

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CATEGORIA_IDS, NIVEL_IDS } from "./categorias";
+import { TIPO_LUGAR_IDS } from "./tipos-lugar";
 
 export type Ciudad = {
   slug: string;
@@ -25,6 +26,11 @@ export type CentroPublico = {
   departamento: string;
   lat: number;
   lng: number;
+  tipo: "acopio" | "recoleccion" | "albergue" | "animales";
+  recibe_donaciones: boolean;
+  entrega_ayuda: boolean;
+  /** null = el lugar no informó si acepta animales. */
+  acepta_mascotas: boolean | null;
   responsable: string | null;
   telefono: string | null;
   horario: string | null;
@@ -47,6 +53,10 @@ export const esquemaCentroNuevo = z.object({
   nombre: textoCorto,
   direccion: z.string().trim().min(5).max(200),
   ciudad_slug: z.string().trim().min(1).max(60),
+  tipo: z.enum(TIPO_LUGAR_IDS as [string, ...string[]]).default("acopio"),
+  recibe_donaciones: z.boolean().optional(),
+  entrega_ayuda: z.boolean().optional(),
+  acepta_mascotas: z.boolean().nullable().optional(),
   lat: z.number().gte(-4.3).lte(13.5), // caja aproximada de Colombia
   lng: z.number().gte(-82).lte(-66.8),
   responsable: z.string().trim().max(120).optional().nullable(),
@@ -73,5 +83,8 @@ export const esquemaActualizacion = z.object({
   horario: z.string().trim().max(120).optional().nullable(),
   notas: z.string().trim().max(500).optional().nullable(),
   estado: z.enum(["pendiente", "verificado", "cerrado"]).optional(),
+  recibe_donaciones: z.boolean().optional(),
+  entrega_ayuda: z.boolean().optional(),
+  acepta_mascotas: z.boolean().nullable().optional(),
   necesidades: z.array(esquemaNecesidad).max(20).optional(),
 });

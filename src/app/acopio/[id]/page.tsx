@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import MapaClient from "@/components/MapaClient";
 import { obtenerCentro } from "@/lib/consultas";
 import { categoria as buscarCategoria, NIVELES } from "@/lib/categorias";
+import { tipoLugar } from "@/lib/tipos-lugar";
 
 export const dynamic = "force-dynamic";
 
@@ -30,9 +31,20 @@ export default async function DetalleAcopio({
 
       <header className="mt-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            {centro.nombre}
-          </h1>
+          <div>
+            <span
+              className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium text-white"
+              style={{
+                backgroundColor: tipoLugar(centro.tipo)?.color ?? "#475569",
+              }}
+            >
+              <span aria-hidden>{tipoLugar(centro.tipo)?.emoji}</span>{" "}
+              {tipoLugar(centro.tipo)?.label ?? centro.tipo}
+            </span>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              {centro.nombre}
+            </h1>
+          </div>
           {centro.estado === "verificado" ? (
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 ring-1 ring-inset ring-emerald-200">
               ✓ Verificado
@@ -49,6 +61,24 @@ export default async function DetalleAcopio({
           {centro.horario ? ` · ${centro.horario}` : ""}
         </p>
       </header>
+
+      {centro.tipo === "albergue" && (
+        <p
+          className={`mt-4 rounded-md border px-4 py-3 text-sm ${
+            centro.acepta_mascotas === true
+              ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+              : centro.acepta_mascotas === false
+                ? "border-slate-300 bg-slate-100 text-slate-700"
+                : "border-amber-300 bg-amber-50 text-amber-900"
+          }`}
+        >
+          {centro.acepta_mascotas === true
+            ? "🐾 Este albergue recibe personas con mascotas."
+            : centro.acepta_mascotas === false
+              ? "🚫 Este albergue no puede recibir mascotas."
+              : "🐾 No informaron si reciben mascotas. Preguntá al llamar antes de ir con tu animal."}
+        </p>
+      )}
 
       {centro.estado === "pendiente" && (
         <p className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">

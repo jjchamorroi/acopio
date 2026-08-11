@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { CATEGORIAS, NIVELES, type NivelId } from "@/lib/categorias";
+import { TIPOS_LUGAR, type TipoLugarId } from "@/lib/tipos-lugar";
 import type { Ciudad } from "@/lib/tipos";
 
 const SelectorUbicacion = dynamic(() => import("./SelectorUbicacion"), {
@@ -22,6 +23,8 @@ const input =
   "focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
 
 export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] }) {
+  const [tipo, setTipo] = useState<TipoLugarId>("acopio");
+  const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [ciudadSlug, setCiudadSlug] = useState(ciudades[0]?.slug ?? "");
@@ -65,6 +68,10 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
+          tipo,
+          // Solo tiene sentido informarlo donde duerme gente. En los demás
+          // tipos va null para no llenar la base de datos irrelevantes.
+          acepta_mascotas: tipo === "albergue" ? aceptaMascotas : null,
           nombre,
           direccion,
           ciudad_slug: ciudadSlug,
@@ -148,9 +155,77 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
           1. El lugar
         </legend>
 
+        <div>
+          <span className="mb-2 block text-xs font-medium text-slate-600">
+            ¿Qué tipo de lugar es? *
+          </span>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {TIPOS_LUGAR.map((t) => {
+              const activo = tipo === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setTipo(t.id)}
+                  aria-pressed={activo}
+                  className={`rounded-lg border p-3 text-left transition ${
+                    activo
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white hover:bg-slate-50"
+                  }`}
+                >
+                  <span className="block text-sm font-medium">
+                    <span aria-hidden>{t.emoji}</span> {t.label}
+                  </span>
+                  <span
+                    className={`mt-0.5 block text-xs ${activo ? "text-slate-300" : "text-slate-500"}`}
+                  >
+                    {t.ayuda}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {tipo === "albergue" && (
+          <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3">
+            <span className="block text-sm font-medium text-emerald-900">
+              🐾 ¿Reciben personas con mascotas?
+            </span>
+            <p className="mt-0.5 text-xs text-emerald-800">
+              Mucha gente no evacúa por no abandonar a su animal. Este dato es
+              de los más buscados y casi nadie lo publica.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {[
+                { v: true as const, t: "Sí, las recibimos" },
+                { v: false as const, t: "No podemos" },
+                { v: null, t: "Todavía no sé" },
+              ].map((o) => {
+                const activo = aceptaMascotas === o.v;
+                return (
+                  <button
+                    key={String(o.v)}
+                    type="button"
+                    onClick={() => setAceptaMascotas(o.v)}
+                    className={`rounded-full px-3 py-1.5 text-xs ring-1 ring-inset transition ${
+                      activo
+                        ? "bg-emerald-700 text-white ring-emerald-700"
+                        : "bg-white text-emerald-900 ring-emerald-300 hover:bg-emerald-100"
+                    }`}
+                  >
+                    {o.t}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Nombre del acopio *
+            Nombre del lugar *
           </span>
           <input
             className={input}

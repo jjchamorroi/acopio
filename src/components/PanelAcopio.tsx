@@ -27,6 +27,7 @@ export default function PanelAcopio({
   const [notas, setNotas] = useState("");
   const [niveles, setNiveles] = useState<Record<string, NivelId | "">>({});
   const [detalles, setDetalles] = useState<Record<string, string>>({});
+  const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -40,6 +41,7 @@ export default function PanelAcopio({
         setTelefono(centro.telefono ?? "");
         setHorario(centro.horario ?? "");
         setNotas(centro.notas ?? "");
+        setAceptaMascotas(centro.acepta_mascotas);
         setNiveles(
           Object.fromEntries(
             centro.necesidades.map((n) => [n.categoria, n.nivel])
@@ -101,7 +103,15 @@ export default function PanelAcopio({
         detalle: detalles[categoria]?.trim() || null,
       }));
     guardar(
-      { telefono, horario, notas, necesidades: lista },
+      {
+        telefono,
+        horario,
+        notas,
+        necesidades: lista,
+        ...(centro?.tipo === "albergue"
+          ? { acepta_mascotas: aceptaMascotas }
+          : {}),
+      },
       "Actualizado. Ya se ve en el mapa."
     );
   }
@@ -183,6 +193,42 @@ export default function PanelAcopio({
           />
         </label>
       </section>
+
+      {centro.tipo === "albergue" && (
+        <section className="rounded-lg border border-emerald-300 bg-emerald-50 p-4">
+          <h2 className="text-sm font-semibold text-emerald-900">
+            🐾 ¿Reciben personas con mascotas?
+          </h2>
+          <p className="mt-0.5 text-xs text-emerald-800">
+            Es de los datos más buscados y casi nadie lo publica. Si cambia
+            durante el día, actualizalo: alguien puede estar decidiendo si
+            evacúa o no con base en esto.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {[
+              { v: true as const, t: "Sí, las recibimos" },
+              { v: false as const, t: "No podemos" },
+              { v: null, t: "Sin definir" },
+            ].map((o) => {
+              const activo = aceptaMascotas === o.v;
+              return (
+                <button
+                  key={String(o.v)}
+                  type="button"
+                  onClick={() => setAceptaMascotas(o.v)}
+                  className={`rounded-full px-3 py-1.5 text-xs ring-1 ring-inset transition ${
+                    activo
+                      ? "bg-emerald-700 text-white ring-emerald-700"
+                      : "bg-white text-emerald-900 ring-emerald-300 hover:bg-emerald-100"
+                  }`}
+                >
+                  {o.t}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
         <div>

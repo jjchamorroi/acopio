@@ -11,12 +11,38 @@ ropa usada cuando lo que le falta es agua.
 para que cada acopio actualice sus necesidades.
 
 - [x] Mapa público con filtro por ciudad y por lo que querés donar
-- [x] Registro de acopios sin cuenta (enlace privado con token)
-- [x] Panel del acopio: actualizar necesidades, horario, teléfono, cerrar
-- [x] Panel interno para verificar acopios
-- [x] Consulta geoespacial "acopios cerca de mí" (`GET /api/cercanos`)
+- [x] Registro de lugares sin cuenta (enlace privado con token)
+- [x] Panel del lugar: actualizar necesidades, horario, teléfono, cerrar
+- [x] Panel interno para verificar lugares
+- [x] Consulta geoespacial "lugares cerca de mí" (`GET /api/cercanos`)
+- [x] Límite de peticiones por IP contra el registro masivo de lugares falsos
+- [x] **Cuatro tipos de lugar** y los dos públicos en un solo mapa
 - [ ] **Fase 2** — donantes: publicar qué tenés para donar y dónde
 - [ ] **Fase 3** — voluntarios: rutas de recolección (recoger de A → llevar a B)
+
+### Los dos públicos
+
+El mapa sirve a dos personas distintas y un selector arriba decide a cuál le
+habla:
+
+| | Muestra | Tipos |
+|---|---|---|
+| **Quiero donar** | quien `recibe_donaciones` | acopio, recolección, albergue, animales |
+| **Necesito ayuda** | quien `entrega_ayuda` | albergue, animales |
+
+`recibe_donaciones` y `entrega_ayuda` son campos propios y no algo deducido del
+tipo, porque hay excepciones reales: un albergue desbordado deja de recibir
+donaciones sin dejar de alojar gente.
+
+### Mascotas
+
+`acepta_mascotas` tiene tres estados —`true`, `false` y `NULL`— y la interfaz
+los distingue. "No informado" no es lo mismo que "no aceptan": a quien viaja con
+un animal hay que decirle que llame a preguntar, no hacerle descartar el lugar.
+
+Existe porque mucha gente no evacúa por no abandonar a su mascota. El filtro
+*"que acepten mascotas"* solo devuelve los que lo confirmaron (`IS TRUE`), nunca
+los que callaron.
 
 La consulta de cercanía ya está lista porque es la pieza sobre la que se monta
 todo lo demás; la interfaz de donante y voluntario va encima de ella.

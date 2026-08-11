@@ -3,14 +3,8 @@
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import Link from "next/link";
 import { categoria as buscarCategoria } from "@/lib/categorias";
+import { tipoLugar } from "@/lib/tipos-lugar";
 import type { CentroPublico } from "@/lib/tipos";
-
-/** El color del pin comunica lo único que importa de un vistazo: qué tan mal está. */
-function colorDe(centro: CentroPublico) {
-  if (centro.necesidades.some((n) => n.nivel === "urgente")) return "#dc2626";
-  if (centro.necesidades.some((n) => n.nivel === "necesita")) return "#f59e0b";
-  return "#0891b2";
-}
 
 export default function MapaAcopios({
   centros,
@@ -35,26 +29,55 @@ export default function MapaAcopios({
       />
 
       {centros.map((c) => {
-        const color = colorDe(c);
+        const tipo = tipoLugar(c.tipo);
         const urgentes = c.necesidades.filter((n) => n.nivel === "urgente");
+
+        // El relleno dice QUÉ es el lugar; el borde rojo, que algo le urge.
+        // Así el mapa comunica las dos cosas sin necesidad de leer nada.
+        const tieneUrgencia = urgentes.length > 0;
+
         return (
           <CircleMarker
             key={c.id}
             center={[c.lat, c.lng]}
-            radius={10}
+            radius={tieneUrgencia ? 11 : 9}
             pathOptions={{
-              color: "#ffffff",
-              weight: 2,
-              fillColor: color,
+              color: tieneUrgencia ? "#dc2626" : "#ffffff",
+              weight: tieneUrgencia ? 3 : 2,
+              fillColor: tipo?.color ?? "#475569",
               fillOpacity: 0.9,
             }}
           >
             <Popup>
               <div className="space-y-2">
                 <div>
+                  <span
+                    className="mb-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                    style={{ backgroundColor: tipo?.color ?? "#475569" }}
+                  >
+                    {tipo?.emoji} {tipo?.corto ?? c.tipo}
+                  </span>
                   <p className="font-semibold text-slate-900">{c.nombre}</p>
                   <p className="text-slate-600">{c.direccion}</p>
                 </div>
+
+                {c.tipo === "albergue" && (
+                  <p
+                    className={
+                      c.acepta_mascotas === true
+                        ? "rounded bg-emerald-50 px-2 py-1 text-emerald-800"
+                        : c.acepta_mascotas === false
+                          ? "rounded bg-slate-100 px-2 py-1 text-slate-700"
+                          : "rounded bg-amber-50 px-2 py-1 text-amber-800"
+                    }
+                  >
+                    {c.acepta_mascotas === true
+                      ? "🐾 Acepta mascotas"
+                      : c.acepta_mascotas === false
+                        ? "🚫 No recibe mascotas"
+                        : "🐾 Mascotas: preguntá al llamar"}
+                  </p>
+                )}
 
                 {c.estado === "pendiente" && (
                   <p className="rounded bg-amber-50 px-2 py-1 text-amber-800">
@@ -63,7 +86,7 @@ export default function MapaAcopios({
                 )}
                 {c.es_demo && (
                   <p className="rounded bg-slate-100 px-2 py-1 text-slate-700">
-                    Dato de prueba, no es un acopio real.
+                    Dato de prueba, no es un lugar real.
                   </p>
                 )}
 

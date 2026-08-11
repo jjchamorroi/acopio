@@ -12,6 +12,7 @@ const SELECT_CENTRO = `
     ci.nombre AS ciudad_nombre, ci.departamento,
     c.lat, c.lng, c.responsable, c.telefono, c.horario, c.notas,
     c.estado, c.es_demo, c.actualizado_en,
+    c.tipo, c.recibe_donaciones, c.entrega_ayuda, c.acepta_mascotas,
     COALESCE(
       (SELECT json_agg(json_build_object(
                 'categoria', n.categoria,
@@ -37,6 +38,11 @@ export async function listarCiudades(): Promise<Ciudad[]> {
 export type FiltrosCentros = {
   ciudad?: string;
   categoria?: string;
+  /** "donar" muestra quien recibe donaciones; "ayuda", quien la entrega. */
+  modo?: "donar" | "ayuda";
+  tipo?: string;
+  /** Solo lugares que confirmaron que aceptan animales. */
+  soloAceptaMascotas?: boolean;
   /** Si es true incluye también los cerrados. Solo lo usa /admin. */
   incluirCerrados?: boolean;
 };
@@ -53,6 +59,20 @@ export async function listarCentros(
   if (filtros.ciudad) {
     params.push(filtros.ciudad);
     condiciones.push(`c.ciudad_slug = $${params.length}`);
+  }
+  if (filtros.modo === "donar") {
+    condiciones.push("c.recibe_donaciones");
+  } else if (filtros.modo === "ayuda") {
+    condiciones.push("c.entrega_ayuda");
+  }
+  if (filtros.tipo) {
+    params.push(filtros.tipo);
+    condiciones.push(`c.tipo = $${params.length}`);
+  }
+  if (filtros.soloAceptaMascotas) {
+    // `IS TRUE` y no `= true`: los que no informaron valen NULL, y decir
+    // "acepta mascotas" de un lugar que nunca lo confirmó sería inventar.
+    condiciones.push("c.acepta_mascotas IS TRUE");
   }
   if (filtros.categoria) {
     params.push(filtros.categoria);

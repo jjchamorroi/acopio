@@ -100,9 +100,24 @@ export async function PATCH(
 
     const campos: string[] = [];
     const valores: unknown[] = [];
+
+    // Texto: la cadena vacía del formulario se guarda como NULL.
     for (const campo of ["telefono", "horario", "notas", "estado"] as const) {
       if (d[campo] !== undefined) {
         valores.push(d[campo] || null);
+        campos.push(`${campo} = $${valores.length}`);
+      }
+    }
+
+    // Booleanos aparte: con `|| null` un `false` legítimo se guardaría como
+    // NULL, y "no recibe donaciones" se volvería "no se sabe".
+    for (const campo of [
+      "recibe_donaciones",
+      "entrega_ayuda",
+      "acepta_mascotas",
+    ] as const) {
+      if (d[campo] !== undefined) {
+        valores.push(d[campo]);
         campos.push(`${campo} = $${valores.length}`);
       }
     }
