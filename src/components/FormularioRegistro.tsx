@@ -7,6 +7,7 @@ import { TIPOS_LUGAR, type TipoLugarId } from "@/lib/tipos-lugar";
 import type { Ciudad } from "@/lib/tipos";
 
 import AsistenteUbicacion from "./AsistenteUbicacion";
+import SelectorCiudad from "./SelectorCiudad";
 
 type Seleccion = Record<string, NivelId | "">;
 
@@ -14,13 +15,17 @@ const input =
   "w-full rounded-md border border-slate-300 px-3 py-2 text-sm " +
   "focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
 
-export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] }) {
+export default function FormularioRegistro({
+  ciudades,
+}: {
+  ciudades: Ciudad[];
+}) {
   const [tipo, setTipo] = useState<TipoLugarId>("acopio");
   const [atiende, setAtiende] = useState("");
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [ciudadSlug, setCiudadSlug] = useState(ciudades[0]?.slug ?? "");
+  const [ciudad, setCiudad] = useState<Ciudad | null>(ciudades[0] ?? null);
   const [responsable, setResponsable] = useState("");
   const [telefono, setTelefono] = useState("");
   const [horario, setHorario] = useState("");
@@ -34,18 +39,19 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
     null
   );
 
-  const ciudad = useMemo(
-    () => ciudades.find((c) => c.slug === ciudadSlug),
-    [ciudades, ciudadSlug]
+  const centroMapa: [number, number] = useMemo(
+    () => (ciudad ? [ciudad.lat, ciudad.lng] : [4.85, -75.7]),
+    [ciudad]
   );
-  const centroMapa: [number, number] = ciudad
-    ? [ciudad.lat, ciudad.lng]
-    : [4.85, -75.7];
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
+    if (!ciudad) {
+      setError("Elegí el municipio.");
+      return;
+    }
     if (!punto) {
       setError("Marcá la ubicación exacta en el mapa antes de continuar.");
       return;
@@ -68,7 +74,7 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
           acepta_mascotas: tipo === "albergue" ? aceptaMascotas : null,
           nombre,
           direccion,
-          ciudad_slug: ciudadSlug,
+          ciudad_slug: ciudad?.slug,
           lat: punto.lat,
           lng: punto.lng,
           responsable: responsable || null,
@@ -250,23 +256,12 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
         </label>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block">
+          <div className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
-              Ciudad *
+              Municipio *
             </span>
-            <select
-              className={input}
-              required
-              value={ciudadSlug}
-              onChange={(e) => setCiudadSlug(e.target.value)}
-            >
-              {ciudades.map((c) => (
-                <option key={c.slug} value={c.slug}>
-                  {c.nombre} — {c.departamento}
-                </option>
-              ))}
-            </select>
-          </label>
+            <SelectorCiudad valor={ciudad} onCambio={setCiudad} requerido />
+          </div>
 
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">

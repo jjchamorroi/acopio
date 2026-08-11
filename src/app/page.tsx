@@ -5,7 +5,7 @@ import MapaClient from "@/components/MapaClient";
 import BotonCompartir from "@/components/BotonCompartir";
 import Filtros from "@/components/Filtros";
 import TarjetaCentro from "@/components/TarjetaCentro";
-import { listarCentros, listarCiudades } from "@/lib/consultas";
+import { listarCentros, listarCiudadesConLugares } from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { MODOS, TIPOS_LUGAR, esModo, type ModoId } from "@/lib/tipos-lugar";
 
@@ -60,7 +60,7 @@ export default async function Home({
   const modo: ModoId = esModo(p.modo) ? p.modo : "donar";
 
   const [ciudades, centros] = await Promise.all([
-    listarCiudades(),
+    listarCiudadesConLugares(),
     listarCentros({
       ciudad: p.ciudad,
       categoria: modo === "donar" ? p.categoria : undefined,

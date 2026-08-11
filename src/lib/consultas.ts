@@ -66,6 +66,59 @@ export async function listarCiudades(): Promise<Ciudad[]> {
   );
 }
 
+/**
+ * Solo las ciudades que tienen al menos un lugar. Es lo que se ofrece en los
+ * filtros del mapa: con 1.122 municipios en la base, listarlos todos daría un
+ * desplegable inmanejable, y la mayoría estaría vacía.
+ */
+export async function listarCiudadesConLugares(): Promise<Ciudad[]> {
+  return conCache("ciudades:con-lugares", TTL_LISTADOS, () =>
+    query<Ciudad>(
+      `SELECT ci.slug, ci.nombre, ci.departamento, ci.lat, ci.lng, ci.prioridad
+         FROM ciudad ci
+        WHERE EXISTS (SELECT 1 FROM centro_acopio c
+                       WHERE c.ciudad_slug = ci.slug AND c.estado <> 'cerrado')
+        ORDER BY ci.prioridad, ci.nombre`
+    )
+  );
+}
+
+/**
+ * Búsqueda de municipios para el autocompletado del formulario.
+ * Sin texto devuelve los de las zonas afectadas, que es lo que casi siempre
+ * se busca.
+ */
+export async function buscarCiudades(texto?: string): Promise<Ciudad[]> {
+  const q = (texto ?? "").trim();
+
+  if (q.length < 2) {
+    return conCache("ciudades:prioritarias", TTL_CIUDADES, () =>
+      query<Ciudad>(
+        `SELECT slug, nombre, departamento, lat, lng, prioridad
+           FROM ciudad WHERE prioridad <= 2
+          ORDER BY prioridad, nombre LIMIT 60`
+      )
+    );
+  }
+
+  // unaccent no está garantizado; se normaliza comparando sin tildes con
+  // translate, para que "Quibdo" encuentre "Quibdó".
+  return query<Ciudad>(
+    `SELECT slug, nombre, departamento, lat, lng, prioridad
+       FROM ciudad
+      WHERE translate(lower(nombre), 'áéíóúñü', 'aeiounu') LIKE
+            '%' || translate(lower($1), 'áéíóúñü', 'aeiounu') || '%'
+         OR translate(lower(departamento), 'áéíóúñü', 'aeiounu') LIKE
+            '%' || translate(lower($1), 'áéíóúñü', 'aeiounu') || '%'
+      ORDER BY prioridad,
+               (translate(lower(nombre), 'áéíóúñü', 'aeiounu') LIKE
+                translate(lower($1), 'áéíóúñü', 'aeiounu') || '%') DESC,
+               nombre
+      LIMIT 25`,
+    [q]
+  );
+}
+
 export type FiltrosCentros = {
   ciudad?: string;
   categoria?: string;

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:setup": "node --env-file-if-exists=.env scripts/run-sql.mjs db/schema.sql",
+    "db:setup": "node --env-file-if-exists=.env scripts/run-sql.mjs db/schema.sql && node --env-file-if-exists=.env scripts/run-sql.mjs db/municipios.sql",
     "db:demo": "node --env-file-if-exists=.env scripts/run-sql.mjs db/demo.sql",
     "db:respaldo": "node --env-file-if-exists=.env scripts/respaldo.mjs",
     "db:demo:borrar": "node --env-file-if-exists=.env scripts/run-sql.mjs db/demo-borrar.sql",

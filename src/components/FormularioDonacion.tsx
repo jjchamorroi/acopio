@@ -8,6 +8,7 @@ import { RADIO_DIFUSO_M } from "@/lib/constantes";
 import type { Ciudad } from "@/lib/tipos";
 
 import AsistenteUbicacion from "./AsistenteUbicacion";
+import SelectorCiudad from "./SelectorCiudad";
 
 type Sugerencia = {
   id: string;
@@ -35,7 +36,7 @@ export default function FormularioDonacion({
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [cantidad, setCantidad] = useState("");
-  const [ciudadSlug, setCiudadSlug] = useState(ciudades[0]?.slug ?? "");
+  const [ciudad, setCiudad] = useState<Ciudad | null>(ciudades[0] ?? null);
   const [contacto, setContacto] = useState("");
   const [telefono, setTelefono] = useState("");
   const [notas, setNotas] = useState("");
@@ -49,19 +50,20 @@ export default function FormularioDonacion({
     sugerencias: Sugerencia[];
   } | null>(null);
 
-  const ciudad = useMemo(
-    () => ciudades.find((c) => c.slug === ciudadSlug),
-    [ciudades, ciudadSlug]
+  const centroMapa: [number, number] = useMemo(
+    () => (ciudad ? [ciudad.lat, ciudad.lng] : [4.85, -75.7]),
+    [ciudad]
   );
-  const centroMapa: [number, number] = ciudad
-    ? [ciudad.lat, ciudad.lng]
-    : [4.85, -75.7];
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     if (!categoria) {
       setError("Elegí qué tipo de cosa vas a donar.");
+      return;
+    }
+    if (!ciudad) {
+      setError("Elegí el municipio.");
       return;
     }
     if (!punto) {
@@ -78,7 +80,7 @@ export default function FormularioDonacion({
           categoria,
           descripcion,
           cantidad: cantidad || null,
-          ciudad_slug: ciudadSlug,
+          ciudad_slug: ciudad?.slug,
           lat: punto.lat,
           lng: punto.lng,
           contacto: contacto || null,
@@ -290,23 +292,12 @@ export default function FormularioDonacion({
           teléfono a quien venga.
         </div>
 
-        <label className="block">
+        <div className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Ciudad *
+            Municipio *
           </span>
-          <select
-            className={input}
-            required
-            value={ciudadSlug}
-            onChange={(e) => setCiudadSlug(e.target.value)}
-          >
-            {ciudades.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.nombre} — {c.departamento}
-              </option>
-            ))}
-          </select>
-        </label>
+          <SelectorCiudad valor={ciudad} onCambio={setCiudad} requerido />
+        </div>
 
         <div>
           <span className="mb-1 block text-xs font-medium text-slate-600">

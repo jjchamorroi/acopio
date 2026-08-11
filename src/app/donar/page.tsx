@@ -1,5 +1,5 @@
 import FormularioDonacion from "@/components/FormularioDonacion";
-import { listarCiudades } from "@/lib/consultas";
+import { buscarCiudades } from "@/lib/consultas";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,8 @@ export const metadata = {
 };
 
 export default async function Donar() {
-  const ciudades = await listarCiudades();
+  // Solo para sugerir un municipio inicial; el resto lo busca el autocompletado.
+  const ciudades = await buscarCiudades();
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">

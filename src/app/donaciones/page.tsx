@@ -1,6 +1,6 @@
 import Link from "next/link";
 import MapaDonacionesClient from "@/components/MapaDonacionesClient";
-import { listarCiudades, listarDonaciones } from "@/lib/consultas";
+import { listarCiudadesConLugares, listarDonaciones } from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { RADIO_DIFUSO_M } from "@/lib/constantes";
 
@@ -22,7 +22,7 @@ export default async function Donaciones({
   const { ciudad, categoria } = await searchParams;
 
   const [ciudades, donaciones] = await Promise.all([
-    listarCiudades(),
+    listarCiudadesConLugares(),
     listarDonaciones({ ciudad, categoria }),
   ]);
 

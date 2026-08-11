@@ -40,6 +40,44 @@ una dirección exacta que no tenemos.
 El teléfono **sí** es público —es lo que permite coordinar— y el formulario lo
 advierte antes de enviar.
 
+### Cobertura geográfica
+
+**1.122 municipios**, todo el país, con prioridad al occidente:
+
+| Prioridad | Qué es | Municipios |
+|---|---|---|
+| 1 | Foco del sismo | 5 |
+| 2 | Chocó, Risaralda, Quindío, Caldas, Valle del Cauca | 119 |
+| 3 | Resto del occidente: Antioquia, Cauca, Nariño, Tolima, Huila | 316 |
+| 4 | Capitales del resto del país | 21 |
+| 5 | Los demás municipios | 661 |
+
+El catálogo se genera desde el volcado de GeoNames y se versiona en
+`db/municipios.sql`, para que nadie tenga que bajar 2 MB para levantar el
+proyecto. Para regenerarlo (la división político-administrativa no cambia en
+una emergencia, así que casi nunca hace falta):
+
+```bash
+curl -o CO.zip https://download.geonames.org/export/dump/CO.zip && unzip CO.zip
+node scripts/generar-municipios.mjs CO.txt
+```
+
+Dos cosas que resuelve el generador y conviene no romper:
+
+**Municipios homónimos.** Armenia existe en Quindío y en Antioquia. El slug
+lleva sufijo de departamento cuando hay repetición (`armenia` /
+`armenia-antioquia`), y los trece municipios que ya estaban en la base
+conservan su slug original porque hay lugares registrados que los referencian.
+
+**Coordenadas ya revisadas.** `ON CONFLICT DO NOTHING` impide que el catálogo
+pise las que estaban. La de Bogotá en GeoNames, por ejemplo, es el centroide
+del distrito entero y cae en Sumapaz, a 40 km del centro.
+
+Con 1.122 municipios, el desplegable dejó de servir: el formulario usa un
+**autocompletado** contra `/api/ciudades?q=`, insensible a tildes ("quibdo"
+encuentra "Quibdó"), y los filtros del mapa ofrecen **solo los municipios que
+tienen lugares registrados**.
+
 ### Los dos públicos
 
 El mapa sirve a dos personas distintas y un selector arriba decide a cuál le

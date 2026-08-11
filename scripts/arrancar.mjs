@@ -41,6 +41,13 @@ if (!process.env.DATABASE_URL) {
     );
 
     if (r.status === 0) {
+      // El catálogo de municipios va aparte del esquema: son 1.122 filas que
+      // no tienen por qué mezclarse con la definición de las tablas.
+      spawnSync(
+        process.execPath,
+        ["scripts/run-sql.mjs", "db/municipios.sql"],
+        { stdio: "inherit", cwd: process.cwd() }
+      );
       aplicado = true;
       break;
     }
