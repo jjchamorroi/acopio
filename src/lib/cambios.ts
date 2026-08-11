@@ -13,6 +13,7 @@ export type Instantanea = {
   recibe_donaciones: boolean;
   entrega_ayuda: boolean;
   acepta_mascotas: boolean | null;
+  atiende: string | null;
   necesidades: { categoria: string; nivel: string; detalle: string | null }[];
 };
 
@@ -33,6 +34,7 @@ export function instantanea(centro: CentroPublico): Instantanea {
     recibe_donaciones: centro.recibe_donaciones,
     entrega_ayuda: centro.entrega_ayuda,
     acepta_mascotas: centro.acepta_mascotas,
+    atiende: centro.atiende,
     necesidades: centro.necesidades
       .map((n) => ({
         categoria: n.categoria,
@@ -70,6 +72,9 @@ export function describirCambio(
   }
   if (antes.horario !== despues.horario) {
     partes.push(`horario: ${antes.horario ?? "sin horario"} → ${despues.horario ?? "sin horario"}`);
+  }
+  if (antes.atiende !== despues.atiende) {
+    partes.push(`atiende: ${antes.atiende ?? "sin especificar"} → ${despues.atiende ?? "sin especificar"}`);
   }
   if (antes.notas !== despues.notas) {
     partes.push("notas modificadas");

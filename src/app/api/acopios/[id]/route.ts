@@ -112,7 +112,7 @@ export async function PATCH(
     const valores: unknown[] = [];
 
     // Texto: la cadena vacía del formulario se guarda como NULL.
-    for (const campo of ["telefono", "horario", "notas", "estado"] as const) {
+    for (const campo of ["telefono", "horario", "notas", "estado", "atiende"] as const) {
       if (d[campo] !== undefined) {
         valores.push(d[campo] || null);
         campos.push(`${campo} = $${valores.length}`);

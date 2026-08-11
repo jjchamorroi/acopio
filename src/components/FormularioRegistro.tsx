@@ -24,6 +24,7 @@ const input =
 
 export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] }) {
   const [tipo, setTipo] = useState<TipoLugarId>("acopio");
+  const [atiende, setAtiende] = useState("");
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
@@ -69,6 +70,7 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           tipo,
+          atiende: atiende || null,
           // Solo tiene sentido informarlo donde duerme gente. En los demás
           // tipos va null para no llenar la base de datos irrelevantes.
           acepta_mascotas: tipo === "albergue" ? aceptaMascotas : null,
@@ -221,6 +223,24 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
               })}
             </div>
           </div>
+        )}
+
+        {(tipo === "institucion" || tipo === "albergue") && (
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-slate-600">
+              ¿A quién atiende?
+            </span>
+            <input
+              className={input}
+              maxLength={120}
+              value={atiende}
+              onChange={(e) => setAtiende(e.target.value)}
+              placeholder="80 adultos mayores, 12 familias, 300 niños…"
+            />
+            <span className="mt-1 block text-xs text-slate-500">
+              Es lo que hace que un donante entienda a dónde va lo suyo.
+            </span>
+          </label>
         )}
 
         <label className="block">

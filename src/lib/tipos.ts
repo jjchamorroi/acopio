@@ -26,7 +26,9 @@ export type CentroPublico = {
   departamento: string;
   lat: number;
   lng: number;
-  tipo: "acopio" | "recoleccion" | "albergue" | "animales";
+  tipo: "acopio" | "recoleccion" | "albergue" | "animales" | "institucion";
+  /** A quién atiende: "80 adultos mayores", "12 familias". */
+  atiende: string | null;
   recibe_donaciones: boolean;
   entrega_ayuda: boolean;
   /** null = el lugar no informó si acepta animales. */
@@ -57,6 +59,7 @@ export const esquemaCentroNuevo = z.object({
   recibe_donaciones: z.boolean().optional(),
   entrega_ayuda: z.boolean().optional(),
   acepta_mascotas: z.boolean().nullable().optional(),
+  atiende: z.string().trim().max(120).optional().nullable(),
   lat: z.number().gte(-4.3).lte(13.5), // caja aproximada de Colombia
   lng: z.number().gte(-82).lte(-66.8),
   responsable: z.string().trim().max(120).optional().nullable(),
@@ -143,5 +146,6 @@ export const esquemaActualizacion = z.object({
   recibe_donaciones: z.boolean().optional(),
   entrega_ayuda: z.boolean().optional(),
   acepta_mascotas: z.boolean().nullable().optional(),
+  atiende: z.string().trim().max(120).optional().nullable(),
   necesidades: z.array(esquemaNecesidad).max(20).optional(),
 });

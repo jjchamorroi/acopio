@@ -41,6 +41,7 @@ export default function PanelAcopio({
   const [detalles, setDetalles] = useState<Record<string, string>>({});
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [historial, setHistorial] = useState<Cambio[]>([]);
+  const [atiende, setAtiende] = useState("");
 
   useEffect(() => {
     let vivo = true;
@@ -55,6 +56,7 @@ export default function PanelAcopio({
         setHorario(centro.horario ?? "");
         setNotas(centro.notas ?? "");
         setAceptaMascotas(centro.acepta_mascotas);
+        setAtiende(centro.atiende ?? "");
         setNiveles(
           Object.fromEntries(
             centro.necesidades.map((n) => [n.categoria, n.nivel])
@@ -190,6 +192,7 @@ export default function PanelAcopio({
         telefono,
         horario,
         notas,
+        atiende,
         necesidades: lista,
         ...(centro?.tipo === "albergue"
           ? { acepta_mascotas: aceptaMascotas }
@@ -270,6 +273,21 @@ export default function PanelAcopio({
             />
           </label>
         </div>
+        {(centro.tipo === "institucion" || centro.tipo === "albergue") && (
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-slate-600">
+              ¿A quién atiende?
+            </span>
+            <input
+              className={input}
+              maxLength={120}
+              value={atiende}
+              onChange={(e) => setAtiende(e.target.value)}
+              placeholder="80 adultos mayores, 12 familias…"
+            />
+          </label>
+        )}
+
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
             Notas

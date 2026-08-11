@@ -106,6 +106,11 @@ export default async function DetalleAcopio({
           {centro.ciudad_nombre}, {centro.departamento}
           {centro.horario ? ` · ${centro.horario}` : ""}
         </p>
+        {centro.atiende && (
+          <p className="mt-2 text-slate-800">
+            <strong>Atiende a {centro.atiende}.</strong>
+          </p>
+        )}
       </header>
 
       {centro.tipo === "albergue" && (

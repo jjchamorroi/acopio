@@ -95,8 +95,8 @@ export async function POST(req: Request) {
       `INSERT INTO centro_acopio
          (nombre, direccion, ciudad_slug, lat, lng, responsable, telefono,
           horario, notas, admin_token_hash,
-          tipo, recibe_donaciones, entrega_ayuda, acepta_mascotas)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+          tipo, recibe_donaciones, entrega_ayuda, acepta_mascotas, atiende)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
        RETURNING id`,
       [
         d.nombre,
@@ -113,6 +113,7 @@ export async function POST(req: Request) {
         d.recibe_donaciones ?? porDefecto?.recibe ?? true,
         d.entrega_ayuda ?? porDefecto?.entrega ?? false,
         d.acepta_mascotas ?? null,
+        d.atiende || null,
       ]
     );
     const id = rows[0].id as string;

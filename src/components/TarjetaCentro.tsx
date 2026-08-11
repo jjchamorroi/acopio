@@ -90,6 +90,11 @@ export default function TarjetaCentro({
             {centro.ciudad_nombre}, {centro.departamento}
             {centro.horario ? ` · ${centro.horario}` : ""}
           </p>
+          {centro.atiende && (
+            <p className="mt-1 text-sm font-medium text-slate-700">
+              Atiende a {centro.atiende}
+            </p>
+          )}
         </div>
 
         {centro.estado === "verificado" ? (

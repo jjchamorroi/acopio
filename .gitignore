@@ -15,3 +15,7 @@ next-env.d.ts
 # Los respaldos llevan teléfonos y ubicaciones exactas de donantes.
 # Son datos personales: nunca al repositorio.
 respaldos/
+
+# Datos recopilados de terceros, sin verificar y sin su consentimiento.
+# Es material de trabajo para llamar, no para publicar.
+investigacion/

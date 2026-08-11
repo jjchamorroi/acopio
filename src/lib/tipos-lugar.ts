@@ -46,6 +46,20 @@ export const TIPOS_LUGAR = [
     entrega: true,
     color: "#ea580c",
   },
+  {
+    // La diferencia con un acopio no es cosmética: un acopio recibe para
+    // repartir, una institución necesita las cosas PARA SÍ MISMA. Al donante
+    // le importa saber si lo suyo va a una bodega que redistribuye o
+    // directamente a los abuelos de un hogar.
+    id: "institucion",
+    label: "Institución que necesita ayuda",
+    corto: "Necesita ayuda",
+    emoji: "🆘",
+    ayuda: "Ancianato, colegio, hogar infantil, fundación… que pide para sí",
+    recibe: true,
+    entrega: false,
+    color: "#be123c",
+  },
 ] as const;
 
 export type TipoLugarId = (typeof TIPOS_LUGAR)[number]["id"];

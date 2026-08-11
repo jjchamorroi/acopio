@@ -90,13 +90,35 @@ ALTER TABLE centro_acopio
 ALTER TABLE centro_acopio
   ADD COLUMN IF NOT EXISTS acepta_mascotas boolean;
 
+-- A quién atiende y cuánta gente: "80 adultos mayores", "12 familias",
+-- "un colegio con 300 niños". En una institución que necesita ayuda para sí
+-- misma esto es lo que permite priorizar, y es la diferencia entre un donante
+-- que entiende a dónde va lo suyo y uno que solo ve un punto en el mapa.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS atiende text;
+
+-- Constraint viejo: si existe con la lista de tipos anterior, se reemplaza
+-- para admitir 'institucion'. Sin esto, una base ya desplegada rechazaría el
+-- tipo nuevo aunque el código lo soporte.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'centro_acopio_tipo_check'
+       AND pg_get_constraintdef(oid) NOT LIKE '%institucion%'
+  ) THEN
+    ALTER TABLE centro_acopio DROP CONSTRAINT centro_acopio_tipo_check;
+  END IF;
+END $$;
+
 DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint WHERE conname = 'centro_acopio_tipo_check'
   ) THEN
     ALTER TABLE centro_acopio ADD CONSTRAINT centro_acopio_tipo_check
-      CHECK (tipo IN ('acopio', 'recoleccion', 'albergue', 'animales'));
+      CHECK (tipo IN ('acopio', 'recoleccion', 'albergue', 'animales',
+                      'institucion'));
   END IF;
 END $$;
 
@@ -245,5 +267,13 @@ INSERT INTO ciudad (slug, nombre, departamento, lat, lng, prioridad) VALUES
   ('medellin',     'Medellín',     'Antioquia',       6.2442,  -75.5812, 2),
   ('dosquebradas', 'Dosquebradas', 'Risaralda',       4.8340,  -75.6740, 2),
   ('cartago',      'Cartago',      'Valle del Cauca', 4.7464,  -75.9117, 3),
-  ('istmina',      'Istmina',      'Chocó',           5.1594,  -76.6844, 3)
+  ('istmina',      'Istmina',      'Chocó',           5.1594,  -76.6844, 3),
+
+  -- Ciudades NO afectadas, pero donde están los acopios que recogen para
+  -- mandar a la zona. Al revisar las guías de acopios publicadas quedó claro
+  -- que la mayoría de puntos de recepción están acá: sin estas ciudades la
+  -- aplicación no le puede decir a alguien en Bogotá dónde dejar lo suyo.
+  ('bogota',       'Bogotá',       'Cundinamarca',    4.7110,  -74.0721, 4),
+  ('barranquilla', 'Barranquilla', 'Atlántico',      10.9685,  -74.7813, 4),
+  ('bucaramanga',  'Bucaramanga',  'Santander',       7.1193,  -73.1227, 4)
 ON CONFLICT (slug) DO NOTHING;
