@@ -1,11 +1,32 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { urlBase } from "@/lib/url";
 import "./globals.css";
 
+const DESCRIPCION =
+  "Mapa colaborativo de acopios, albergues y puntos de atención animal tras el sismo del 10 de agosto de 2026, con lo que cada uno necesita hoy.";
+
 export const metadata: Metadata = {
-  title: "Red de Acopio · Sismo Colombia 2026",
-  description:
-    "Mapa colaborativo de centros de acopio y de lo que cada uno necesita, tras el sismo del 10 de agosto de 2026.",
+  // Sin metadataBase, Next genera rutas relativas para la imagen de
+  // previsualización y WhatsApp muestra la tarjeta sin foto.
+  metadataBase: urlBase(),
+  title: {
+    default: "Red de Acopio · Sismo Colombia 2026",
+    template: "%s · Red de Acopio",
+  },
+  description: DESCRIPCION,
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    siteName: "Red de Acopio",
+    title: "Red de Acopio · Sismo Colombia 2026",
+    description: DESCRIPCION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Red de Acopio · Sismo Colombia 2026",
+    description: DESCRIPCION,
+  },
 };
 
 export const viewport: Viewport = {
@@ -27,18 +48,30 @@ export default function RootLayout({
             <Link href="/" className="font-semibold tracking-tight">
               Red de Acopio
             </Link>
-            <nav className="ml-auto flex items-center gap-2 text-sm">
+            <nav className="ml-auto flex items-center gap-1 text-sm sm:gap-2">
               <Link
                 href="/"
-                className="rounded px-3 py-1.5 hover:bg-white/10 transition"
+                className="rounded px-2 py-1.5 transition hover:bg-white/10 sm:px-3"
               >
                 Mapa
               </Link>
               <Link
-                href="/registrar"
-                className="rounded bg-white px-3 py-1.5 font-medium text-slate-900 hover:bg-slate-200 transition"
+                href="/donaciones"
+                className="hidden rounded px-3 py-1.5 transition hover:bg-white/10 sm:block"
               >
-                Registrar acopio
+                Donaciones
+              </Link>
+              <Link
+                href="/registrar"
+                className="hidden rounded px-3 py-1.5 transition hover:bg-white/10 sm:block"
+              >
+                Registrar lugar
+              </Link>
+              <Link
+                href="/donar"
+                className="rounded bg-white px-3 py-1.5 font-medium text-slate-900 transition hover:bg-slate-200"
+              >
+                Tengo algo para donar
               </Link>
             </nav>
           </div>

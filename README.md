@@ -17,8 +17,28 @@ para que cada acopio actualice sus necesidades.
 - [x] Consulta geoespacial "lugares cerca de mí" (`GET /api/cercanos`)
 - [x] Límite de peticiones por IP contra el registro masivo de lugares falsos
 - [x] **Cuatro tipos de lugar** y los dos públicos en un solo mapa
-- [ ] **Fase 2** — donantes: publicar qué tenés para donar y dónde
+- [x] **Fase 2** — donantes: publicar qué tenés y a quién cerca le sirve
+- [x] Compartir por WhatsApp con previsualización y cifras reales
 - [ ] **Fase 3** — voluntarios: rutas de recolección (recoger de A → llevar a B)
+
+### Privacidad de los donantes (fase 2)
+
+De cada donación se guardan **dos ubicaciones**: la exacta y una desplazada al
+azar unos 300 m. Las consultas públicas seleccionan **únicamente la
+aproximada** — la exacta ni siquiera aparece en el `SELECT`, así que no puede
+escaparse por un endpoint mal escrito.
+
+El desplazamiento se calcula una sola vez, al insertar, y se guarda. Si se
+recalculara en cada consulta, el punto bailaría y bastaría con pedir la misma
+donación varias veces para triangular el centro real.
+
+Sin esto, el mapa sería un catálogo de casas con cosas de valor adentro,
+publicado justo cuando media ciudad está vacía. En el mapa se dibuja un
+**círculo del tamaño real de la imprecisión**, no un punto: un punto sugeriría
+una dirección exacta que no tenemos.
+
+El teléfono **sí** es público —es lo que permite coordinar— y el formulario lo
+advierte antes de enviar.
 
 ### Los dos públicos
 

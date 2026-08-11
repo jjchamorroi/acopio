@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import MapaClient from "@/components/MapaClient";
+import BotonCompartir from "@/components/BotonCompartir";
 import { obtenerCentro } from "@/lib/consultas";
 import { categoria as buscarCategoria, NIVELES } from "@/lib/categorias";
 import { tipoLugar } from "@/lib/tipos-lugar";
@@ -8,6 +10,50 @@ import { tipoLugar } from "@/lib/tipos-lugar";
 export const dynamic = "force-dynamic";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  if (!UUID.test(id)) return {};
+
+  const centro = await obtenerCentro(id);
+  if (!centro) return {};
+
+  const tipo = tipoLugar(centro.tipo);
+  const urgentes = centro.necesidades.filter((n) => n.nivel === "urgente");
+
+  // Lo que se lee en la tarjeta de WhatsApp es esto. Que diga qué necesita
+  // —no "centro de acopio en Pereira"— es lo que hace que alguien actúe.
+  const partes: string[] = [];
+  if (urgentes.length > 0) {
+    partes.push(
+      `Necesita urgente: ${urgentes
+        .map((n) => buscarCategoria(n.categoria)?.label ?? n.categoria)
+        .join(", ")}`
+    );
+  }
+  if (centro.tipo === "albergue" && centro.acepta_mascotas === true) {
+    partes.push("Acepta mascotas");
+  }
+  partes.push(`${centro.direccion}, ${centro.ciudad_nombre}`);
+
+  const descripcion = partes.join(". ");
+  const titulo = `${tipo?.label ?? "Lugar"}: ${centro.nombre}`;
+
+  return {
+    title: titulo,
+    description: descripcion,
+    openGraph: { title: titulo, description: descripcion },
+    twitter: {
+      card: "summary_large_image",
+      title: titulo,
+      description: descripcion,
+    },
+  };
+}
 
 export default async function DetalleAcopio({
   params,
@@ -112,6 +158,19 @@ export default async function DetalleAcopio({
           Cómo llegar
         </a>
       </div>
+
+      <BotonCompartir
+        className="mt-4"
+        texto={
+          porNivel("urgente").length > 0
+            ? `${centro.nombre} (${centro.ciudad_nombre}) necesita urgente: ${porNivel(
+                "urgente"
+              )
+                .map((n) => buscarCategoria(n.categoria)?.label ?? n.categoria)
+                .join(", ")}.`
+            : `${centro.nombre}, en ${centro.ciudad_nombre}. Mirá qué necesita:`
+        }
+      />
 
       <section className="mt-6 space-y-4">
         {(["urgente", "necesita", "sobra"] as const).map((nivel) => {

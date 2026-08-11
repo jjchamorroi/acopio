@@ -125,6 +125,65 @@ CREATE TABLE IF NOT EXISTS necesidad (
 CREATE INDEX IF NOT EXISTS necesidad_categoria_idx ON necesidad (categoria, nivel);
 
 -- ---------------------------------------------------------------------------
+-- FASE 2 — Donaciones ofrecidas por particulares.
+--
+-- PRIVACIDAD, que acá es lo importante:
+--
+-- Guardamos la ubicación exacta (lat/lng) y una desplazada al azar unos 300 m
+-- (lat_aprox/lng_aprox). Las consultas públicas seleccionan ÚNICAMENTE las
+-- aproximadas, así que la dirección real no puede escaparse por un endpoint
+-- mal escrito: no está en el SELECT. La dirección exacta no se publica nunca;
+-- se coordina por teléfono.
+--
+-- Sin esto, el mapa sería un catálogo de casas con cosas de valor adentro,
+-- publicado justo cuando media ciudad está vacía. El desplazamiento se calcula
+-- una sola vez al insertar y se guarda: si se recalculara en cada consulta, el
+-- punto bailaría y bastaría con pedir la misma donación varias veces para
+-- triangular el centro real.
+--
+-- El teléfono SÍ es público, y el formulario lo advierte antes de enviarlo.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS donacion (
+  id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  categoria        text NOT NULL,
+  descripcion      text NOT NULL,
+  cantidad         text,
+  ciudad_slug      text NOT NULL REFERENCES ciudad(slug),
+
+  -- Privada. Nunca se expone en un endpoint público.
+  lat              double precision NOT NULL,
+  lng              double precision NOT NULL,
+
+  -- Pública: la anterior desplazada al azar.
+  lat_aprox        double precision NOT NULL,
+  lng_aprox        double precision NOT NULL,
+  geom_aprox       geography(Point, 4326)
+                     GENERATED ALWAYS AS
+                     (ST_SetSRID(ST_MakePoint(lng_aprox, lat_aprox), 4326)::geography) STORED,
+
+  contacto         text,
+  telefono         text NOT NULL,
+  notas            text,
+
+  estado           text NOT NULL DEFAULT 'disponible'
+                     CHECK (estado IN ('disponible', 'comprometida', 'entregada', 'cancelada')),
+
+  -- Una donación vieja es peor que ninguna: manda a alguien a buscar algo que
+  -- ya no está. A la semana deja de aparecer sola.
+  vence_en         timestamptz NOT NULL DEFAULT now() + interval '7 days',
+
+  es_demo          boolean NOT NULL DEFAULT false,
+  admin_token_hash text NOT NULL,
+  creado_en        timestamptz NOT NULL DEFAULT now(),
+  actualizado_en   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS donacion_geom_idx ON donacion USING GIST (geom_aprox);
+CREATE INDEX IF NOT EXISTS donacion_categoria_idx ON donacion (categoria, estado);
+CREATE INDEX IF NOT EXISTS donacion_ciudad_idx ON donacion (ciudad_slug);
+CREATE INDEX IF NOT EXISTS donacion_vigencia_idx ON donacion (vence_en) WHERE estado = 'disponible';
+
+-- ---------------------------------------------------------------------------
 -- Control de abuso: cuántas peticiones lleva cada quien en la ventana actual.
 --
 -- Vive en Postgres y no en memoria porque el contador tiene que sobrevivir a

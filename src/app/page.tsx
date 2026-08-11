@@ -1,6 +1,8 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import MapaClient from "@/components/MapaClient";
+import BotonCompartir from "@/components/BotonCompartir";
 import Filtros from "@/components/Filtros";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import { listarCentros, listarCiudades } from "@/lib/consultas";
@@ -11,6 +13,37 @@ export const dynamic = "force-dynamic";
 
 // Centro geográfico del eje cafetero, que es donde está el grueso del daño.
 const CENTRO_POR_DEFECTO: [number, number] = [4.85, -75.7];
+
+/**
+ * La descripción lleva cifras reales, no una frase fija. Cuando alguien pega
+ * el enlace en un grupo de WhatsApp, lo que decide si los demás lo abren es
+ * ver que hay algo vivo del otro lado.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const centros = await listarCentros({});
+    const urgentes = centros.filter((c) =>
+      c.necesidades.some((n) => n.nivel === "urgente")
+    ).length;
+    const albergues = centros.filter((c) => c.tipo === "albergue").length;
+
+    const partes = [`${centros.length} lugares activos`];
+    if (urgentes > 0) partes.push(`${urgentes} con algo urgente`);
+    if (albergues > 0) partes.push(`${albergues} albergues`);
+
+    const descripcion = `${partes.join(" · ")}. Mirá qué necesita cada uno antes de salir de la casa.`;
+    return {
+      description: descripcion,
+      openGraph: { description: descripcion },
+      // `card` se repite a propósito: al declarar `twitter` acá, Next reemplaza
+      // el objeto del layout en vez de fusionarlo, y sin esto la tarjeta se
+      // degrada a imagen pequeña.
+      twitter: { card: "summary_large_image", description: descripcion },
+    };
+  } catch {
+    return {};
+  }
+}
 
 export default async function Home({
   searchParams,
@@ -61,6 +94,14 @@ export default async function Home({
           {copia.titulo}
         </h1>
         <p className="mt-2 max-w-2xl text-slate-600">{copia.bajada}</p>
+        <BotonCompartir
+          className="mt-4"
+          texto={
+            urgentes > 0
+              ? `Mapa de acopios y albergues por el sismo: ${centros.length} lugares, ${urgentes} necesitan algo urgente. Mirá qué falta antes de salir de la casa:`
+              : "Mapa de acopios y albergues por el sismo. Mirá qué necesita cada uno antes de salir de la casa:"
+          }
+        />
       </section>
 
       <section className="mb-5 rounded-lg border border-slate-200 bg-white p-4">

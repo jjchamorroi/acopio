@@ -1,5 +1,25 @@
 import { query } from "./db";
-import type { CentroPublico, Ciudad } from "./tipos";
+import type { CentroPublico, Ciudad, DonacionPublica } from "./tipos";
+
+/**
+ * Columnas publicables de una donación.
+ *
+ * Fijate que NO están `lat` ni `lng`: solo las aproximadas. La dirección real
+ * del donante no sale de la base por ninguna consulta de este archivo, y esa
+ * es justamente la garantía. Si algún día hace falta la exacta —para armarle
+ * la ruta a un voluntario que ya aceptó— tiene que ser en una consulta aparte
+ * y con autorización, nunca ampliando esta.
+ */
+const SELECT_DONACION = `
+  SELECT
+    d.id, d.categoria, d.descripcion, d.cantidad,
+    d.ciudad_slug, ci.nombre AS ciudad_nombre, ci.departamento,
+    d.lat_aprox, d.lng_aprox,
+    d.contacto, d.telefono, d.notas, d.estado, d.es_demo,
+    d.creado_en, d.vence_en
+  FROM donacion d
+  JOIN ciudad ci ON ci.slug = d.ciudad_slug
+`;
 
 /**
  * Agregamos las necesidades como JSON dentro de la misma consulta en vez de
@@ -96,6 +116,50 @@ export async function obtenerCentro(id: string): Promise<CentroPublico | null> {
   const filas = await query<CentroPublico>(`${SELECT_CENTRO} WHERE c.id = $1`, [
     id,
   ]);
+  return filas[0] ?? null;
+}
+
+export type FiltrosDonaciones = {
+  ciudad?: string;
+  categoria?: string;
+  /** Por defecto solo las disponibles y vigentes. */
+  incluirTodas?: boolean;
+};
+
+export async function listarDonaciones(
+  filtros: FiltrosDonaciones = {}
+): Promise<DonacionPublica[]> {
+  const condiciones: string[] = [];
+  const params: unknown[] = [];
+
+  if (!filtros.incluirTodas) {
+    // Una donación vencida o ya entregada solo sirve para hacer perder
+    // el viaje a alguien.
+    condiciones.push("d.estado = 'disponible'", "d.vence_en > now()");
+  }
+  if (filtros.ciudad) {
+    params.push(filtros.ciudad);
+    condiciones.push(`d.ciudad_slug = $${params.length}`);
+  }
+  if (filtros.categoria) {
+    params.push(filtros.categoria);
+    condiciones.push(`d.categoria = $${params.length}`);
+  }
+
+  const where = condiciones.length ? `WHERE ${condiciones.join(" AND ")}` : "";
+  return query<DonacionPublica>(
+    `${SELECT_DONACION} ${where} ORDER BY d.creado_en DESC LIMIT 300`,
+    params
+  );
+}
+
+export async function obtenerDonacion(
+  id: string
+): Promise<DonacionPublica | null> {
+  const filas = await query<DonacionPublica>(
+    `${SELECT_DONACION} WHERE d.id = $1`,
+    [id]
+  );
   return filas[0] ?? null;
 }
 
