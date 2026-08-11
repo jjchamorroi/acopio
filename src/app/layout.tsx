@@ -48,22 +48,23 @@ export default function RootLayout({
             <Link href="/" className="font-semibold tracking-tight">
               Red de Acopio
             </Link>
-            <nav className="ml-auto flex items-center gap-1 text-sm sm:gap-2">
+            {/* En pantallas anchas van todos los enlaces a la vista. */}
+            <nav className="ml-auto hidden items-center gap-2 text-sm sm:flex">
               <Link
                 href="/"
-                className="rounded px-2 py-1.5 transition hover:bg-white/10 sm:px-3"
+                className="rounded px-3 py-1.5 transition hover:bg-white/10"
               >
                 Mapa
               </Link>
               <Link
                 href="/donaciones"
-                className="hidden rounded px-3 py-1.5 transition hover:bg-white/10 sm:block"
+                className="rounded px-3 py-1.5 transition hover:bg-white/10"
               >
                 Donaciones
               </Link>
               <Link
                 href="/registrar"
-                className="hidden rounded px-3 py-1.5 transition hover:bg-white/10 sm:block"
+                className="rounded px-3 py-1.5 transition hover:bg-white/10"
               >
                 Registrar lugar
               </Link>
@@ -74,6 +75,47 @@ export default function RootLayout({
                 Tengo algo para donar
               </Link>
             </nav>
+
+            {/*
+              En celular, un <details> nativo en vez de un menú con estado de
+              React: funciona sin JavaScript, no agrega peso al paquete y el
+              navegador ya se encarga del teclado y del lector de pantalla.
+            */}
+            <details className="group relative ml-auto sm:hidden">
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-3 py-2 text-sm font-medium marker:content-none">
+                Menú
+                <svg
+                  viewBox="0 0 20 20"
+                  className="size-4 fill-current transition group-open:rotate-180"
+                  aria-hidden="true"
+                >
+                  <path d="M5.5 7.5 10 12l4.5-4.5z" />
+                </svg>
+              </summary>
+              <nav className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-lg bg-white text-slate-900 shadow-lg ring-1 ring-black/10">
+                <Link href="/" className="block px-4 py-3 hover:bg-slate-100">
+                  Mapa de lugares
+                </Link>
+                <Link
+                  href="/donar"
+                  className="block border-t border-slate-100 px-4 py-3 font-medium hover:bg-slate-100"
+                >
+                  Tengo algo para donar
+                </Link>
+                <Link
+                  href="/donaciones"
+                  className="block border-t border-slate-100 px-4 py-3 hover:bg-slate-100"
+                >
+                  Donaciones ofrecidas
+                </Link>
+                <Link
+                  href="/registrar"
+                  className="block border-t border-slate-100 px-4 py-3 hover:bg-slate-100"
+                >
+                  Registrar un lugar
+                </Link>
+              </nav>
+            </details>
           </div>
         </header>
 

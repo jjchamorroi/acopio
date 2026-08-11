@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 import { listarCentros } from "@/lib/consultas";
+import { invalidarCache } from "@/lib/cache";
 import { esquemaCentroNuevo } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
 import { tipoLugar } from "@/lib/tipos-lugar";
@@ -30,7 +31,16 @@ export async function GET(req: Request) {
     soloAceptaMascotas: searchParams.get("mascotas") === "1",
     incluirCerrados: searchParams.get("todos") === "1" && esAdmin(req),
   });
-  return NextResponse.json({ centros });
+  return NextResponse.json(
+    { centros },
+    {
+      // Los intermedios pueden reutilizar la respuesta unos segundos. En una
+      // emergencia el desfase es irrelevante y la diferencia de capacidad no.
+      headers: {
+        "cache-control": "public, s-maxage=20, stale-while-revalidate=60",
+      },
+    }
+  );
 }
 
 export async function POST(req: Request) {
@@ -120,6 +130,12 @@ export async function POST(req: Request) {
     }
 
     await cliente.query("COMMIT");
+
+    // Sin esto, un lugar recién registrado tardaría hasta el TTL en salir en
+    // el mapa y parecería que el registro no funcionó. Vaciar todo el caché
+    // en cada escritura es aceptable porque se lee muchísimo más de lo que se
+    // escribe.
+    invalidarCache();
 
     // El token viaja una sola vez, en esta respuesta. Después solo queda el hash.
     return NextResponse.json({ id, token }, { status: 201 });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 import { listarDonaciones, centrosCercanos } from "@/lib/consultas";
+import { invalidarCache } from "@/lib/cache";
 import { esquemaDonacionNueva } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
 import { difuminarUbicacion } from "@/lib/privacidad";
@@ -18,7 +19,14 @@ export async function GET(req: Request) {
     categoria: searchParams.get("categoria") ?? undefined,
     incluirTodas: searchParams.get("todas") === "1" && esAdmin(req),
   });
-  return NextResponse.json({ donaciones });
+  return NextResponse.json(
+    { donaciones },
+    {
+      headers: {
+        "cache-control": "public, s-maxage=20, stale-while-revalidate=60",
+      },
+    }
+  );
 }
 
 export async function POST(req: Request) {
@@ -82,6 +90,7 @@ export async function POST(req: Request) {
       ]
     );
     id = rows[0].id as string;
+    invalidarCache();
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error desconocido";
     if (msg.includes("donacion_ciudad_slug_fkey")) {

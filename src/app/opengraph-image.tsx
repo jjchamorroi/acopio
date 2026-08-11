@@ -2,7 +2,18 @@ import { ImageResponse } from "next/og";
 import { listarCentros } from "@/lib/consultas";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+
+/**
+ * Se regenera cada 5 minutos, no en cada petición.
+ *
+ * Es el endpoint más caro que tenemos —dibuja un PNG de 1200x630— y el más
+ * pedido por robots: WhatsApp descarga esta imagen cada vez que alguien pega
+ * el enlace en un chat. Medido sin caché aguantaba ~25 req/s con p95 de 11
+ * segundos, o sea que un link circulando lo volvía el primer cuello de
+ * botella. Que las cifras tengan cinco minutos de antigüedad no le importa a
+ * nadie; que la tarjeta no cargue, sí.
+ */
+export const revalidate = 300;
 export const alt = "Red de Acopio — sismo Colombia";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -91,6 +102,14 @@ export default async function Image() {
         </div>
       </div>
     ),
-    size
+    {
+      ...size,
+      // Para que los intermedios (CDN, proxy de Railway, cachés de WhatsApp)
+      // también la reutilicen y ni siquiera nos lleguen a pedir.
+      headers: {
+        "cache-control":
+          "public, max-age=300, s-maxage=300, stale-while-revalidate=600",
+      },
+    }
   );
 }

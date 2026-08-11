@@ -1,5 +1,14 @@
 import { query } from "./db";
+import { conCache } from "./cache";
 import type { CentroPublico, Ciudad, DonacionPublica } from "./tipos";
+
+/**
+ * Segundos que se reutiliza cada resultado. Solo aplica a los LISTADOS: la
+ * ficha de un lugar y el panel de su responsable van siempre contra la base,
+ * porque ahí sí importa ver el cambio que uno acaba de guardar.
+ */
+const TTL_LISTADOS = 20;
+const TTL_CIUDADES = 600; // Casi estático: cambia cuando agregamos una ciudad.
 
 /**
  * Columnas publicables de una donación.
@@ -49,9 +58,11 @@ const SELECT_CENTRO = `
 `;
 
 export async function listarCiudades(): Promise<Ciudad[]> {
-  return query<Ciudad>(
-    `SELECT slug, nombre, departamento, lat, lng, prioridad
-       FROM ciudad ORDER BY prioridad, nombre`
+  return conCache("ciudades", TTL_CIUDADES, () =>
+    query<Ciudad>(
+      `SELECT slug, nombre, departamento, lat, lng, prioridad
+         FROM ciudad ORDER BY prioridad, nombre`
+    )
   );
 }
 
@@ -69,6 +80,14 @@ export type FiltrosCentros = {
 
 export async function listarCentros(
   filtros: FiltrosCentros = {}
+): Promise<CentroPublico[]> {
+  return conCache(`centros:${JSON.stringify(filtros)}`, TTL_LISTADOS, () =>
+    listarCentrosSinCache(filtros)
+  );
+}
+
+async function listarCentrosSinCache(
+  filtros: FiltrosCentros
 ): Promise<CentroPublico[]> {
   const condiciones: string[] = [];
   const params: unknown[] = [];
@@ -128,6 +147,14 @@ export type FiltrosDonaciones = {
 
 export async function listarDonaciones(
   filtros: FiltrosDonaciones = {}
+): Promise<DonacionPublica[]> {
+  return conCache(`donaciones:${JSON.stringify(filtros)}`, TTL_LISTADOS, () =>
+    listarDonacionesSinCache(filtros)
+  );
+}
+
+async function listarDonacionesSinCache(
+  filtros: FiltrosDonaciones
 ): Promise<DonacionPublica[]> {
   const condiciones: string[] = [];
   const params: unknown[] = [];

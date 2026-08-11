@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPool, query } from "@/lib/db";
 import { obtenerCentro } from "@/lib/consultas";
+import { invalidarCache } from "@/lib/cache";
 import { esquemaActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
@@ -161,6 +162,8 @@ export async function PATCH(
   } finally {
     cliente.release();
   }
+
+  invalidarCache();
 
   const centro = await obtenerCentro(id);
   return NextResponse.json({ centro });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPool, query } from "@/lib/db";
 import { obtenerDonacion } from "@/lib/consultas";
+import { invalidarCache } from "@/lib/cache";
 import { esquemaDonacionActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
@@ -105,6 +106,8 @@ export async function PATCH(
   if (rowCount === 0) {
     return NextResponse.json({ error: "No encontrada" }, { status: 404 });
   }
+
+  invalidarCache();
 
   const donacion = await obtenerDonacion(id);
   return NextResponse.json({ donacion });
