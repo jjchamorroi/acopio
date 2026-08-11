@@ -146,15 +146,23 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
 ### Cambios en el esquema
 
-`/docker-entrypoint-initdb.d/` solo corre la primera vez que se crea el volumen.
-Si tocás `db/schema.sql` después, aplicalo a mano:
+**No hay que hacer nada.** El contenedor aplica `db/schema.sql` en cada arranque
+(`scripts/arrancar.mjs`), antes de levantar Next. Vale igual en local, en
+Railway y en Dokploy.
 
-```bash
-docker compose exec -T db psql -U acopio -d acopio -f /sql/schema.sql
-```
+Es seguro porque el archivo es idempotente —`CREATE TABLE IF NOT EXISTS`,
+`ADD COLUMN IF NOT EXISTS`, `ON CONFLICT DO NOTHING`—, así que correrlo cien
+veces da lo mismo que correrlo una.
 
-Es idempotente (`CREATE TABLE IF NOT EXISTS`, `ON CONFLICT DO NOTHING`), así que
-repetirlo no rompe nada.
+Existe porque desplegar código nuevo contra el esquema viejo tira abajo la
+aplicación entera (`column c.tipo does not exist`) y migrar dependía de que
+alguien se acordara. Un paso manual que hay que recordar en cada despliegue es
+un incidente esperando su turno.
+
+Si la migración falla, el servidor **arranca igual**: un contenedor que no
+levanta no muestra logs ni responde `/api/salud`, y te deja a ciegas justo
+cuando necesitás diagnosticar. En ese caso el healthcheck reporta
+`"esquema": "pendiente"` y el error queda escrito en los logs.
 
 ## Dónde alojarlo
 

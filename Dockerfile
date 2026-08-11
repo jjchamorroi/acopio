@@ -58,4 +58,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 
 USER nextjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+# No arranca server.js directo: primero aplica el esquema. Ver scripts/arrancar.mjs.
+CMD ["node", "scripts/arrancar.mjs"]
