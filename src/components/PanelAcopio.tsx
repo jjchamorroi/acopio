@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIAS, NIVELES, type NivelId } from "@/lib/categorias";
+import { TIPOS_LUGAR, tipoLugar, type TipoLugarId } from "@/lib/tipos-lugar";
 import type { CentroPublico } from "@/lib/tipos";
 
 const input =
@@ -42,6 +43,7 @@ export default function PanelAcopio({
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [historial, setHistorial] = useState<Cambio[]>([]);
   const [atiende, setAtiende] = useState("");
+  const [tipo, setTipo] = useState<TipoLugarId>("acopio");
 
   useEffect(() => {
     let vivo = true;
@@ -57,6 +59,7 @@ export default function PanelAcopio({
         setNotas(centro.notas ?? "");
         setAceptaMascotas(centro.acepta_mascotas);
         setAtiende(centro.atiende ?? "");
+        setTipo(centro.tipo);
         setNiveles(
           Object.fromEntries(
             centro.necesidades.map((n) => [n.categoria, n.nivel])
@@ -135,6 +138,7 @@ export default function PanelAcopio({
       setHorario(datos.centro.horario ?? "");
       setNotas(datos.centro.notas ?? "");
       setAceptaMascotas(datos.centro.acepta_mascotas);
+      setTipo(datos.centro.tipo);
       setNiveles(
         Object.fromEntries(
           datos.centro.necesidades.map((n: { categoria: string; nivel: string }) => [
@@ -189,6 +193,7 @@ export default function PanelAcopio({
       }));
     guardar(
       {
+        tipo,
         telefono,
         horario,
         notas,
@@ -246,6 +251,38 @@ export default function PanelAcopio({
         </p>
       )}
 
+      <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">Tipo de lugar</h2>
+          <p className="mt-0.5 text-xs text-slate-600">
+            Si quedó mal clasificado, corregilo acá. Cambiarlo cambia en qué
+            listado aparece: un acopio se muestra a quien quiere donar, un
+            albergue también a quien busca dónde dormir.
+          </p>
+        </div>
+
+        <select
+          className={input}
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value as TipoLugarId)}
+        >
+          {TIPOS_LUGAR.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.emoji} {t.label} — {t.ayuda}
+            </option>
+          ))}
+        </select>
+
+        {tipo !== centro.tipo && (
+          <p className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            Vas a cambiarlo de{" "}
+            <strong>{tipoLugar(centro.tipo)?.corto ?? centro.tipo}</strong> a{" "}
+            <strong>{tipoLugar(tipo)?.corto ?? tipo}</strong>. Se aplica al
+            guardar, queda en el historial y se puede revertir.
+          </p>
+        )}
+      </section>
+
       <section className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
         <h2 className="text-sm font-semibold text-slate-900">Datos de contacto</h2>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -273,7 +310,7 @@ export default function PanelAcopio({
             />
           </label>
         </div>
-        {(centro.tipo === "institucion" || centro.tipo === "albergue") && (
+        {(tipo === "institucion" || tipo === "albergue") && (
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
               ¿A quién atiende?
@@ -302,7 +339,7 @@ export default function PanelAcopio({
         </label>
       </section>
 
-      {centro.tipo === "albergue" && (
+      {tipo === "albergue" && (
         <section className="rounded-lg border border-emerald-300 bg-emerald-50 p-4">
           <h2 className="text-sm font-semibold text-emerald-900">
             🐾 ¿Reciben personas con mascotas?

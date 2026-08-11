@@ -133,6 +133,7 @@ export const esquemaDonacionActualizacion = z.object({
 });
 
 export const esquemaActualizacion = z.object({
+  tipo: z.enum(TIPO_LUGAR_IDS as [string, ...string[]]).optional(),
   telefono: z
     .string()
     .trim()

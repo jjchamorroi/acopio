@@ -6,6 +6,7 @@ import { esquemaActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
 import { instantanea, describirCambio } from "@/lib/cambios";
+import { tipoLugar } from "@/lib/tipos-lugar";
 
 export const dynamic = "force-dynamic";
 
@@ -110,6 +111,25 @@ export async function PATCH(
 
     const campos: string[] = [];
     const valores: unknown[] = [];
+
+    // Cambiar el tipo cambia lo que el lugar HACE. Si quien edita no dijo
+    // explícitamente si recibe o entrega, se toman los valores habituales del
+    // tipo nuevo: si no, un acopio reclasificado como albergue seguiría sin
+    // aparecer para quien busca dónde dormir.
+    if (d.tipo !== undefined && d.tipo !== centroAntes.tipo) {
+      const porDefecto = tipoLugar(d.tipo);
+      valores.push(d.tipo);
+      campos.push(`tipo = $${valores.length}`);
+
+      if (d.recibe_donaciones === undefined && porDefecto) {
+        valores.push(porDefecto.recibe);
+        campos.push(`recibe_donaciones = $${valores.length}`);
+      }
+      if (d.entrega_ayuda === undefined && porDefecto) {
+        valores.push(porDefecto.entrega);
+        campos.push(`entrega_ayuda = $${valores.length}`);
+      }
+    }
 
     // Texto: la cadena vacía del formulario se guarda como NULL.
     for (const campo of ["telefono", "horario", "notas", "estado", "atiende"] as const) {

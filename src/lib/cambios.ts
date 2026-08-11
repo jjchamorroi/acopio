@@ -1,4 +1,5 @@
 import { categoria as buscarCategoria, NIVELES } from "./categorias";
+import { tipoLugar } from "./tipos-lugar";
 import type { CentroPublico } from "./tipos";
 
 /**
@@ -6,6 +7,7 @@ import type { CentroPublico } from "./tipos";
  * reescribe al revertir.
  */
 export type Instantanea = {
+  tipo: string;
   telefono: string | null;
   horario: string | null;
   notas: string | null;
@@ -27,6 +29,7 @@ export type CambioRegistrado = {
 
 export function instantanea(centro: CentroPublico): Instantanea {
   return {
+    tipo: centro.tipo,
     telefono: centro.telefono,
     horario: centro.horario,
     notas: centro.notas,
@@ -64,6 +67,11 @@ export function describirCambio(
 ): string {
   const partes: string[] = [];
 
+  if (antes.tipo !== despues.tipo) {
+    partes.push(
+      `tipo: ${tipoLugar(antes.tipo)?.corto ?? antes.tipo} → ${tipoLugar(despues.tipo)?.corto ?? despues.tipo}`
+    );
+  }
   if (antes.estado !== despues.estado) {
     partes.push(`estado: ${antes.estado} → ${despues.estado}`);
   }

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Ícono de la pestaña: pin de mapa con un corazón calado.
+
+    Pensado para 16 px, que es donde de verdad se ve: silueta gruesa, un solo
+    color plano y el corazón recortado en negativo. Nada de degradados ni
+    contornos finos — a ese tamaño se convierten en un borrón gris.
+
+    El corazón está calado (fill-rule evenodd sobre un único trazado) y no
+    pintado encima: así el hueco toma el color de la pestaña y el ícono se ve
+    bien tanto en tema claro como oscuro.
+  -->
+  <path
+    fill="#dc2626"
+    fill-rule="evenodd"
+    d="M16 1.5c-6.075 0-11 4.925-11 11 0 7.7 9.35 17.15 10.35 18.14a.92.92 0 0 0 1.3 0C17.65 29.65 27 20.2 27 12.5c0-6.075-4.925-11-11-11Zm0 5.4c1.02-1.06 2.2-1.62 3.42-1.62 2.36 0 4.28 1.94 4.28 4.34 0 3.2-2.62 5.9-6.6 9.5l-1.1 1-1.1-1c-3.98-3.6-6.6-6.3-6.6-9.5 0-2.4 1.92-4.34 4.28-4.34 1.22 0 2.4.56 3.42 1.62Z"
+  />
+</svg>
