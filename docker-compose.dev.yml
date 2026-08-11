@@ -1,0 +1,26 @@
+# Override para desarrollar dentro de Docker con recarga en caliente.
+#
+#   npm run docker:dev
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#
+# Editás los archivos en Windows y el contenedor recompila solo.
+services:
+  web:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: development
+      # En Windows, Docker no propaga los eventos del sistema de archivos al
+      # contenedor Linux. Sin esto, Next no se entera de que guardaste.
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/app
+      # Volúmenes anónimos: evitan que la carpeta de Windows pise las
+      # dependencias y el caché de build compilados dentro de Linux.
+      - /app/node_modules
+      - /app/.next
+    # `next dev` tarda en levantar y el healthcheck de producción lo marcaría
+    # como no saludable durante el arranque.
+    healthcheck:
+      disable: true

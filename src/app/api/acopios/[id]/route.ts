@@ -1,0 +1,135 @@
+import { NextResponse } from "next/server";
+import { getPool, query } from "@/lib/db";
+import { obtenerCentro } from "@/lib/consultas";
+import { esquemaActualizacion } from "@/lib/tipos";
+import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
+
+export const dynamic = "force-dynamic";
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: "Id inválido" }, { status: 400 });
+  }
+  const centro = await obtenerCentro(id);
+  if (!centro) {
+    return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+  }
+  return NextResponse.json({ centro });
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: "Id inválido" }, { status: 400 });
+  }
+
+  const admin = esAdmin(req);
+
+  // Autorización: o es el admin, o trae el token que se le entregó al acopio.
+  if (!admin) {
+    const tokenRecibido = req.headers.get("x-acopio-token") ?? "";
+    if (!tokenRecibido) {
+      return NextResponse.json({ error: "Falta el token" }, { status: 401 });
+    }
+    const filas = await query<{ admin_token_hash: string }>(
+      "SELECT admin_token_hash FROM centro_acopio WHERE id = $1",
+      [id]
+    );
+    if (filas.length === 0) {
+      return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+    }
+    if (!tokensCoinciden(hashToken(tokenRecibido), filas[0].admin_token_hash)) {
+      return NextResponse.json({ error: "Token inválido" }, { status: 403 });
+    }
+  }
+
+  let cuerpo: unknown;
+  try {
+    cuerpo = await req.json();
+  } catch {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+
+  const parsed = esquemaActualizacion.safeParse(cuerpo);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Datos inválidos", detalles: parsed.error.flatten() },
+      { status: 400 }
+    );
+  }
+  const d = parsed.data;
+
+  // Solo el admin puede marcar un acopio como verificado: si el propio
+  // responsable pudiera hacerlo, el sello de verificación no valdría nada.
+  if (d.estado === "verificado" && !admin) {
+    return NextResponse.json(
+      { error: "Solo un administrador puede verificar un acopio" },
+      { status: 403 }
+    );
+  }
+
+  const cliente = await getPool().connect();
+  try {
+    await cliente.query("BEGIN");
+
+    const campos: string[] = [];
+    const valores: unknown[] = [];
+    for (const campo of ["telefono", "horario", "notas", "estado"] as const) {
+      if (d[campo] !== undefined) {
+        valores.push(d[campo] || null);
+        campos.push(`${campo} = $${valores.length}`);
+      }
+    }
+    if (campos.length > 0) {
+      valores.push(id);
+      const { rowCount } = await cliente.query(
+        `UPDATE centro_acopio SET ${campos.join(", ")}, actualizado_en = now()
+          WHERE id = $${valores.length}`,
+        valores
+      );
+      if (rowCount === 0) {
+        await cliente.query("ROLLBACK");
+        return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+      }
+    }
+
+    // Las necesidades se reemplazan completas: es lo que espera el panel,
+    // donde el responsable ve la lista entera y la deja como está hoy.
+    if (d.necesidades) {
+      await cliente.query("DELETE FROM necesidad WHERE centro_id = $1", [id]);
+      for (const n of d.necesidades) {
+        await cliente.query(
+          `INSERT INTO necesidad (centro_id, categoria, nivel, detalle)
+           VALUES ($1,$2,$3,$4)
+           ON CONFLICT (centro_id, categoria)
+           DO UPDATE SET nivel = EXCLUDED.nivel, detalle = EXCLUDED.detalle`,
+          [id, n.categoria, n.nivel, n.detalle || null]
+        );
+      }
+      await cliente.query(
+        "UPDATE centro_acopio SET actualizado_en = now() WHERE id = $1",
+        [id]
+      );
+    }
+
+    await cliente.query("COMMIT");
+  } catch (err) {
+    await cliente.query("ROLLBACK");
+    console.error("Error actualizando acopio:", err);
+    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+  } finally {
+    cliente.release();
+  }
+
+  const centro = await obtenerCentro(id);
+  return NextResponse.json({ centro });
+}

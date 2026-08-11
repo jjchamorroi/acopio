@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --color-urgente: #dc2626;
+  --color-necesita: #f59e0b;
+  --color-sobra: #0891b2;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* Leaflet pinta sus tiles por encima de todo si no se le baja el z-index,
+   y termina tapando los menús y el encabezado fijo. */
+.leaflet-container {
+  z-index: 0;
+  font: inherit;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+  min-width: 200px;
+}

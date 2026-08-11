@@ -1,0 +1,8 @@
+# Estos archivos los consume Linux dentro de los contenedores. Si Git los
+# entrega con finales de línea CRLF de Windows, psql y el shell del contenedor
+# fallan con errores que no dicen nada útil.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary

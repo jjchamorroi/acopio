@@ -1,0 +1,41 @@
+{
+  "name": "red-de-acopio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mapa colaborativo de centros de acopio para la emergencia por el sismo del 10 de agosto de 2026 en Colombia.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:setup": "node --env-file-if-exists=.env scripts/run-sql.mjs db/schema.sql",
+    "db:demo": "node --env-file-if-exists=.env scripts/run-sql.mjs db/demo.sql",
+    "db:demo:borrar": "node --env-file-if-exists=.env scripts/run-sql.mjs db/demo-borrar.sql",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f web",
+    "docker:demo": "docker compose exec -T db psql -U acopio -d acopio -f /sql/demo.sql",
+    "docker:demo:borrar": "docker compose exec -T db psql -U acopio -d acopio -f /sql/demo-borrar.sql",
+    "docker:psql": "docker compose exec db psql -U acopio -d acopio",
+    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "next": "^15.5.4",
+    "pg": "^8.13.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-leaflet": "^5.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/leaflet": "^1.9.14",
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}
