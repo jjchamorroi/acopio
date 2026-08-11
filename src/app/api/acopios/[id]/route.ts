@@ -3,8 +3,15 @@ import { getPool, query } from "@/lib/db";
 import { obtenerCentro } from "@/lib/consultas";
 import { esquemaActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
+import { consumirLimite, respuesta429 } from "@/lib/limite";
 
 export const dynamic = "force-dynamic";
+
+// Un acopio real actualiza sus necesidades varias veces al día, no sesenta
+// veces por hora. Este techo no le estorba a nadie legítimo y sí le corta las
+// piernas a quien intente adivinar tokens a fuerza bruta.
+const MAX_EDICIONES_POR_HORA = 60;
+const VENTANA_SEGUNDOS = 3600;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -36,6 +43,16 @@ export async function PATCH(
 
   // Autorización: o es el admin, o trae el token que se le entregó al acopio.
   if (!admin) {
+    const limite = await consumirLimite(
+      req,
+      "editar-acopio",
+      MAX_EDICIONES_POR_HORA,
+      VENTANA_SEGUNDOS
+    );
+    if (!limite.permitido) {
+      return respuesta429(limite, "Demasiadas ediciones desde esta conexión");
+    }
+
     const tokenRecibido = req.headers.get("x-acopio-token") ?? "";
     if (!tokenRecibido) {
       return NextResponse.json({ error: "Falta el token" }, { status: 401 });

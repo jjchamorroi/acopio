@@ -77,6 +77,27 @@ CREATE TABLE IF NOT EXISTS necesidad (
 CREATE INDEX IF NOT EXISTS necesidad_categoria_idx ON necesidad (categoria, nivel);
 
 -- ---------------------------------------------------------------------------
+-- Control de abuso: cuántas peticiones lleva cada quien en la ventana actual.
+--
+-- Vive en Postgres y no en memoria porque el contador tiene que sobrevivir a
+-- los reinicios y a los despliegues: si se borra en cada deploy, basta con
+-- esperar un redeploy para volver a tener cupo. Tampoco usamos Redis: una
+-- pieza más de infraestructura para llevar tres columnas no se justifica.
+--
+-- `clave` NO guarda la IP sino su hash. El objetivo es contar peticiones, no
+-- saber quién es la gente, y en una aplicación de emergencia conviene no
+-- acumular datos que nadie necesita (Ley 1581 de 2012, habeas data).
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS limite_peticion (
+  clave          text PRIMARY KEY,
+  ventana_inicio timestamptz NOT NULL DEFAULT now(),
+  conteo         int NOT NULL DEFAULT 1
+);
+
+CREATE INDEX IF NOT EXISTS limite_peticion_ventana_idx
+  ON limite_peticion (ventana_inicio);
+
+-- ---------------------------------------------------------------------------
 -- Ciudades afectadas por el sismo del 10/08/2026 (coordenadas de cabecera).
 -- ---------------------------------------------------------------------------
 INSERT INTO ciudad (slug, nombre, departamento, lat, lng, prioridad) VALUES

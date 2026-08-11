@@ -77,7 +77,12 @@ export default function PanelAcopio({
         body: JSON.stringify(cambios),
       });
       const datos = await res.json();
-      if (!res.ok) throw new Error(datos.error ?? "No se pudo guardar");
+      if (!res.ok) {
+        throw new Error(
+          [datos.error, datos.detalle].filter(Boolean).join(". ") ||
+            "No se pudo guardar"
+        );
+      }
       setCentro(datos.centro);
       setGuardado(mensaje);
     } catch (err) {

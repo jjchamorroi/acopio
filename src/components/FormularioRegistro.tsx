@@ -78,7 +78,14 @@ export default function FormularioRegistro({ ciudades }: { ciudades: Ciudad[] })
         }),
       });
       const datos = await res.json();
-      if (!res.ok) throw new Error(datos.error ?? "No se pudo registrar");
+      if (!res.ok) {
+        // El 429 trae un `detalle` con cuánto hay que esperar; sin él el
+        // mensaje quedaría en un "demasiadas peticiones" que no dice qué hacer.
+        throw new Error(
+          [datos.error, datos.detalle].filter(Boolean).join(". ") ||
+            "No se pudo registrar"
+        );
+      }
       setResultado(datos);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error inesperado");

@@ -3,8 +3,20 @@ import { getPool } from "@/lib/db";
 import { listarCentros } from "@/lib/consultas";
 import { esquemaCentroNuevo } from "@/lib/tipos";
 import { generarToken, hashToken, esAdmin } from "@/lib/tokens";
+import {
+  consumirLimite,
+  limpiarLimitesVencidos,
+  respuesta429,
+} from "@/lib/limite";
 
 export const dynamic = "force-dynamic";
+
+// Cinco acopios por hora desde la misma conexión. Un caso legítimo —alguien de
+// una alcaldía cargando varios puntos— cabe de sobra; un script que quiera
+// llenar el mapa de basura, no. Si a alguien real se le queda corto, que nos
+// escriba: es preferible eso a un mapa contaminado en plena emergencia.
+const MAX_REGISTROS_POR_HORA = 5;
+const VENTANA_SEGUNDOS = 3600;
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -17,6 +29,26 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // El límite se consume antes de mirar el cuerpo: si no, un atacante puede
+  // hacernos parsear y validar miles de peticiones gratis.
+  if (!esAdmin(req)) {
+    const limite = await consumirLimite(
+      req,
+      "crear-acopio",
+      MAX_REGISTROS_POR_HORA,
+      VENTANA_SEGUNDOS
+    );
+    if (!limite.permitido) {
+      return respuesta429(
+        limite,
+        "Demasiados acopios registrados desde esta conexión"
+      );
+    }
+  }
+
+  // Limpieza oportunista de contadores vencidos, sin bloquear la respuesta.
+  if (Math.random() < 0.02) void limpiarLimitesVencidos();
+
   let cuerpo: unknown;
   try {
     cuerpo = await req.json();
