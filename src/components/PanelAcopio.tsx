@@ -44,6 +44,7 @@ export default function PanelAcopio({
   const [historial, setHistorial] = useState<Cambio[]>([]);
   const [atiende, setAtiende] = useState("");
   const [tipo, setTipo] = useState<TipoLugarId>("acopio");
+  const [tiposSangre, setTiposSangre] = useState("");
 
   useEffect(() => {
     let vivo = true;
@@ -60,6 +61,7 @@ export default function PanelAcopio({
         setAceptaMascotas(centro.acepta_mascotas);
         setAtiende(centro.atiende ?? "");
         setTipo(centro.tipo);
+        setTiposSangre(centro.tipos_sangre ?? "");
         setNiveles(
           Object.fromEntries(
             centro.necesidades.map((n) => [n.categoria, n.nivel])
@@ -194,6 +196,7 @@ export default function PanelAcopio({
     guardar(
       {
         tipo,
+        tipos_sangre: tipo === "sangre" ? tiposSangre : null,
         telefono,
         horario,
         notas,
@@ -338,6 +341,27 @@ export default function PanelAcopio({
           />
         </label>
       </section>
+
+      {tipo === "sangre" && (
+        <section className="rounded-lg border border-rose-300 bg-rose-50 p-4">
+          <label className="block">
+            <span className="block text-sm font-semibold text-rose-900">
+              🩸 ¿Qué tipos de sangre necesitan ahora?
+            </span>
+            <p className="mt-0.5 mb-2 text-xs text-rose-800">
+              Actualizalo cuando cambie. Que diga &quot;urgente O negativo&quot;
+              y ya no lo sea manda gente a donar para nada.
+            </p>
+            <input
+              className={input}
+              maxLength={120}
+              value={tiposSangre}
+              onChange={(e) => setTiposSangre(e.target.value)}
+              placeholder="O−, O+ · todos los tipos"
+            />
+          </label>
+        </section>
+      )}
 
       {tipo === "albergue" && (
         <section className="rounded-lg border border-emerald-300 bg-emerald-50 p-4">

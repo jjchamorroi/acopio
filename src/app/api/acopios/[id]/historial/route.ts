@@ -100,8 +100,9 @@ export async function POST(
       `UPDATE centro_acopio
           SET telefono = $1, horario = $2, notas = $3, estado = $4,
               recibe_donaciones = $5, entrega_ayuda = $6, acepta_mascotas = $7,
-              atiende = $8, tipo = COALESCE($9, tipo), actualizado_en = now()
-        WHERE id = $10`,
+              atiende = $8, tipo = COALESCE($9, tipo), tipos_sangre = $10,
+              actualizado_en = now()
+        WHERE id = $11`,
       [
         objetivo.telefono,
         objetivo.horario,
@@ -112,6 +113,7 @@ export async function POST(
         objetivo.acepta_mascotas,
         objetivo.atiende ?? null,
         objetivo.tipo ?? null,
+        objetivo.tipos_sangre ?? null,
         id,
       ]
     );

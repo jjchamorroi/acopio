@@ -1,10 +1,44 @@
 "use client";
 
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Popup,
+  useMap,
+} from "react-leaflet";
 import Link from "next/link";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { tipoLugar } from "@/lib/tipos-lugar";
 import type { CentroPublico } from "@/lib/tipos";
+
+/**
+ * Mueve la vista cuando cambian el centro o el zoom.
+ *
+ * MapContainer solo mira `center` y `zoom` al montarse: son props de
+ * inicialización, no reactivas. Sin esto, elegir una ciudad en el filtro
+ * recargaba los puntos pero dejaba el mapa donde estaba, y el usuario tenía
+ * que buscar a mano dónde habían aparecido.
+ */
+function Recentrar({
+  centro,
+  zoom,
+}: {
+  centro: [number, number];
+  zoom: number;
+}) {
+  const map = useMap();
+  const [lat, lng] = centro;
+
+  useEffect(() => {
+    // flyTo y no setView: el desplazamiento animado deja claro que el mapa se
+    // movió a otro sitio, en vez de dar un salto que desorienta.
+    map.flyTo([lat, lng], zoom, { duration: 0.8 });
+  }, [map, lat, lng, zoom]);
+
+  return null;
+}
 
 export default function MapaAcopios({
   centros,
@@ -27,6 +61,8 @@ export default function MapaAcopios({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         maxZoom={19}
       />
+
+      <Recentrar centro={centro} zoom={zoom} />
 
       {centros.map((c) => {
         const tipo = tipoLugar(c.tipo);

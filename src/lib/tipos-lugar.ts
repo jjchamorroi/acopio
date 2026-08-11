@@ -47,6 +47,19 @@ export const TIPOS_LUGAR = [
     color: "#ea580c",
   },
   {
+    // No es un acopio: acá no se deja nada, se va uno a donar. Por eso vive
+    // como tipo de lugar y no como categoría donable — la sangre no se puede
+    // dejar en una bodega ni la puede llevar un voluntario.
+    id: "sangre",
+    label: "Punto de donación de sangre",
+    corto: "Sangre",
+    emoji: "🩸",
+    ayuda: "Hemocentro o jornada de donación de sangre",
+    recibe: true,
+    entrega: false,
+    color: "#9f1239",
+  },
+  {
     // La diferencia con un acopio no es cosmética: un acopio recibe para
     // repartir, una institución necesita las cosas PARA SÍ MISMA. Al donante
     // le importa saber si lo suyo va a una bodega que redistribuye o

@@ -1,6 +1,13 @@
 "use client";
 
-import { MapContainer, TileLayer, Circle, Popup } from "react-leaflet";
+import { useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Circle,
+  Popup,
+  useMap,
+} from "react-leaflet";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { RADIO_DIFUSO_M } from "@/lib/constantes";
 import type { DonacionPublica } from "@/lib/tipos";
@@ -11,6 +18,22 @@ import type { DonacionPublica } from "@/lib/tipos";
  * círculo comunica de un vistazo "está en algún lugar de acá adentro", que es
  * la verdad.
  */
+/** Ver la nota en MapaAcopios: center y zoom no son props reactivas. */
+function Recentrar({
+  centro,
+  zoom,
+}: {
+  centro: [number, number];
+  zoom: number;
+}) {
+  const map = useMap();
+  const [lat, lng] = centro;
+  useEffect(() => {
+    map.flyTo([lat, lng], zoom, { duration: 0.8 });
+  }, [map, lat, lng, zoom]);
+  return null;
+}
+
 export default function MapaDonaciones({
   donaciones,
   centro,
@@ -32,6 +55,8 @@ export default function MapaDonaciones({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         maxZoom={19}
       />
+
+      <Recentrar centro={centro} zoom={zoom} />
 
       {donaciones.map((d) => {
         const cat = buscarCategoria(d.categoria);

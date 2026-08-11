@@ -26,7 +26,15 @@ export type CentroPublico = {
   departamento: string;
   lat: number;
   lng: number;
-  tipo: "acopio" | "recoleccion" | "albergue" | "animales" | "institucion";
+  tipo:
+    | "acopio"
+    | "recoleccion"
+    | "albergue"
+    | "animales"
+    | "institucion"
+    | "sangre";
+  /** Tipos de sangre que piden: "O−, O+" o "todos los tipos". */
+  tipos_sangre: string | null;
   /** A quién atiende: "80 adultos mayores", "12 familias". */
   atiende: string | null;
   recibe_donaciones: boolean;
@@ -60,6 +68,7 @@ export const esquemaCentroNuevo = z.object({
   entrega_ayuda: z.boolean().optional(),
   acepta_mascotas: z.boolean().nullable().optional(),
   atiende: z.string().trim().max(120).optional().nullable(),
+  tipos_sangre: z.string().trim().max(120).optional().nullable(),
   lat: z.number().gte(-4.3).lte(13.5), // caja aproximada de Colombia
   lng: z.number().gte(-82).lte(-66.8),
   responsable: z.string().trim().max(120).optional().nullable(),
@@ -148,5 +157,6 @@ export const esquemaActualizacion = z.object({
   entrega_ayuda: z.boolean().optional(),
   acepta_mascotas: z.boolean().nullable().optional(),
   atiende: z.string().trim().max(120).optional().nullable(),
+  tipos_sangre: z.string().trim().max(120).optional().nullable(),
   necesidades: z.array(esquemaNecesidad).max(20).optional(),
 });

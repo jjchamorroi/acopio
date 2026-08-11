@@ -114,6 +114,12 @@ export default function TarjetaCentro({
         </p>
       )}
 
+      {centro.tipo === "sangre" && centro.tipos_sangre && (
+        <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-sm font-medium text-rose-900 ring-1 ring-inset ring-rose-200">
+          <span aria-hidden>🩸</span> Piden: {centro.tipos_sangre}
+        </p>
+      )}
+
       {/* En los albergues, lo de mascotas va primero: es lo que decide si
           alguien evacúa o se queda en una casa que se puede caer. */}
       {esAlojamiento && (

@@ -97,15 +97,21 @@ ALTER TABLE centro_acopio
 ALTER TABLE centro_acopio
   ADD COLUMN IF NOT EXISTS atiende text;
 
--- Constraint viejo: si existe con la lista de tipos anterior, se reemplaza
--- para admitir 'institucion'. Sin esto, una base ya desplegada rechazaría el
--- tipo nuevo aunque el código lo soporte.
+-- Qué tipos de sangre piden. Texto libre y no una lista cerrada: un
+-- hemocentro dice "urgente O negativo" y otro "todos los tipos", y forzarlos
+-- a un catálogo haría perder ese matiz justo donde importa.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS tipos_sangre text;
+
+-- El constraint se recrea cuando aparece un tipo nuevo. Sin esto, una base ya
+-- desplegada rechazaría el tipo aunque el código lo soporte. Se compara contra
+-- el último añadido.
 DO $$
 BEGIN
   IF EXISTS (
     SELECT 1 FROM pg_constraint
      WHERE conname = 'centro_acopio_tipo_check'
-       AND pg_get_constraintdef(oid) NOT LIKE '%institucion%'
+       AND pg_get_constraintdef(oid) NOT LIKE '%sangre%'
   ) THEN
     ALTER TABLE centro_acopio DROP CONSTRAINT centro_acopio_tipo_check;
   END IF;
@@ -118,7 +124,7 @@ BEGIN
   ) THEN
     ALTER TABLE centro_acopio ADD CONSTRAINT centro_acopio_tipo_check
       CHECK (tipo IN ('acopio', 'recoleccion', 'albergue', 'animales',
-                      'institucion'));
+                      'institucion', 'sangre'));
   END IF;
 END $$;
 

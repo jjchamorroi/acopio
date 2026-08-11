@@ -113,6 +113,13 @@ export default async function DetalleAcopio({
         )}
       </header>
 
+      {centro.tipo === "sangre" && (
+        <p className="mt-4 rounded-md border border-rose-300 bg-rose-50 px-4 py-3 text-rose-900">
+          <strong>🩸 Tipos de sangre que necesitan: </strong>
+          {centro.tipos_sangre ?? "no lo informaron — llamá para preguntar"}
+        </p>
+      )}
+
       {centro.tipo === "albergue" && (
         <p
           className={`mt-4 rounded-md border px-4 py-3 text-sm ${

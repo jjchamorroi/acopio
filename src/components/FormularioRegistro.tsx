@@ -22,6 +22,7 @@ export default function FormularioRegistro({
 }) {
   const [tipo, setTipo] = useState<TipoLugarId>("acopio");
   const [atiende, setAtiende] = useState("");
+  const [tiposSangre, setTiposSangre] = useState("");
   const [aceptaMascotas, setAceptaMascotas] = useState<boolean | null>(null);
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
@@ -69,6 +70,7 @@ export default function FormularioRegistro({
         body: JSON.stringify({
           tipo,
           atiende: atiende || null,
+          tipos_sangre: tipo === "sangre" ? tiposSangre || null : null,
           // Solo tiene sentido informarlo donde duerme gente. En los demás
           // tipos va null para no llenar la base de datos irrelevantes.
           acepta_mascotas: tipo === "albergue" ? aceptaMascotas : null,
@@ -220,6 +222,28 @@ export default function FormularioRegistro({
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {tipo === "sangre" && (
+          <div className="rounded-lg border border-rose-300 bg-rose-50 p-3">
+            <label className="block">
+              <span className="block text-sm font-medium text-rose-900">
+                🩸 ¿Qué tipos de sangre necesitan?
+              </span>
+              <p className="mt-0.5 mb-2 text-xs text-rose-800">
+                Escribilo como lo dicen ellos: &quot;urgente O negativo&quot;,
+                &quot;todos los tipos&quot;. Es lo primero que mira quien está
+                decidiendo si vale la pena ir.
+              </p>
+              <input
+                className={input}
+                maxLength={120}
+                value={tiposSangre}
+                onChange={(e) => setTiposSangre(e.target.value)}
+                placeholder="O−, O+ · todos los tipos"
+              />
+            </label>
           </div>
         )}
 

@@ -16,6 +16,7 @@ export type Instantanea = {
   entrega_ayuda: boolean;
   acepta_mascotas: boolean | null;
   atiende: string | null;
+  tipos_sangre: string | null;
   necesidades: { categoria: string; nivel: string; detalle: string | null }[];
 };
 
@@ -38,6 +39,7 @@ export function instantanea(centro: CentroPublico): Instantanea {
     entrega_ayuda: centro.entrega_ayuda,
     acepta_mascotas: centro.acepta_mascotas,
     atiende: centro.atiende,
+    tipos_sangre: centro.tipos_sangre,
     necesidades: centro.necesidades
       .map((n) => ({
         categoria: n.categoria,
@@ -83,6 +85,11 @@ export function describirCambio(
   }
   if (antes.atiende !== despues.atiende) {
     partes.push(`atiende: ${antes.atiende ?? "sin especificar"} → ${despues.atiende ?? "sin especificar"}`);
+  }
+  if (antes.tipos_sangre !== despues.tipos_sangre) {
+    partes.push(
+      `tipos de sangre: ${antes.tipos_sangre ?? "sin especificar"} → ${despues.tipos_sangre ?? "sin especificar"}`
+    );
   }
   if (antes.notas !== despues.notas) {
     partes.push("notas modificadas");
