@@ -5,6 +5,7 @@ import { invalidarCache } from "@/lib/cache";
 import { esquemaConvocatoriaActualizacion } from "@/lib/tipos";
 
 import { autorizarConvocatoria } from "@/lib/autorizacion";
+import { esAdmin } from "@/lib/tokens";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,63 @@ export async function GET(
     return NextResponse.json({ error: "No encontrada" }, { status: 404 });
   }
   return NextResponse.json({ convocatoria });
+}
+
+/**
+ * Borrado definitivo. SOLO el equipo.
+ *
+ * Si ya hay gente apuntada exige confirmación explícita: borrar arrastra sus
+ * inscripciones y quien organiza pierde los teléfonos para avisarles que no
+ * vayan. Cancelar es casi siempre lo correcto — la convocatoria queda
+ * marcada como cancelada y la lista de contactos sobrevive.
+ */
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: "Id inválido" }, { status: 400 });
+  }
+
+  if (!esAdmin(req)) {
+    return NextResponse.json(
+      { error: "Solo el equipo puede eliminar una convocatoria" },
+      { status: 403 }
+    );
+  }
+
+  const forzar = new URL(req.url).searchParams.get("forzar") === "1";
+
+  const { rows } = await getPool().query(
+    `SELECT count(*)::int AS n FROM inscripcion
+      WHERE convocatoria_id = $1 AND estado = 'confirmada'`,
+    [id]
+  );
+  const inscritos = rows[0]?.n ?? 0;
+
+  if (inscritos > 0 && !forzar) {
+    return NextResponse.json(
+      {
+        error: `Hay ${inscritos} ${inscritos === 1 ? "persona apuntada" : "personas apuntadas"}`,
+        detalle:
+          "Si la borrás perdés sus teléfonos y no vas a poder avisarles que no vayan. Cancelarla es casi siempre lo correcto.",
+        inscritos,
+      },
+      { status: 409 }
+    );
+  }
+
+  const { rowCount } = await getPool().query(
+    "DELETE FROM convocatoria WHERE id = $1",
+    [id]
+  );
+  if (rowCount === 0) {
+    return NextResponse.json({ error: "No encontrada" }, { status: 404 });
+  }
+
+  invalidarCache();
+  return NextResponse.json({ eliminado: true });
 }
 
 export async function PATCH(

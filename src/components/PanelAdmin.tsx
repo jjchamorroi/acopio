@@ -64,6 +64,75 @@ export default function PanelAdmin() {
     }
   }, [cargar]);
 
+  /**
+   * Borrado definitivo. Se pide escribir ELIMINAR y no un simple "aceptar":
+   * cerrar y eliminar están a dos botones de distancia, y confundirlos borra
+   * un lugar real con todo su historial.
+   */
+  async function eliminarLugar(id: string, nombre: string) {
+    const escrito = prompt(
+      `Vas a ELIMINAR "${nombre}" y todo su historial. No se puede deshacer.
+
+` +
+        `Si el lugar existió y solo dejó de recibir, usá "Cerrar" en vez de esto.
+
+` +
+        `Escribí ELIMINAR para confirmar:`
+    );
+    if (escrito !== "ELIMINAR") return;
+
+    const res = await fetch(`/api/acopios/${id}`, {
+      method: "DELETE",
+      headers: { authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error ?? "No se pudo eliminar");
+      return;
+    }
+    await cargar(token);
+  }
+
+  async function eliminarConvocatoria(id: string, titulo: string) {
+    const escrito = prompt(
+      `Vas a ELIMINAR la convocatoria "${titulo}". No se puede deshacer.
+
+` +
+        `Si simplemente ya no se hace, usá "Cancelar" — así conservás los ` +
+        `teléfonos de quienes se apuntaron para avisarles.
+
+` +
+        `Escribí ELIMINAR para confirmar:`
+    );
+    if (escrito !== "ELIMINAR") return;
+
+    let res = await fetch(`/api/convocatorias/${id}`, {
+      method: "DELETE",
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    // 409 = hay gente apuntada. Se pregunta una segunda vez, diciendo cuántos.
+    if (res.status === 409) {
+      const d = await res.json().catch(() => ({}));
+      if (!confirm(`${d.error}. ${d.detalle}
+
+¿Eliminar de todas formas?`)) {
+        return;
+      }
+      res = await fetch(`/api/convocatorias/${id}?forzar=1`, {
+        method: "DELETE",
+        headers: { authorization: `Bearer ${token}` },
+      });
+    }
+
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error ?? "No se pudo eliminar");
+      return;
+    }
+    await cargar(token);
+  }
+
   async function cambiarEstado(id: string, estado: string) {
     setError(null);
     const res = await fetch(`/api/acopios/${id}`, {
@@ -191,6 +260,13 @@ export default function PanelAdmin() {
               Reabrir
             </button>
           )}
+          <button
+            onClick={() => eliminarLugar(c.id, c.nombre)}
+            title="Solo para duplicados o errores: borra el lugar y su historial"
+            className="ml-auto rounded-md px-3 py-1.5 text-red-700 hover:bg-red-50"
+          >
+            Eliminar
+          </button>
         </div>
       </article>
     );
@@ -281,6 +357,13 @@ export default function PanelAdmin() {
                         Llamar a quien organiza
                       </a>
                     )}
+                    <button
+                      onClick={() => eliminarConvocatoria(v.id, v.titulo)}
+                      title="Solo para duplicados o errores"
+                      className="ml-auto rounded-md px-3 py-1.5 text-red-700 hover:bg-red-50"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </article>
               );

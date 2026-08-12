@@ -33,6 +33,46 @@ export async function GET(
   return NextResponse.json({ centro });
 }
 
+/**
+ * Borrado definitivo. SOLO el equipo, y solo para errores: un duplicado, una
+ * prueba, algo que nunca debió publicarse.
+ *
+ * Para un lugar que existió y ya no recibe está `estado = cerrado`, que lo
+ * saca del mapa pero conserva el historial y permite reabrirlo. Borrar es
+ * para lo que no debió existir; arrastra en cascada sus necesidades y su
+ * historial de cambios, y no hay forma de deshacerlo.
+ */
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: "Id inválido" }, { status: 400 });
+  }
+
+  // A propósito no vale el token del propio lugar: alguien con el enlace
+  // reenviado por WhatsApp podría borrar un acopio con todo su historial.
+  // Cerrar sí puede hacerlo; borrar, no.
+  if (!esAdmin(req)) {
+    return NextResponse.json(
+      { error: "Solo el equipo puede eliminar un lugar" },
+      { status: 403 }
+    );
+  }
+
+  const { rowCount } = await getPool().query(
+    "DELETE FROM centro_acopio WHERE id = $1",
+    [id]
+  );
+  if (rowCount === 0) {
+    return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+  }
+
+  invalidarCache();
+  return NextResponse.json({ eliminado: true });
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
