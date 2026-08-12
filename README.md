@@ -19,7 +19,31 @@ para que cada acopio actualice sus necesidades.
 - [x] **Cuatro tipos de lugar** y los dos públicos en un solo mapa
 - [x] **Fase 2** — donantes: publicar qué tenés y a quién cerca le sirve
 - [x] Compartir por WhatsApp con previsualización y cifras reales
-- [ ] **Fase 3** — voluntarios: rutas de recolección (recoger de A → llevar a B)
+- [x] **Convocatorias de voluntarios** con cupo real e inscripción sin cuenta
+- [ ] **Fase 3** — rutas de recolección (recoger de A → llevar a B)
+
+### Convocatorias de voluntarios
+
+Una donación es un **estado** ("necesito agua", indefinido); un voluntariado es
+un **evento**: pasa mañana de 6 a 2 y hacen falta diez personas. Por eso vive en
+su propia tabla y no como una necesidad más — modelarlo como necesidad habría
+perdido lo único que moviliza a alguien: cuándo, dónde y para qué.
+
+- **Cupo real, no informativo.** El control se hace con `SELECT … FOR UPDATE`
+  sobre la convocatoria: sin ese bloqueo, dos personas apuntándose a la vez
+  leen el mismo conteo y el último puesto se vende dos veces. Probado con cinco
+  inscripciones simultáneas contra dos cupos: entran exactamente dos.
+- **Vencen solas.** Una convocatoria de ayer no es información, es ruido; y
+  crear una que ya terminó se rechaza.
+- **Qué llevar** es un campo propio y no un detalle: quien llega sin agua,
+  guantes ni almuerzo deja de ser ayuda y pasa a ser alguien más a quien cuidar.
+- **Marca de trabajo con riesgo** (escombros, estructuras dañadas) que muestra
+  una advertencia: el voluntariado espontáneo en edificios colapsados lesiona
+  gente y estorba a los rescatistas profesionales.
+
+**Los datos de los voluntarios son privados.** En público va solo el contador;
+la lista con nombres y teléfonos la ve únicamente quien convoca, con su enlace.
+Publicarlos convertiría un acto de solidaridad en una base de contactos abierta.
 
 ### Privacidad de los donantes (fase 2)
 

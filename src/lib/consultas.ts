@@ -1,6 +1,11 @@
 import { query } from "./db";
 import { conCache } from "./cache";
-import type { CentroPublico, Ciudad, DonacionPublica } from "./tipos";
+import type {
+  CentroPublico,
+  Ciudad,
+  ConvocatoriaPublica,
+  DonacionPublica,
+} from "./tipos";
 
 /**
  * Segundos que se reutiliza cada resultado. Solo aplica a los LISTADOS: la
@@ -279,4 +284,74 @@ export async function centrosCercanos(
       LIMIT 50`,
     params
   );
+}
+
+
+/**
+ * Columnas publicables de una convocatoria.
+ *
+ * `inscritos` se cuenta en la misma consulta: sacarlo aparte serían N+1
+ * consultas para pintar una lista. Y solo se cuenta, nunca se listan los
+ * datos de las personas.
+ */
+const SELECT_CONVOCATORIA = `
+  SELECT
+    v.id, v.centro_id, ca.nombre AS centro_nombre,
+    v.titulo, v.descripcion,
+    v.ciudad_slug, ci.nombre AS ciudad_nombre, ci.departamento,
+    v.lugar_encuentro, v.lat, v.lng,
+    v.inicia, v.termina, v.cupo,
+    (SELECT count(*)::int FROM inscripcion i
+      WHERE i.convocatoria_id = v.id AND i.estado = 'confirmada') AS inscritos,
+    v.que_llevar, v.requisitos, v.con_riesgo,
+    v.contacto, v.telefono, v.estado, v.es_demo, v.creado_en
+  FROM convocatoria v
+  JOIN ciudad ci ON ci.slug = v.ciudad_slug
+  LEFT JOIN centro_acopio ca ON ca.id = v.centro_id
+`;
+
+export type FiltrosConvocatorias = {
+  ciudad?: string;
+  /** Por defecto solo las abiertas que todavía no terminaron. */
+  incluirPasadas?: boolean;
+};
+
+export async function listarConvocatorias(
+  filtros: FiltrosConvocatorias = {}
+): Promise<ConvocatoriaPublica[]> {
+  return conCache(
+    `convocatorias:${JSON.stringify(filtros)}`,
+    TTL_LISTADOS,
+    () => {
+      const condiciones: string[] = [];
+      const params: unknown[] = [];
+
+      if (!filtros.incluirPasadas) {
+        // Una convocatoria de ayer no es información: es ruido que estorba.
+        condiciones.push("v.estado = 'abierta'", "v.termina > now()");
+      }
+      if (filtros.ciudad) {
+        params.push(filtros.ciudad);
+        condiciones.push(`v.ciudad_slug = $${params.length}`);
+      }
+
+      const where = condiciones.length
+        ? `WHERE ${condiciones.join(" AND ")}`
+        : "";
+      return query<ConvocatoriaPublica>(
+        `${SELECT_CONVOCATORIA} ${where} ORDER BY v.inicia LIMIT 200`,
+        params
+      );
+    }
+  );
+}
+
+export async function obtenerConvocatoria(
+  id: string
+): Promise<ConvocatoriaPublica | null> {
+  const filas = await query<ConvocatoriaPublica>(
+    `${SELECT_CONVOCATORIA} WHERE v.id = $1`,
+    [id]
+  );
+  return filas[0] ?? null;
 }

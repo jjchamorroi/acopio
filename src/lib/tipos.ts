@@ -160,3 +160,102 @@ export const esquemaActualizacion = z.object({
   tipos_sangre: z.string().trim().max(120).optional().nullable(),
   necesidades: z.array(esquemaNecesidad).max(20).optional(),
 });
+
+/**
+ * Convocatoria tal como se publica.
+ *
+ * `inscritos` es un CONTADOR, no una lista: los datos de quien se ofrece a
+ * ayudar son privados y solo los ve quien convoca. Publicar los teléfonos de
+ * los voluntarios convertiría un acto de solidaridad en una base de contactos
+ * abierta a cualquiera.
+ */
+export type ConvocatoriaPublica = {
+  id: string;
+  centro_id: string | null;
+  centro_nombre: string | null;
+  titulo: string;
+  descripcion: string;
+  ciudad_slug: string;
+  ciudad_nombre: string;
+  departamento: string;
+  lugar_encuentro: string;
+  lat: number;
+  lng: number;
+  inicia: string;
+  termina: string;
+  /** null = sin tope de personas. */
+  cupo: number | null;
+  inscritos: number;
+  que_llevar: string | null;
+  requisitos: string | null;
+  con_riesgo: boolean;
+  contacto: string | null;
+  telefono: string | null;
+  estado: "abierta" | "cancelada";
+  es_demo: boolean;
+  creado_en: string;
+};
+
+const fechaIso = z
+  .string()
+  .refine((v) => !Number.isNaN(Date.parse(v)), "Fecha inválida");
+
+export const esquemaConvocatoriaNueva = z
+  .object({
+    centro_id: z.string().uuid().optional().nullable(),
+    titulo: z.string().trim().min(5).max(120),
+    descripcion: z.string().trim().min(10).max(600),
+    ciudad_slug: z.string().trim().min(1).max(60),
+    lugar_encuentro: z.string().trim().min(5).max(200),
+    lat: z.number().gte(-4.3).lte(13.5),
+    lng: z.number().gte(-82).lte(-66.8),
+    inicia: fechaIso,
+    termina: fechaIso,
+    cupo: z.number().int().positive().max(5000).optional().nullable(),
+    que_llevar: z.string().trim().max(300).optional().nullable(),
+    requisitos: z.string().trim().max(300).optional().nullable(),
+    con_riesgo: z.boolean().optional(),
+    contacto: z.string().trim().max(120).optional().nullable(),
+    telefono: z
+      .string()
+      .trim()
+      .max(40)
+      .regex(/^[0-9+()\s-]*$/, "Teléfono inválido")
+      .optional()
+      .nullable(),
+  })
+  .refine((d) => Date.parse(d.termina) > Date.parse(d.inicia), {
+    message: "La convocatoria no puede terminar antes de empezar",
+    path: ["termina"],
+  });
+
+export const esquemaConvocatoriaActualizacion = z.object({
+  titulo: z.string().trim().min(5).max(120).optional(),
+  descripcion: z.string().trim().min(10).max(600).optional(),
+  lugar_encuentro: z.string().trim().min(5).max(200).optional(),
+  inicia: fechaIso.optional(),
+  termina: fechaIso.optional(),
+  cupo: z.number().int().positive().max(5000).optional().nullable(),
+  que_llevar: z.string().trim().max(300).optional().nullable(),
+  requisitos: z.string().trim().max(300).optional().nullable(),
+  con_riesgo: z.boolean().optional(),
+  telefono: z
+    .string()
+    .trim()
+    .max(40)
+    .regex(/^[0-9+()\s-]*$/, "Teléfono inválido")
+    .optional()
+    .nullable(),
+  estado: z.enum(["abierta", "cancelada"]).optional(),
+});
+
+export const esquemaInscripcion = z.object({
+  nombre: z.string().trim().min(2).max(120),
+  telefono: z
+    .string()
+    .trim()
+    .min(7)
+    .max(40)
+    .regex(/^[0-9+()\s-]+$/, "Teléfono inválido"),
+  nota: z.string().trim().max(200).optional().nullable(),
+});

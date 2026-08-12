@@ -33,3 +33,26 @@ export async function autorizarLugar(
 
   return { ok: true, admin: false };
 }
+
+/**
+ * Igual que autorizarLugar pero para convocatorias. Se repite en vez de
+ * generalizar con un nombre de tabla interpolado: meter identificadores de
+ * tabla por concatenación es la puerta de atrás por la que entra una
+ * inyección SQL, y son doce líneas.
+ */
+export async function autorizarConvocatoria(
+  req: Request,
+  id: string
+): Promise<boolean> {
+  if (esAdmin(req)) return true;
+
+  const recibido = req.headers.get("x-acopio-token") ?? "";
+  if (!recibido) return false;
+
+  const filas = await query<{ admin_token_hash: string }>(
+    "SELECT admin_token_hash FROM convocatoria WHERE id = $1",
+    [id]
+  );
+  if (filas.length === 0) return false;
+  return tokensCoinciden(hashToken(recibido), filas[0].admin_token_hash);
+}

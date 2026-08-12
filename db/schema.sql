@@ -240,6 +240,97 @@ CREATE INDEX IF NOT EXISTS donacion_ciudad_idx ON donacion (ciudad_slug);
 CREATE INDEX IF NOT EXISTS donacion_vigencia_idx ON donacion (vence_en) WHERE estado = 'disponible';
 
 -- ---------------------------------------------------------------------------
+-- CONVOCATORIAS DE VOLUNTARIOS
+--
+-- Una donación es un ESTADO ("necesito agua", indefinido); un voluntariado es
+-- un EVENTO: pasa mañana de 6 a 2 y hacen falta diez personas. Modelarlo como
+-- una necesidad más habría perdido lo único que moviliza a alguien —cuándo,
+-- dónde y para qué—, así que va en su propia tabla.
+--
+-- centro_id es opcional: una convocatoria puede colgar de un lugar ya
+-- registrado —y heredar su verificación— o ser suelta, en una cuadra o un
+-- punto de encuentro que no es un lugar del mapa.
+--
+-- La ubicación va exacta y sin difuminar, al revés que en las donaciones:
+-- acá el punto ES el sitio de encuentro público al que hay que llegar, no la
+-- casa de nadie.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS convocatoria (
+  id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  centro_id        uuid REFERENCES centro_acopio(id) ON DELETE SET NULL,
+
+  titulo           text NOT NULL,
+  descripcion      text NOT NULL,
+
+  ciudad_slug      text NOT NULL REFERENCES ciudad(slug),
+  lugar_encuentro  text NOT NULL,
+  lat              double precision NOT NULL,
+  lng              double precision NOT NULL,
+  geom             geography(Point, 4326)
+                     GENERATED ALWAYS AS
+                     (ST_SetSRID(ST_MakePoint(lng, lat), 4326)::geography) STORED,
+
+  inicia           timestamptz NOT NULL,
+  termina          timestamptz NOT NULL,
+
+  -- NULL = sin tope. Con tope, el contador evita que lleguen doscientas
+  -- personas a un trabajo para diez, que hay que alimentar y coordinar.
+  cupo             int CHECK (cupo IS NULL OR cupo > 0),
+
+  -- Qué llevar. No es un detalle: quien llega sin agua, guantes ni almuerzo
+  -- deja de ser ayuda y pasa a ser alguien más a quien cuidar.
+  que_llevar       text,
+  requisitos       text,
+
+  -- Trabajo con riesgo (escombros, estructuras dañadas). Dispara una
+  -- advertencia visible: el voluntariado espontáneo en edificios colapsados
+  -- lesiona gente y estorba a los rescatistas profesionales.
+  con_riesgo       boolean NOT NULL DEFAULT false,
+
+  contacto         text,
+  telefono         text,
+
+  estado           text NOT NULL DEFAULT 'abierta'
+                     CHECK (estado IN ('abierta', 'cancelada')),
+
+  es_demo          boolean NOT NULL DEFAULT false,
+  admin_token_hash text NOT NULL,
+  creado_en        timestamptz NOT NULL DEFAULT now(),
+  actualizado_en   timestamptz NOT NULL DEFAULT now(),
+
+  CHECK (termina > inicia)
+);
+
+CREATE INDEX IF NOT EXISTS convocatoria_geom_idx ON convocatoria USING GIST (geom);
+CREATE INDEX IF NOT EXISTS convocatoria_ciudad_idx ON convocatoria (ciudad_slug);
+CREATE INDEX IF NOT EXISTS convocatoria_vigencia_idx
+  ON convocatoria (termina) WHERE estado = 'abierta';
+
+-- ---------------------------------------------------------------------------
+-- Quién se apuntó.
+--
+-- Los datos de la persona son PRIVADOS: en público solo se publica el número.
+-- Quien convoca ve la lista para poder llamar; nadie más. Publicar los
+-- teléfonos de quienes se ofrecen a ayudar sería convertir un acto de
+-- solidaridad en una base de datos de contactos abierta.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS inscripcion (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  convocatoria_id uuid NOT NULL REFERENCES convocatoria(id) ON DELETE CASCADE,
+  nombre          text NOT NULL,
+  telefono        text NOT NULL,
+  nota            text,
+  estado          text NOT NULL DEFAULT 'confirmada'
+                    CHECK (estado IN ('confirmada', 'cancelada')),
+  -- Para que la persona pueda darse de baja sin crear cuenta.
+  token_hash      text NOT NULL,
+  creado_en       timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS inscripcion_convocatoria_idx
+  ON inscripcion (convocatoria_id, estado);
+
+-- ---------------------------------------------------------------------------
 -- Control de abuso: cuántas peticiones lleva cada quien en la ventana actual.
 --
 -- Vive en Postgres y no en memoria porque el contador tiene que sobrevivir a

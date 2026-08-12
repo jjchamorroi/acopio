@@ -57,6 +57,12 @@ export default function RootLayout({
                 Mapa
               </Link>
               <Link
+                href="/voluntarios"
+                className="rounded px-3 py-1.5 transition hover:bg-white/10"
+              >
+                Voluntarios
+              </Link>
+              <Link
                 href="/donaciones"
                 className="rounded px-3 py-1.5 transition hover:bg-white/10"
               >
@@ -101,6 +107,12 @@ export default function RootLayout({
                   className="block border-t border-slate-100 px-4 py-3 font-medium hover:bg-slate-100"
                 >
                   Tengo algo para donar
+                </Link>
+                <Link
+                  href="/voluntarios"
+                  className="block border-t border-slate-100 px-4 py-3 hover:bg-slate-100"
+                >
+                  Se necesitan voluntarios
                 </Link>
                 <Link
                   href="/donaciones"
