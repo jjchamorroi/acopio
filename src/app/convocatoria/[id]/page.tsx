@@ -145,7 +145,15 @@ export default async function DetalleConvocatoria({
       />
 
       <section className="mt-6">
-        <MapaClient centros={[]} centro={[c.lat, c.lng]} zoom={16} />
+        {/* La convocatoria va en `convocatorias`, no solo en `centro`: esa prop
+            centra la vista, pero el marcador lo dibuja la lista. Sin ella el
+            mapa quedaba apuntando al sitio correcto y completamente vacío. */}
+        <MapaClient
+          centros={[]}
+          convocatorias={[c]}
+          centro={[c.lat, c.lng]}
+          zoom={16}
+        />
         <p className="mt-1 text-xs text-slate-500">
           Punto de encuentro. Es una ubicación pública, no la casa de nadie.
         </p>
