@@ -28,9 +28,15 @@ export async function generateMetadata(): Promise<Metadata> {
     ).length;
     const albergues = centros.filter((c) => c.tipo === "albergue").length;
 
-    const partes = [`${centros.length} lugares activos`];
+    // El plural se calcula: "1 albergues" en la tarjeta de WhatsApp se lee
+    // como descuido, y es lo primero que ve alguien que no conoce el sitio.
+    const partes = [
+      `${centros.length} ${centros.length === 1 ? "lugar activo" : "lugares activos"}`,
+    ];
     if (urgentes > 0) partes.push(`${urgentes} con algo urgente`);
-    if (albergues > 0) partes.push(`${albergues} albergues`);
+    if (albergues > 0) {
+      partes.push(`${albergues} ${albergues === 1 ? "albergue" : "albergues"}`);
+    }
 
     const descripcion = `${partes.join(" · ")}. Mirá qué necesita cada uno antes de salir de la casa.`;
     return {
