@@ -333,6 +333,30 @@ Railway no manda tráfico a una instancia que todavía no conectó con la base.
 El `docker-compose.yml` no interviene acá: Railway despliega servicios sueltos.
 Sigue siendo el entorno de desarrollo local.
 
+### Dominio propio
+
+Se agrega en Railway: *Settings → Networking → Custom Domain*. El plan Hobby
+admite dos dominios personalizados.
+
+Después hay que poner la variable `NEXT_PUBLIC_SITE_URL` con el dominio nuevo.
+Sin ella, las previsualizaciones de WhatsApp seguirían apuntando al dominio
+viejo.
+
+> **Nunca borres ni renombres el dominio `*.up.railway.app`.** Railway no
+> redirige: su proxy mapea hostname a servicio, y al quitar ese mapeo el
+> hostname deja de responder. Peor, el subdominio liberado vuelve al pozo
+> común y otra persona podría reclamarlo para servir cualquier cosa en una
+> dirección que ya circuló por WhatsApp.
+>
+> Los dos dominios conviven. `src/middleware.ts` redirige del viejo al nuevo
+> con un 308 en cuanto `NEXT_PUBLIC_SITE_URL` exista, así que los enlaces ya
+> compartidos siguen llevando al sitio correcto.
+>
+> El middleware **excluye `/api`** a propósito: el healthcheck consulta
+> `/api/salud`, y devolverle una redirección en vez de un 200 marcaría el
+> despliegue como no saludable. También excluye la imagen de previsualización,
+> porque los rastreadores de WhatsApp no siempre siguen redirecciones.
+
 ## Desplegar en Dokploy
 
 1. **Base de datos** → *Create Database* → PostgreSQL, cambiando la imagen a
