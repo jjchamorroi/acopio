@@ -5,6 +5,7 @@ import type {
   Ciudad,
   ConvocatoriaPublica,
   DonacionPublica,
+  ProfesionalPublico,
 } from "./tipos";
 
 /**
@@ -364,6 +365,81 @@ export async function obtenerConvocatoria(
 ): Promise<ConvocatoriaPublica | null> {
   const filas = await query<ConvocatoriaPublica>(
     `${SELECT_CONVOCATORIA} WHERE v.id = $1`,
+    [id]
+  );
+  return filas[0] ?? null;
+}
+
+
+/**
+ * Columnas publicables de un profesional.
+ *
+ * El teléfono sale como NULL cuando la persona pidió no publicarlo. La
+ * decisión se aplica en el SELECT y no en la interfaz: así el número no puede
+ * escaparse por una pantalla que se olvide de comprobarlo.
+ */
+const SELECT_PROFESIONAL = `
+  SELECT
+    p.id, p.nombre, p.profesion, p.registro, p.descripcion,
+    p.modalidad, p.ciudad_slug,
+    ci.nombre AS ciudad_nombre, ci.departamento,
+    p.disponibilidad,
+    CASE WHEN p.telefono_publico THEN p.telefono ELSE NULL END AS telefono,
+    NOT p.telefono_publico AS contacto_por_equipo,
+    p.email,
+    p.estado, p.es_demo, p.creado_en
+  FROM profesional p
+  LEFT JOIN ciudad ci ON ci.slug = p.ciudad_slug
+`;
+
+export type FiltrosProfesionales = {
+  profesion?: string;
+  ciudad?: string;
+  modalidad?: string;
+  incluirCerrados?: boolean;
+};
+
+export async function listarProfesionales(
+  filtros: FiltrosProfesionales = {}
+): Promise<ProfesionalPublico[]> {
+  return conCache(
+    `profesionales:${JSON.stringify(filtros)}`,
+    TTL_LISTADOS,
+    () => {
+      const condiciones: string[] = [];
+      const params: unknown[] = [];
+
+      if (!filtros.incluirCerrados) condiciones.push("p.estado <> 'cerrado'");
+      if (filtros.profesion) {
+        params.push(filtros.profesion);
+        condiciones.push(`p.profesion = $${params.length}`);
+      }
+      if (filtros.ciudad) {
+        params.push(filtros.ciudad);
+        condiciones.push(`p.ciudad_slug = $${params.length}`);
+      }
+      if (filtros.modalidad) {
+        params.push(filtros.modalidad);
+        // Quien atiende de las dos formas aparece en los dos filtros.
+        condiciones.push(`(p.modalidad = $${params.length} OR p.modalidad = 'ambas')`);
+      }
+
+      const where = condiciones.length ? `WHERE ${condiciones.join(" AND ")}` : "";
+      return query<ProfesionalPublico>(
+        `${SELECT_PROFESIONAL} ${where}
+         ORDER BY (p.estado = 'verificado') DESC, p.creado_en DESC
+         LIMIT 300`,
+        params
+      );
+    }
+  );
+}
+
+export async function obtenerProfesional(
+  id: string
+): Promise<ProfesionalPublico | null> {
+  const filas = await query<ProfesionalPublico>(
+    `${SELECT_PROFESIONAL} WHERE p.id = $1`,
     [id]
   );
   return filas[0] ?? null;

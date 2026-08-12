@@ -101,7 +101,8 @@ export default function MapaAcopios({
             pathOptions={{
               color: "#ffffff",
               weight: 3,
-              fillColor: lleno ? "#94a3b8" : "#059669",
+              // Verde 142°: a 33° del teal de los albergues, que antes era idéntico.
+              fillColor: lleno ? "#94a3b8" : "#15803d",
               fillOpacity: 0.9,
             }}
           >

@@ -41,6 +41,13 @@ const ACCIONES = [
     modo: "voluntarios" as ModoId,
   },
   {
+    href: "/profesionales",
+    emoji: "🩺",
+    titulo: "Necesito atención",
+    ayuda: "Psicología y salud, gratis",
+    modo: null as ModoId | null,
+  },
+  {
     href: "/registrar",
     emoji: "📍",
     titulo: "Registrar un lugar",

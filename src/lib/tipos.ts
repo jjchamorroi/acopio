@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CATEGORIA_IDS, NIVEL_IDS } from "./categorias";
 import { TIPO_LUGAR_IDS } from "./tipos-lugar";
+import { PROFESION_IDS, MODALIDAD_IDS } from "./profesiones";
 
 export type Ciudad = {
   slug: string;
@@ -272,4 +273,65 @@ export const esquemaInscripcion = z.object({
     .max(40)
     .regex(/^[0-9+()\s-]+$/, "Teléfono inválido"),
   nota: z.string().trim().max(200).optional().nullable(),
+});
+
+/**
+ * Profesional tal como se publica.
+ *
+ * `telefono` viene en null cuando la persona eligió no publicarlo; en ese caso
+ * `contacto_por_equipo` es true y la interfaz explica que el contacto se
+ * coordina a través del equipo. El número existe en la base, pero no sale.
+ */
+export type ProfesionalPublico = {
+  id: string;
+  nombre: string;
+  profesion: string;
+  registro: string | null;
+  descripcion: string;
+  modalidad: "presencial" | "remoto" | "ambas";
+  ciudad_slug: string | null;
+  ciudad_nombre: string | null;
+  departamento: string | null;
+  disponibilidad: string | null;
+  telefono: string | null;
+  contacto_por_equipo: boolean;
+  email: string | null;
+  estado: "pendiente" | "verificado" | "cerrado";
+  es_demo: boolean;
+  creado_en: string;
+};
+
+export const esquemaProfesionalNuevo = z.object({
+  nombre: z.string().trim().min(3).max(120),
+  profesion: z.enum(PROFESION_IDS as [string, ...string[]]),
+  registro: z.string().trim().max(60).optional().nullable(),
+  descripcion: z.string().trim().min(10).max(600),
+  modalidad: z.enum(MODALIDAD_IDS as [string, ...string[]]).default("ambas"),
+  ciudad_slug: z.string().trim().max(60).optional().nullable(),
+  disponibilidad: z.string().trim().max(200).optional().nullable(),
+  telefono: z
+    .string()
+    .trim()
+    .min(7)
+    .max(40)
+    .regex(/^[0-9+()\s-]+$/, "Teléfono inválido"),
+  telefono_publico: z.boolean().default(false),
+  email: z.string().trim().email("Correo inválido").max(120).optional().nullable(),
+});
+
+export const esquemaProfesionalActualizacion = z.object({
+  descripcion: z.string().trim().min(10).max(600).optional(),
+  modalidad: z.enum(MODALIDAD_IDS as [string, ...string[]]).optional(),
+  disponibilidad: z.string().trim().max(200).optional().nullable(),
+  telefono: z
+    .string()
+    .trim()
+    .min(7)
+    .max(40)
+    .regex(/^[0-9+()\s-]+$/, "Teléfono inválido")
+    .optional(),
+  telefono_publico: z.boolean().optional(),
+  email: z.string().trim().email("Correo inválido").max(120).optional().nullable(),
+  registro: z.string().trim().max(60).optional().nullable(),
+  estado: z.enum(["pendiente", "verificado", "cerrado"]).optional(),
 });

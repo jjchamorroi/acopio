@@ -63,6 +63,12 @@ export default function RootLayout({
                 Voluntarios
               </Link>
               <Link
+                href="/profesionales"
+                className="rounded px-3 py-1.5 transition hover:bg-white/10"
+              >
+                Profesionales
+              </Link>
+              <Link
                 href="/donaciones"
                 className="rounded px-3 py-1.5 transition hover:bg-white/10"
               >
@@ -125,6 +131,12 @@ export default function RootLayout({
                   className="block border-t border-slate-100 px-4 py-3 hover:bg-slate-100"
                 >
                   Se necesitan voluntarios
+                </Link>
+                <Link
+                  href="/profesionales"
+                  className="block border-t border-slate-100 px-4 py-3 hover:bg-slate-100"
+                >
+                  Atención profesional
                 </Link>
                 <Link
                   href="/donaciones"

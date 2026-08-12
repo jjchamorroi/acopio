@@ -331,6 +331,60 @@ CREATE INDEX IF NOT EXISTS inscripcion_convocatoria_idx
   ON inscripcion (convocatoria_id, estado);
 
 -- ---------------------------------------------------------------------------
+-- PROFESIONALES QUE OFRECEN SUS SERVICIOS
+--
+-- Médicos, enfermeros, psicólogos, veterinarios, trabajadores sociales.
+-- Es lo más delicado que publica este sitio: un acopio equivocado hace perder
+-- un viaje, pero alguien que dice ser psicólogo sin serlo hace daño real —la
+-- atención psicológica improvisada tras un desastre empeora el trauma— y un
+-- falso médico puede matar.
+--
+-- De ahí tres decisiones:
+--
+-- 1. `registro` guarda la tarjeta profesional o el ReTHUS y SE PUBLICA. No lo
+--    verificamos nosotros, no podemos; publicarlo permite que cualquiera lo
+--    consulte en el registro oficial. Convierte "confíen en mí" en algo
+--    comprobable.
+--
+-- 2. Nacen 'pendiente'. El sello solo lo pone el equipo tras confirmar.
+--
+-- 3. NO tienen coordenadas ni salen en el mapa. Un acopio es una dirección
+--    pública; una persona no. Con la ciudad y la modalidad alcanza para
+--    coordinar, y así no publicamos dónde vive nadie.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS profesional (
+  id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  nombre           text NOT NULL,
+  profesion        text NOT NULL,
+  -- Tarjeta profesional / ReTHUS. Se publica para que sea verificable.
+  registro         text,
+  descripcion      text NOT NULL,
+
+  modalidad        text NOT NULL DEFAULT 'ambas'
+                     CHECK (modalidad IN ('presencial', 'remoto', 'ambas')),
+  -- Opcional: quien atiende solo en remoto no tiene por qué decir dónde vive.
+  ciudad_slug      text REFERENCES ciudad(slug),
+  disponibilidad   text,
+
+  telefono         text NOT NULL,
+  -- Lo decide cada quien. Un psicólogo con el número abierto puede recibir
+  -- llamadas a las 3 a.m. y quemarse en una semana; obligarlo a publicarlo
+  -- ahuyenta justo a quien más falta hace.
+  telefono_publico boolean NOT NULL DEFAULT false,
+  email            text,
+
+  estado           text NOT NULL DEFAULT 'pendiente'
+                     CHECK (estado IN ('pendiente', 'verificado', 'cerrado')),
+  es_demo          boolean NOT NULL DEFAULT false,
+  admin_token_hash text NOT NULL,
+  creado_en        timestamptz NOT NULL DEFAULT now(),
+  actualizado_en   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS profesional_profesion_idx ON profesional (profesion, estado);
+CREATE INDEX IF NOT EXISTS profesional_ciudad_idx ON profesional (ciudad_slug);
+
+-- ---------------------------------------------------------------------------
 -- Control de abuso: cuántas peticiones lleva cada quien en la ventana actual.
 --
 -- Vive en Postgres y no en memoria porque el contador tiene que sobrevivir a

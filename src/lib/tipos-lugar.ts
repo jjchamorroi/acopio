@@ -37,7 +37,7 @@ export const TIPOS_LUGAR = [
     ayuda: "Olla comunitaria o comedor que reparte comida preparada",
     recibe: true,
     entrega: true,
-    color: "#c2410c",
+    color: "#ea580c",
   },
   {
     id: "albergue",
@@ -47,7 +47,7 @@ export const TIPOS_LUGAR = [
     ayuda: "Aloja a personas damnificadas",
     recibe: true,
     entrega: true,
-    color: "#059669",
+    color: "#0f766e",
   },
   {
     id: "animales",
@@ -57,7 +57,7 @@ export const TIPOS_LUGAR = [
     ayuda: "Atención veterinaria y acopio para mascotas",
     recibe: true,
     entrega: true,
-    color: "#ea580c",
+    color: "#4d7c0f",
   },
   {
     // No es un acopio: acá no se deja nada, se va uno a donar. Por eso vive
@@ -70,7 +70,7 @@ export const TIPOS_LUGAR = [
     ayuda: "Hemocentro o jornada de donación de sangre",
     recibe: true,
     entrega: false,
-    color: "#9f1239",
+    color: "#be123c",
   },
   {
     // La diferencia con un acopio no es cosmética: un acopio recibe para
@@ -84,7 +84,7 @@ export const TIPOS_LUGAR = [
     ayuda: "Ancianato, colegio, hogar infantil, fundación… que pide para sí",
     recibe: true,
     entrega: false,
-    color: "#be123c",
+    color: "#a21caf",
   },
 ] as const;
 
