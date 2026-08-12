@@ -60,10 +60,21 @@ function Mascotas({ acepta }: { acepta: boolean | null }) {
 export default function TarjetaCentro({
   centro,
   modo = "donar",
+  distanciaM,
 }: {
   centro: CentroPublico;
   modo?: ModoId;
+  /** Presente solo cuando la lista viene ordenada por cercanía. */
+  distanciaM?: number;
 }) {
+  // Bajo un kilómetro se dice en metros: "a 400 m" se entiende como caminable,
+  // "a 0,4 km" obliga a hacer la cuenta.
+  const distancia =
+    distanciaM === undefined
+      ? null
+      : distanciaM < 1000
+        ? `a ${Math.round(distanciaM / 10) * 10} m`
+        : `a ${(distanciaM / 1000).toFixed(1)} km`;
   const tipo = tipoLugar(centro.tipo);
   const urgentes = centro.necesidades.filter((n) => n.nivel === "urgente");
   const necesita = centro.necesidades.filter((n) => n.nivel === "necesita");
@@ -96,6 +107,12 @@ export default function TarjetaCentro({
             </p>
           )}
         </div>
+
+        {distancia && (
+          <span className="shrink-0 rounded-full bg-slate-900 px-2.5 py-1 text-xs font-medium text-white">
+            {distancia}
+          </span>
+        )}
 
         {centro.estado === "verificado" ? (
           <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800 ring-1 ring-inset ring-emerald-200">

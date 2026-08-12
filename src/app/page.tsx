@@ -4,9 +4,14 @@ import Link from "next/link";
 import MapaClient from "@/components/MapaClient";
 import BotonCompartir from "@/components/BotonCompartir";
 import AccionesRapidas from "@/components/AccionesRapidas";
+import CercaDeMi from "@/components/CercaDeMi";
 import Filtros from "@/components/Filtros";
 import TarjetaCentro from "@/components/TarjetaCentro";
-import { listarCentros, listarCiudadesConLugares } from "@/lib/consultas";
+import {
+  listarCentros,
+  listarCiudadesConLugares,
+  centrosCercanos,
+} from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { MODOS, TIPOS_LUGAR, esModo, type ModoId } from "@/lib/tipos-lugar";
 
@@ -61,26 +66,42 @@ export default async function Home({
     modo?: string;
     tipo?: string;
     mascotas?: string;
+    lat?: string;
+    lng?: string;
   }>;
 }) {
   const p = await searchParams;
   const modo: ModoId = esModo(p.modo) ? p.modo : "donar";
 
+  // Si la persona compartió su ubicación, el orden deja de ser cronológico y
+  // pasa a ser por distancia: es lo único que importa cuando alguien necesita
+  // llegar caminando.
+  const lat = Number(p.lat);
+  const lng = Number(p.lng);
+  const ubicado = Number.isFinite(lat) && Number.isFinite(lng);
+
   const [ciudades, centros] = await Promise.all([
     listarCiudadesConLugares(),
-    listarCentros({
-      ciudad: p.ciudad,
-      categoria: modo === "donar" ? p.categoria : undefined,
-      modo,
-      tipo: p.tipo,
-      soloAceptaMascotas: modo === "ayuda" && p.mascotas === "1",
-    }),
+    ubicado
+      ? centrosCercanos(lat, lng, 50, modo === "donar" ? p.categoria : undefined, {
+          modo,
+          tipo: p.tipo,
+        })
+      : listarCentros({
+          ciudad: p.ciudad,
+          categoria: modo === "donar" ? p.categoria : undefined,
+          modo,
+          tipo: p.tipo,
+          soloAceptaMascotas: modo === "ayuda" && p.mascotas === "1",
+        }),
   ]);
 
   const ciudadSel = ciudades.find((c) => c.slug === p.ciudad);
-  const centroMapa: [number, number] = ciudadSel
-    ? [ciudadSel.lat, ciudadSel.lng]
-    : CENTRO_POR_DEFECTO;
+  const centroMapa: [number, number] = ubicado
+    ? [lat, lng]
+    : ciudadSel
+      ? [ciudadSel.lat, ciudadSel.lng]
+      : CENTRO_POR_DEFECTO;
 
   const urgentes = centros.filter((c) =>
     c.necesidades.some((n) => n.nivel === "urgente")
@@ -103,6 +124,14 @@ export default async function Home({
         <p className="mt-2 max-w-2xl text-slate-600">{copia.bajada}</p>
         <div className="mt-5">
           <AccionesRapidas />
+        </div>
+
+        {/* La ubicación es lo primero en "necesito ayuda": quien no tiene
+            dónde comer hoy necesita su barrio, no un mapa del país. */}
+        <div className="mt-4">
+          <Suspense fallback={<div className="h-12" />}>
+            <CercaDeMi activo={ubicado} />
+          </Suspense>
         </div>
 
         <BotonCompartir
@@ -158,13 +187,16 @@ export default async function Home({
         <MapaClient
           centros={centros}
           centro={centroMapa}
-          zoom={ciudadSel ? 13 : 8}
+          zoom={ubicado ? 13 : ciudadSel ? 13 : 8}
+          miUbicacion={ubicado ? [lat, lng] : undefined}
         />
       </section>
 
       <section>
         <h2 className="mb-3 text-lg font-semibold text-slate-900">
-          Listado {ciudadSel ? `en ${ciudadSel.nombre}` : ""}
+          {ubicado
+            ? "Lo más cerca de vos"
+            : `Listado ${ciudadSel ? `en ${ciudadSel.nombre}` : ""}`}
         </h2>
 
         {centros.length === 0 ? (
@@ -180,7 +212,16 @@ export default async function Home({
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {centros.map((c) => (
-              <TarjetaCentro key={c.id} centro={c} modo={modo} />
+              <TarjetaCentro
+                key={c.id}
+                centro={c}
+                modo={modo}
+                distanciaM={
+                  "distancia_m" in c
+                    ? (c as { distancia_m: number }).distancia_m
+                    : undefined
+                }
+              />
             ))}
           </div>
         )}

@@ -20,6 +20,7 @@ export default function MapaClient(props: {
   centros: CentroPublico[];
   centro: [number, number];
   zoom?: number;
+  miUbicacion?: [number, number];
 }) {
   return <MapaAcopios {...props} />;
 }

@@ -44,10 +44,13 @@ export default function MapaAcopios({
   centros,
   centro,
   zoom = 12,
+  miUbicacion,
 }: {
   centros: CentroPublico[];
   centro: [number, number];
   zoom?: number;
+  /** Dónde está la persona, si compartió su ubicación. */
+  miUbicacion?: [number, number];
 }) {
   return (
     <MapContainer
@@ -63,6 +66,21 @@ export default function MapaAcopios({
       />
 
       <Recentrar centro={centro} zoom={zoom} />
+
+      {miUbicacion && (
+        <CircleMarker
+          center={miUbicacion}
+          radius={8}
+          pathOptions={{
+            color: "#ffffff",
+            weight: 3,
+            fillColor: "#2563eb",
+            fillOpacity: 1,
+          }}
+        >
+          <Popup>Estás por acá</Popup>
+        </CircleMarker>
+      )}
 
       {centros.map((c) => {
         const tipo = tipoLugar(c.tipo);

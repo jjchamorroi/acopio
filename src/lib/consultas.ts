@@ -257,7 +257,8 @@ export async function centrosCercanos(
   lat: number,
   lng: number,
   radioKm = 15,
-  categoria?: string
+  categoria?: string,
+  extra: { modo?: "donar" | "ayuda"; tipo?: string } = {}
 ): Promise<(CentroPublico & { distancia_m: number })[]> {
   const params: unknown[] = [lng, lat, radioKm * 1000];
   let filtroCategoria = "";
@@ -267,6 +268,16 @@ export async function centrosCercanos(
                                     WHERE n.centro_id = c.id
                                       AND n.categoria = $${params.length}
                                       AND n.nivel IN ('urgente', 'necesita'))`;
+  }
+
+  let filtroModo = "";
+  if (extra.modo === "donar") filtroModo = "AND c.recibe_donaciones";
+  else if (extra.modo === "ayuda") filtroModo = "AND c.entrega_ayuda";
+
+  let filtroTipo = "";
+  if (extra.tipo) {
+    params.push(extra.tipo);
+    filtroTipo = `AND c.tipo = $${params.length}`;
   }
 
   return query<CentroPublico & { distancia_m: number }>(
@@ -279,6 +290,8 @@ export async function centrosCercanos(
          WHERE c.estado <> 'cerrado'
            AND ST_DWithin(c.geom, ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography, $3)
            ${filtroCategoria}
+           ${filtroModo}
+           ${filtroTipo}
        ) sub
       ORDER BY distancia_m
       LIMIT 50`,
