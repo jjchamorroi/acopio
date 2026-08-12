@@ -27,6 +27,19 @@ export const TIPOS_LUGAR = [
     color: "#7c3aed",
   },
   {
+    // El único tipo que resuelve la pregunta más inmediata de un damnificado:
+    // dónde comer hoy. Recibe y entrega a la vez —le donan los ingredientes y
+    // reparte los platos—, así que aparece en los dos públicos.
+    id: "comedor",
+    label: "Comedor comunitario",
+    corto: "Comedor",
+    emoji: "🍲",
+    ayuda: "Olla comunitaria o comedor que reparte comida preparada",
+    recibe: true,
+    entrega: true,
+    color: "#c2410c",
+  },
+  {
     id: "albergue",
     label: "Albergue temporal",
     corto: "Albergue",
@@ -99,7 +112,7 @@ export const MODOS = {
     label: "Necesito ayuda",
     titulo: "¿Dónde puedo recibir ayuda?",
     bajada:
-      "Albergues y puntos de atención abiertos ahora. Llamá antes de ir: la información la aporta la comunidad.",
+      "Comedores, albergues y puntos de atención abiertos ahora. Llamá antes de ir: la información la aporta la comunidad.",
     vacio: "Todavía no hay lugares registrados que entreguen ayuda acá.",
   },
 } as const;

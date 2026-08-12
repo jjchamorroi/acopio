@@ -313,7 +313,7 @@ export default function PanelAcopio({
             />
           </label>
         </div>
-        {(tipo === "institucion" || tipo === "albergue") && (
+        {(tipo === "institucion" || tipo === "albergue" || tipo === "comedor") && (
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
               ¿A quién atiende?
@@ -323,7 +323,11 @@ export default function PanelAcopio({
               maxLength={120}
               value={atiende}
               onChange={(e) => setAtiende(e.target.value)}
-              placeholder="80 adultos mayores, 12 familias…"
+              placeholder={
+                tipo === "comedor"
+                  ? "200 almuerzos diarios…"
+                  : "80 adultos mayores, 12 familias…"
+              }
             />
           </label>
         )}

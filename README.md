@@ -109,8 +109,8 @@ habla:
 
 | | Muestra | Tipos |
 |---|---|---|
-| **Quiero donar** | quien `recibe_donaciones` | acopio, recolección, albergue, animales |
-| **Necesito ayuda** | quien `entrega_ayuda` | albergue, animales |
+| **Quiero donar** | quien `recibe_donaciones` | los siete tipos |
+| **Necesito ayuda** | quien `entrega_ayuda` | comedor, albergue, animales |
 
 `recibe_donaciones` y `entrega_ayuda` son campos propios y no algo deducido del
 tipo, porque hay excepciones reales: un albergue desbordado deja de recibir

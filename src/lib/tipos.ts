@@ -32,7 +32,8 @@ export type CentroPublico = {
     | "albergue"
     | "animales"
     | "institucion"
-    | "sangre";
+    | "sangre"
+    | "comedor";
   /** Tipos de sangre que piden: "O−, O+" o "todos los tipos". */
   tipos_sangre: string | null;
   /** A quién atiende: "80 adultos mayores", "12 familias". */

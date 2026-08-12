@@ -247,7 +247,7 @@ export default function FormularioRegistro({
           </div>
         )}
 
-        {(tipo === "institucion" || tipo === "albergue") && (
+        {(tipo === "institucion" || tipo === "albergue" || tipo === "comedor") && (
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
               ¿A quién atiende?
@@ -257,7 +257,11 @@ export default function FormularioRegistro({
               maxLength={120}
               value={atiende}
               onChange={(e) => setAtiende(e.target.value)}
-              placeholder="80 adultos mayores, 12 familias, 300 niños…"
+              placeholder={
+                tipo === "comedor"
+                  ? "200 almuerzos diarios, 60 familias del barrio…"
+                  : "80 adultos mayores, 12 familias, 300 niños…"
+              }
             />
             <span className="mt-1 block text-xs text-slate-500">
               Es lo que hace que un donante entienda a dónde va lo suyo.

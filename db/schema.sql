@@ -111,7 +111,7 @@ BEGIN
   IF EXISTS (
     SELECT 1 FROM pg_constraint
      WHERE conname = 'centro_acopio_tipo_check'
-       AND pg_get_constraintdef(oid) NOT LIKE '%sangre%'
+       AND pg_get_constraintdef(oid) NOT LIKE '%comedor%'
   ) THEN
     ALTER TABLE centro_acopio DROP CONSTRAINT centro_acopio_tipo_check;
   END IF;
@@ -124,7 +124,7 @@ BEGIN
   ) THEN
     ALTER TABLE centro_acopio ADD CONSTRAINT centro_acopio_tipo_check
       CHECK (tipo IN ('acopio', 'recoleccion', 'albergue', 'animales',
-                      'institucion', 'sangre'));
+                      'institucion', 'sangre', 'comedor'));
   END IF;
 END $$;
 
