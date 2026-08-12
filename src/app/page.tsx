@@ -10,8 +10,10 @@ import TarjetaCentro from "@/components/TarjetaCentro";
 import {
   listarCentros,
   listarCiudadesConLugares,
+  listarConvocatorias,
   centrosCercanos,
 } from "@/lib/consultas";
+import TarjetaConvocatoria from "@/components/TarjetaConvocatoria";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { MODOS, TIPOS_LUGAR, esModo, type ModoId } from "@/lib/tipos-lugar";
 
@@ -80,20 +82,35 @@ export default async function Home({
   const lng = Number(p.lng);
   const ubicado = Number.isFinite(lat) && Number.isFinite(lng);
 
+  // El modo de voluntarios muestra otra entidad: jornadas con fecha y cupo,
+  // no lugares. Por eso se consulta aparte en vez de forzar convocatorias
+  // dentro de una lista de acopios.
+  const esVoluntarios = modo === "voluntarios";
+  const modoLugares = modo === "voluntarios" ? undefined : modo;
+
+  const convocatorias = esVoluntarios
+    ? await listarConvocatorias({ ciudad: p.ciudad })
+    : [];
+
   const [ciudades, centros] = await Promise.all([
     listarCiudadesConLugares(),
-    ubicado
-      ? centrosCercanos(lat, lng, 50, modo === "donar" ? p.categoria : undefined, {
-          modo,
-          tipo: p.tipo,
-        })
-      : listarCentros({
-          ciudad: p.ciudad,
-          categoria: modo === "donar" ? p.categoria : undefined,
-          modo,
-          tipo: p.tipo,
-          soloAceptaMascotas: modo === "ayuda" && p.mascotas === "1",
-        }),
+    esVoluntarios
+      ? Promise.resolve([])
+      : ubicado
+        ? centrosCercanos(
+            lat,
+            lng,
+            50,
+            modo === "donar" ? p.categoria : undefined,
+            { modo: modoLugares, tipo: p.tipo }
+          )
+        : listarCentros({
+            ciudad: p.ciudad,
+            categoria: modo === "donar" ? p.categoria : undefined,
+            modo: modoLugares,
+            tipo: p.tipo,
+            soloAceptaMascotas: modo === "ayuda" && p.mascotas === "1",
+          }),
   ]);
 
   const ciudadSel = ciudades.find((c) => c.slug === p.ciudad);
@@ -113,6 +130,12 @@ export default async function Home({
   // llena de colores que no están en el mapa.
   const tiposPresentes = TIPOS_LUGAR.filter((t) =>
     centros.some((c) => c.tipo === t.id)
+  );
+
+  // Plazas libres sumando todas las convocatorias con cupo.
+  const plazas = convocatorias.reduce(
+    (n, c) => n + (c.cupo === null ? 0 : Math.max(0, c.cupo - c.inscritos)),
+    0
   );
 
   return (
@@ -150,42 +173,69 @@ export default async function Home({
         </Suspense>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-100 pt-3 text-xs text-slate-600">
-          <span>
-            <strong className="text-slate-900">{centros.length}</strong>{" "}
-            {centros.length === 1 ? "lugar" : "lugares"}
-            {modo === "donar" && p.categoria
-              ? ` piden ${buscarCategoria(p.categoria)?.label?.toLowerCase() ?? p.categoria}`
-              : ""}
-          </span>
+          {esVoluntarios ? (
+            <>
+              <span>
+                <strong className="text-slate-900">{convocatorias.length}</strong>{" "}
+                {convocatorias.length === 1
+                  ? "convocatoria abierta"
+                  : "convocatorias abiertas"}
+              </span>
+              {plazas > 0 && (
+                <span className="text-emerald-700">
+                  <strong>faltan {plazas} personas</strong>
+                </span>
+              )}
+              <span className="flex items-center gap-1.5">
+                <i className="inline-block size-2.5 rounded-full bg-emerald-600" />
+                con cupo
+              </span>
+              <span className="flex items-center gap-1.5">
+                <i className="inline-block size-2.5 rounded-full bg-slate-400" />
+                completa
+              </span>
+            </>
+          ) : (
+            <>
+              <span>
+                <strong className="text-slate-900">{centros.length}</strong>{" "}
+                {centros.length === 1 ? "lugar" : "lugares"}
+                {modo === "donar" && p.categoria
+                  ? ` piden ${buscarCategoria(p.categoria)?.label?.toLowerCase() ?? p.categoria}`
+                  : ""}
+              </span>
 
-          {modo === "donar" && urgentes > 0 && (
-            <span className="text-red-700">
-              <strong>{urgentes}</strong> con algo urgente
-            </span>
+              {modo === "donar" && urgentes > 0 && (
+                <span className="text-red-700">
+                  <strong>{urgentes}</strong> con algo urgente
+                </span>
+              )}
+
+              {modo === "ayuda" && conMascotas > 0 && (
+                <span>
+                  <span aria-hidden>🐾</span> <strong>{conMascotas}</strong>{" "}
+                  aceptan mascotas
+                </span>
+              )}
+
+              {tiposPresentes.map((t) => (
+                <span key={t.id} className="flex items-center gap-1.5">
+                  <i
+                    className="inline-block size-2.5 rounded-full"
+                    style={{ backgroundColor: t.color }}
+                  />
+                  {t.corto}
+                </span>
+              ))}
+            </>
           )}
-
-          {modo === "ayuda" && conMascotas > 0 && (
-            <span>
-              <span aria-hidden>🐾</span> <strong>{conMascotas}</strong> aceptan
-              mascotas
-            </span>
-          )}
-
-          {tiposPresentes.map((t) => (
-            <span key={t.id} className="flex items-center gap-1.5">
-              <i
-                className="inline-block size-2.5 rounded-full"
-                style={{ backgroundColor: t.color }}
-              />
-              {t.corto}
-            </span>
-          ))}
         </div>
       </section>
 
       <section className="mb-6">
         <MapaClient
           centros={centros}
+          convocatorias={convocatorias}
           centro={centroMapa}
           zoom={ubicado ? 13 : ciudadSel ? 13 : 8}
           miUbicacion={ubicado ? [lat, lng] : undefined}
@@ -194,12 +244,32 @@ export default async function Home({
 
       <section>
         <h2 className="mb-3 text-lg font-semibold text-slate-900">
-          {ubicado
-            ? "Lo más cerca de vos"
-            : `Listado ${ciudadSel ? `en ${ciudadSel.nombre}` : ""}`}
+          {esVoluntarios
+            ? "Convocatorias abiertas"
+            : ubicado
+              ? "Lo más cerca de vos"
+              : `Listado ${ciudadSel ? `en ${ciudadSel.nombre}` : ""}`}
         </h2>
 
-        {centros.length === 0 ? (
+        {esVoluntarios ? (
+          convocatorias.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+              <p className="text-slate-600">{copia.vacio}</p>
+              <Link
+                href="/convocar"
+                className="mt-3 inline-block rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+              >
+                Convocar voluntarios
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {convocatorias.map((c) => (
+                <TarjetaConvocatoria key={c.id} convocatoria={c} />
+              ))}
+            </div>
+          )
+        ) : centros.length === 0 ? (
           <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
             <p className="text-slate-600">{copia.vacio}</p>
             <Link

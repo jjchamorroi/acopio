@@ -12,17 +12,38 @@ type Inscripcion = {
   creado_en: string;
 };
 
+/** Misma clave que guarda /admin en la sesión del navegador. */
+const CLAVE_ADMIN = "acopio_admin_token";
+
 /**
- * Vista de quien organiza. Es el único lugar de toda la aplicación donde se
- * muestran los datos de los voluntarios, y solo con el enlace privado.
+ * Vista de quien organiza —o del equipo, con la clave de administración—.
+ * Es el único lugar de toda la aplicación donde se muestran los datos de los
+ * voluntarios; en público solo va el contador.
  */
 export default function PanelConvocatoria({
   convocatoria,
   token,
+  modoAdmin = false,
 }: {
   convocatoria: ConvocatoriaPublica;
-  token: string;
+  token: string | null;
+  modoAdmin?: boolean;
 }) {
+  /**
+   * En modo administrador va la clave del equipo; si no, el enlace privado de
+   * quien convocó. El servidor resuelve los permisos igual en los dos casos.
+   */
+  function cabeceras(): Record<string, string> {
+    const base: Record<string, string> = { "content-type": "application/json" };
+    if (modoAdmin) {
+      const clave =
+        typeof window !== "undefined"
+          ? (sessionStorage.getItem(CLAVE_ADMIN) ?? "")
+          : "";
+      return { ...base, authorization: `Bearer ${clave}` };
+    }
+    return { ...base, "x-acopio-token": token ?? "" };
+  }
   const [inscripciones, setInscripciones] = useState<Inscripcion[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +52,7 @@ export default function PanelConvocatoria({
     try {
       const res = await fetch(
         `/api/convocatorias/${convocatoria.id}/inscripciones`,
-        { headers: { "x-acopio-token": token } }
+        { headers: cabeceras() }
       );
       if (res.status === 403) {
         setError("El enlace no es válido para esta convocatoria.");
@@ -44,7 +65,8 @@ export default function PanelConvocatoria({
     } finally {
       setCargando(false);
     }
-  }, [convocatoria.id, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [convocatoria.id, token, modoAdmin]);
 
   useEffect(() => {
     void cargar();
@@ -59,7 +81,7 @@ export default function PanelConvocatoria({
       return;
     await fetch(`/api/convocatorias/${convocatoria.id}`, {
       method: "PATCH",
-      headers: { "content-type": "application/json", "x-acopio-token": token },
+      headers: cabeceras(),
       body: JSON.stringify({ estado: "cancelada" }),
     });
     location.reload();
@@ -70,10 +92,12 @@ export default function PanelConvocatoria({
   return (
     <section className="rounded-lg border border-blue-300 bg-blue-50 p-4">
       <h2 className="text-sm font-semibold text-blue-900">
-        Panel de quien organiza
+        {modoAdmin ? "Panel del equipo" : "Panel de quien organiza"}
       </h2>
       <p className="mt-0.5 text-xs text-blue-800">
-        Estos datos solo los ves vos, con este enlace. No se publican.
+        {modoAdmin
+          ? "Estás viendo esto con la clave de administración. Los datos de los voluntarios no son públicos."
+          : "Estos datos solo los ves vos, con este enlace. No se publican."}
       </p>
 
       {error && (

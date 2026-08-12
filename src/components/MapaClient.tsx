@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { CentroPublico } from "@/lib/tipos";
+import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
 
 /**
  * Leaflet toca `window` al importarse, así que revienta si Next intenta
@@ -21,6 +21,7 @@ export default function MapaClient(props: {
   centro: [number, number];
   zoom?: number;
   miUbicacion?: [number, number];
+  convocatorias?: ConvocatoriaPublica[];
 }) {
   return <MapaAcopios {...props} />;
 }

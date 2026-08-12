@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import type { CentroPublico } from "@/lib/tipos";
+import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 
 /**
@@ -16,6 +16,7 @@ export default function PanelAdmin() {
   const [token, setToken] = useState("");
   const [autenticado, setAutenticado] = useState(false);
   const [centros, setCentros] = useState<CentroPublico[]>([]);
+  const [convocatorias, setConvocatorias] = useState<ConvocatoriaPublica[]>([]);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +30,23 @@ export default function PanelAdmin() {
       if (!res.ok) throw new Error("No se pudo cargar el listado");
       const { centros } = (await res.json()) as { centros: CentroPublico[] };
       setCentros(centros);
+
+      // Las convocatorias van en la misma carga: si falla, el panel de lugares
+      // sigue sirviendo — es información de apoyo, no la principal.
+      try {
+        const rc = await fetch("/api/convocatorias?pasadas=1", {
+          headers: { authorization: `Bearer ${tk}` },
+        });
+        if (rc.ok) {
+          const { convocatorias } = (await rc.json()) as {
+            convocatorias: ConvocatoriaPublica[];
+          };
+          setConvocatorias(convocatorias);
+        }
+      } catch {
+        // sin convocatorias, el resto del panel funciona igual
+      }
+
       setAutenticado(true);
       sessionStorage.setItem(CLAVE, tk);
     } catch (err) {
@@ -198,6 +216,77 @@ export default function PanelAdmin() {
         <p className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
           {error}
         </p>
+      )}
+
+      {convocatorias.length > 0 && (
+        <section>
+          <h2 className="mb-2 text-sm font-semibold text-slate-700">
+            Convocatorias de voluntarios ({convocatorias.length})
+          </h2>
+          <div className="space-y-3">
+            {convocatorias.map((v) => {
+              const termino = new Date(v.termina).getTime() < Date.now();
+              const faltan =
+                v.cupo === null ? null : Math.max(0, v.cupo - v.inscritos);
+              return (
+                <article
+                  key={v.id}
+                  className="rounded-lg border border-slate-200 bg-white p-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-slate-900">
+                        {v.titulo}
+                        {v.con_riesgo && (
+                          <span className="ml-2 rounded bg-amber-50 px-1.5 py-0.5 text-xs font-normal text-amber-900">
+                            riesgo
+                          </span>
+                        )}
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        {v.lugar_encuentro} · {v.ciudad_nombre}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {new Date(v.inicia).toLocaleString("es-CO", {
+                          timeZone: "America/Bogota",
+                        })}
+                        {" · "}
+                        {v.inscritos} apuntados
+                        {faltan !== null && !termino
+                          ? ` · faltan ${faltan} de ${v.cupo}`
+                          : ""}
+                      </p>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-700">
+                      {v.estado === "cancelada"
+                        ? "cancelada"
+                        : termino
+                          ? "terminada"
+                          : "abierta"}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                    <Link
+                      href={`/convocatoria/${v.id}?admin=1`}
+                      className="rounded-md border border-slate-300 px-3 py-1.5 font-medium hover:bg-slate-50"
+                    >
+                      Ver inscritos y gestionar
+                    </Link>
+                    {v.telefono && (
+                      <a
+                        href={`tel:${v.telefono.replace(/\s/g, "")}`}
+                        className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-50"
+                      >
+                        Llamar a quien organiza
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
       )}
 
       <section>

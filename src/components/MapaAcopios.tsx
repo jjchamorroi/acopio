@@ -11,7 +11,8 @@ import {
 import Link from "next/link";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { tipoLugar } from "@/lib/tipos-lugar";
-import type { CentroPublico } from "@/lib/tipos";
+import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
+import { formatearFranja } from "./TarjetaConvocatoria";
 
 /**
  * Mueve la vista cuando cambian el centro o el zoom.
@@ -45,12 +46,15 @@ export default function MapaAcopios({
   centro,
   zoom = 12,
   miUbicacion,
+  convocatorias = [],
 }: {
   centros: CentroPublico[];
   centro: [number, number];
   zoom?: number;
   /** Dónde está la persona, si compartió su ubicación. */
   miUbicacion?: [number, number];
+  /** Jornadas de voluntariado, cuando el mapa está en ese modo. */
+  convocatorias?: ConvocatoriaPublica[];
 }) {
   return (
     <MapContainer
@@ -81,6 +85,61 @@ export default function MapaAcopios({
           <Popup>Estás por acá</Popup>
         </CircleMarker>
       )}
+
+      {/* Las convocatorias se dibujan distinto de los lugares a propósito: un
+          lugar es algo que existe, una jornada es algo que pasa a una hora.
+          Confundirlas en el mapa haría que alguien llegue un martes a un
+          punto de encuentro que solo existió el sábado. */}
+      {convocatorias.map((v) => {
+        const faltan = v.cupo === null ? null : Math.max(0, v.cupo - v.inscritos);
+        const lleno = faltan === 0;
+        return (
+          <CircleMarker
+            key={v.id}
+            center={[v.lat, v.lng]}
+            radius={11}
+            pathOptions={{
+              color: "#ffffff",
+              weight: 3,
+              fillColor: lleno ? "#94a3b8" : "#059669",
+              fillOpacity: 0.9,
+            }}
+          >
+            <Popup>
+              <div className="space-y-1.5">
+                <p className="font-medium text-emerald-700">
+                  {formatearFranja(v.inicia, v.termina)}
+                </p>
+                <p className="font-semibold text-slate-900">{v.titulo}</p>
+                <p className="text-slate-600">{v.lugar_encuentro}</p>
+                {v.con_riesgo && (
+                  <p className="rounded bg-amber-50 px-2 py-1 text-amber-900">
+                    ⚠ Trabajo con riesgo
+                  </p>
+                )}
+                <p className="font-medium text-slate-900">
+                  {faltan === null
+                    ? `${v.inscritos} apuntados`
+                    : lleno
+                      ? "Cupo completo"
+                      : `Faltan ${faltan} de ${v.cupo}`}
+                </p>
+                {v.que_llevar && (
+                  <p className="text-slate-600">Llevá: {v.que_llevar}</p>
+                )}
+                <p>
+                  <Link
+                    href={`/convocatoria/${v.id}`}
+                    className="font-medium text-blue-700 underline"
+                  >
+                    Ver y apuntarme
+                  </Link>
+                </p>
+              </div>
+            </Popup>
+          </CircleMarker>
+        );
+      })}
 
       {centros.map((c) => {
         const tipo = tipoLugar(c.tipo);

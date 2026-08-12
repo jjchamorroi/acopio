@@ -44,10 +44,11 @@ export default async function DetalleConvocatoria({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ t?: string }>;
+  searchParams: Promise<{ t?: string; admin?: string }>;
 }) {
   const { id } = await params;
-  const { t } = await searchParams;
+  const { t, admin } = await searchParams;
+  const modoAdmin = admin === "1";
   if (!UUID.test(id)) notFound();
 
   const c = await obtenerConvocatoria(id);
@@ -150,9 +151,13 @@ export default async function DetalleConvocatoria({
         </p>
       </section>
 
-      {t && (
+      {(t || modoAdmin) && (
         <div className="mt-6">
-          <PanelConvocatoria convocatoria={c} token={t} />
+          <PanelConvocatoria
+            convocatoria={c}
+            token={t ?? null}
+            modoAdmin={modoAdmin}
+          />
         </div>
       )}
     </div>

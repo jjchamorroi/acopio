@@ -34,8 +34,11 @@ export default function Filtros({
     "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm " +
     "focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
 
-  // En modo "necesito ayuda" no tiene sentido filtrar por lo que uno dona.
+  // Cada modo filtra por lo suyo: donar por categoría, ayuda por mascotas, y
+  // las convocatorias solo por ciudad —el resto de filtros son de lugares y
+  // acá no hay lugares, hay jornadas.
   const esDonar = modo === "donar";
+  const esVoluntarios = modo === "voluntarios";
   const tiposVisibles = TIPOS_LUGAR.filter((t) =>
     esDonar ? t.recibe : t.entrega
   );
@@ -45,7 +48,7 @@ export default function Filtros({
       <div
         role="group"
         aria-label="¿Qué necesitás hacer?"
-        className="grid grid-cols-2 gap-2 rounded-lg bg-slate-100 p-1"
+        className="grid grid-cols-3 gap-1 rounded-lg bg-slate-100 p-1"
       >
         {(Object.keys(MODOS) as ModoId[]).map((id) => {
           const activo = modo === id;
@@ -55,7 +58,7 @@ export default function Filtros({
               type="button"
               onClick={() => cambiarModo(id)}
               aria-pressed={activo}
-              className={`rounded-md px-4 py-2.5 text-sm font-medium transition ${
+              className={`rounded-md px-2 py-2.5 text-center text-xs font-medium transition sm:text-sm ${
                 activo
                   ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-300"
                   : "text-slate-600 hover:text-slate-900"
@@ -67,7 +70,7 @@ export default function Filtros({
         })}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className={`grid gap-3 ${esVoluntarios ? "" : "sm:grid-cols-3"}`}>
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
             Ciudad
@@ -86,6 +89,7 @@ export default function Filtros({
           </select>
         </label>
 
+        {!esVoluntarios && (
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
             Tipo de lugar
@@ -103,8 +107,9 @@ export default function Filtros({
             ))}
           </select>
         </label>
+        )}
 
-        {esDonar ? (
+        {esVoluntarios ? null : esDonar ? (
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
               Quiero donar…

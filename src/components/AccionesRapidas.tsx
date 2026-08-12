@@ -34,11 +34,11 @@ const ACCIONES = [
     modo: "ayuda" as ModoId,
   },
   {
-    href: "/voluntarios",
+    href: "/?modo=voluntarios",
     emoji: "🙋",
     titulo: "Quiero ser voluntario",
     ayuda: "Jornadas con cupo abierto",
-    modo: null as ModoId | null,
+    modo: "voluntarios" as ModoId,
   },
   {
     href: "/registrar",
