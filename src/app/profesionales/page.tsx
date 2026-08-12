@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import TarjetaProfesional from "@/components/TarjetaProfesional";
 import BotonCompartir from "@/components/BotonCompartir";
+import ContactosUtiles from "@/components/ContactosUtiles";
 import { listarProfesionales } from "@/lib/consultas";
 import {
   PROFESIONES_SALUD,
@@ -84,8 +85,9 @@ export default async function Profesionales({
             <strong className="text-[var(--color-tinta)]">
               Sobre todo salud
             </strong>{" "}
-            —y en especial salud mental—, y también ingeniería para saber si una
-            vivienda quedó habitable.
+            —psicología, medicina, enfermería, veterinaria—, y también{" "}
+            ingeniería y arquitectura para saber si una vivienda quedó
+            habitable, asesoría jurídica y trabajo social.
           </p>
         </div>
         <Link
@@ -147,18 +149,29 @@ export default async function Profesionales({
       )}
 
       {profesionales.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-borde-fuerte)] bg-white p-8 text-center">
-          <p className="text-[var(--color-apagado)]">
-            Todavía no hay profesionales registrados
-            {profesion ? " en esa área" : ""}.
-          </p>
-          <Link
-            href="/ofrecer-servicio"
-            className="mt-3 inline-block rounded-lg bg-[var(--color-tinta)] px-4 py-2.5 text-sm font-bold text-white"
-          >
-            Ofrecer mi ayuda
-          </Link>
-        </div>
+        <>
+          <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-borde-fuerte)] bg-white p-8 text-center">
+            <p className="text-[var(--color-apagado)]">
+              Todavía no hay profesionales registrados
+              {profesion ? " en esa área" : ""}.
+            </p>
+            <Link
+              href="/ofrecer-servicio"
+              className="mt-3 inline-block rounded-lg bg-[var(--color-tinta)] px-4 py-2.5 text-sm font-bold text-white"
+            >
+              Ofrecer mi ayuda
+            </Link>
+          </div>
+
+          {/* Con el directorio vacío, esto es lo único que de verdad sirve:
+              alguien buscando ayuda a las 3 a.m. se va con un número al que
+              llamar en vez de con una pantalla en blanco. */}
+          <div className="mt-4">
+            <ContactosUtiles
+              intro="Mientras tanto, estas líneas oficiales atienden siempre y son gratuitas."
+            />
+          </div>
+        </>
       ) : (
         <>
           {/*
@@ -198,6 +211,10 @@ export default async function Profesionales({
               </div>
             </section>
           )}
+
+          <div className="mt-8">
+            <ContactosUtiles />
+          </div>
         </>
       )}
     </div>
