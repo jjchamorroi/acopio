@@ -90,11 +90,32 @@ export async function PATCH(
   }
 
   valores.push(id);
-  const { rowCount } = await getPool().query(
-    `UPDATE convocatoria SET ${campos.join(", ")}, actualizado_en = now()
-      WHERE id = $${valores.length}`,
-    valores
-  );
+
+  let rowCount: number | null = 0;
+  try {
+    ({ rowCount } = await getPool().query(
+      `UPDATE convocatoria SET ${campos.join(", ")}, actualizado_en = now()
+        WHERE id = $${valores.length}`,
+      valores
+    ));
+  } catch (err) {
+    // 23514 = violación de CHECK. El único de esta tabla es termina > inicia,
+    // y se dispara cuando se edita una sola de las dos fechas. Sin este
+    // manejo, el usuario recibe un 500 con el cuerpo vacío: un fallo mudo
+    // justo cuando está corrigiendo un horario.
+    if ((err as { code?: string }).code === "23514") {
+      return NextResponse.json(
+        {
+          error: "La convocatoria no puede terminar antes de empezar",
+          detalle: "Revisá las dos fechas: la de fin quedó antes que la de inicio.",
+        },
+        { status: 400 }
+      );
+    }
+    console.error("Error actualizando convocatoria:", err);
+    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+  }
+
   if (rowCount === 0) {
     return NextResponse.json({ error: "No encontrada" }, { status: 404 });
   }

@@ -248,7 +248,20 @@ export const esquemaConvocatoriaActualizacion = z.object({
     .optional()
     .nullable(),
   estado: z.enum(["abierta", "cancelada"]).optional(),
-});
+})
+  // Al editar, las fechas pueden venir sueltas: solo se comparan si llegan
+  // las dos. Si viene una sola, el CHECK de la base es el que queda como
+  // última defensa — y su error se traduce abajo, en la ruta.
+  .refine(
+    (d) =>
+      !d.inicia ||
+      !d.termina ||
+      Date.parse(d.termina) > Date.parse(d.inicia),
+    {
+      message: "La convocatoria no puede terminar antes de empezar",
+      path: ["termina"],
+    }
+  );
 
 export const esquemaInscripcion = z.object({
   nombre: z.string().trim().min(2).max(120),
