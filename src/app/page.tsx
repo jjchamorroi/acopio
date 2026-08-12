@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import MapaClient from "@/components/MapaClient";
 import BotonCompartir from "@/components/BotonCompartir";
+import AccionesRapidas from "@/components/AccionesRapidas";
 import Filtros from "@/components/Filtros";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import { listarCentros, listarCiudadesConLugares } from "@/lib/consultas";
@@ -94,6 +95,10 @@ export default async function Home({
           {copia.titulo}
         </h1>
         <p className="mt-2 max-w-2xl text-slate-600">{copia.bajada}</p>
+        <div className="mt-5">
+          <AccionesRapidas />
+        </div>
+
         <BotonCompartir
           className="mt-4"
           texto={

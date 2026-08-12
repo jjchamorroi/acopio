@@ -83,11 +83,23 @@ export default function RootLayout({
             </nav>
 
             {/*
-              En celular, un <details> nativo en vez de un menú con estado de
+              En celular la acción principal va FUERA del menú desplegable.
+              Estaba escondida adentro, y quien entraba veía un mapa sin
+              ninguna pista de que también podía ofrecer lo que tiene.
+            */}
+            <Link
+              href="/donar"
+              className="ml-auto rounded bg-white px-3 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-200 sm:hidden"
+            >
+              Donar
+            </Link>
+
+            {/*
+              El resto en un <details> nativo en vez de un menú con estado de
               React: funciona sin JavaScript, no agrega peso al paquete y el
               navegador ya se encarga del teclado y del lector de pantalla.
             */}
-            <details className="group relative ml-auto sm:hidden">
+            <details className="group relative sm:hidden">
               <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-3 py-2 text-sm font-medium marker:content-none">
                 Menú
                 <svg
