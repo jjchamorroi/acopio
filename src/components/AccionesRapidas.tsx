@@ -22,6 +22,8 @@ const SECUNDARIAS = [
     href: "/profesionales",
     emoji: "🩺",
     titulo: "Necesito atención en salud",
+    // Salud es lo que busca casi todo el mundo, así que encabeza el texto.
+    // Quien necesita un ingeniero para su casa lo encuentra al entrar.
     modo: null as ModoId | null,
   },
   {

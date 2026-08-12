@@ -3,7 +3,11 @@ import type { Metadata } from "next";
 import TarjetaProfesional from "@/components/TarjetaProfesional";
 import BotonCompartir from "@/components/BotonCompartir";
 import { listarProfesionales } from "@/lib/consultas";
-import { PROFESIONES, MODALIDADES } from "@/lib/profesiones";
+import {
+  PROFESIONES_SALUD,
+  PROFESIONES_OTRAS,
+  MODALIDADES,
+} from "@/lib/profesiones";
 
 export const dynamic = "force-dynamic";
 
@@ -12,20 +16,23 @@ export async function generateMetadata(): Promise<Metadata> {
     const ps = await listarProfesionales({});
     const descripcion =
       ps.length === 0
-        ? "Médicos, psicólogos y enfermeros que ofrecen atención gratuita tras el sismo."
-        : `${ps.length} profesionales de la salud ofrecen atención gratuita: psicología, medicina, enfermería y más.`;
+        ? "Médicos, psicólogos, enfermeros e ingenieros que ayudan gratis tras el sismo."
+        : `${ps.length} profesionales ayudan gratis: psicología, medicina, enfermería y revisión de viviendas.`;
     return {
-      title: "Atención de salud gratuita",
+      title: "Ayuda profesional gratuita",
       description: descripcion,
-      openGraph: { title: "Atención de salud gratuita", description: descripcion },
+      openGraph: {
+        title: "Ayuda profesional gratuita",
+        description: descripcion,
+      },
       twitter: {
         card: "summary_large_image",
-        title: "Atención de salud gratuita",
+        title: "Ayuda profesional gratuita",
         description: descripcion,
       },
     };
   } catch {
-    return { title: "Atención de salud gratuita" };
+    return { title: "Ayuda profesional gratuita" };
   }
 }
 
@@ -37,9 +44,13 @@ export default async function Profesionales({
   const { profesion, modalidad } = await searchParams;
   const profesionales = await listarProfesionales({ profesion, modalidad });
 
-  // Solo se ofrecen los filtros de profesiones que alguien ejerce: una lista
-  // de trece opciones donde doce están vacías solo genera callejones sin salida.
-  const presentes = PROFESIONES.filter((p) =>
+  const idsSalud = new Set(PROFESIONES_SALUD.map((p) => p.id as string));
+  const deSalud = profesionales.filter((p) => idsSalud.has(p.profesion));
+  const otros = profesionales.filter((p) => !idsSalud.has(p.profesion));
+
+  // Solo se ofrecen los filtros de profesiones que alguien ejerce: trece
+  // opciones donde doce están vacías solo genera callejones sin salida.
+  const presentes = [...PROFESIONES_SALUD, ...PROFESIONES_OTRAS].filter((p) =>
     profesionales.some((x) => x.profesion === p.id)
   );
 
@@ -52,29 +63,40 @@ export default async function Profesionales({
     return q ? `/profesionales?${q}` : "/profesionales";
   };
 
+  const chip = (activo: boolean) =>
+    `shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset transition ${
+      activo
+        ? "bg-[var(--color-tinta)] text-white ring-[var(--color-tinta)]"
+        : "bg-white text-[var(--color-tinta)] ring-[var(--color-borde-fuerte)] hover:bg-[var(--color-hueso)]"
+    }`;
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6">
+    <div className="mx-auto max-w-5xl px-4 py-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Profesionales de la salud
+          <h1 className="text-[30px] font-extrabold leading-tight tracking-tight sm:text-[34px]">
+            Ayuda profesional gratuita
           </h1>
-          <p className="mt-2 max-w-2xl text-[var(--color-apagado)]">
-            Psicólogos, médicos, enfermeros y veterinarios que atienden{" "}
+          <p className="mt-2 max-w-2xl text-[17px] leading-snug text-[var(--color-apagado)]">
+            Gente que atiende{" "}
             <strong className="text-[var(--color-tinta)]">sin cobrar</strong> a
-            personas afectadas por el sismo. También hay asesoría jurídica,
-            trabajo social e ingeniería.
+            personas afectadas por el sismo.{" "}
+            <strong className="text-[var(--color-tinta)]">
+              Sobre todo salud
+            </strong>{" "}
+            —y en especial salud mental—, y también ingeniería para saber si una
+            vivienda quedó habitable.
           </p>
         </div>
         <Link
           href="/ofrecer-servicio"
-          className="rounded-md bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
+          className="rounded-lg bg-[var(--color-tinta)] px-4 py-2.5 text-sm font-bold text-white hover:bg-black"
         >
-          Ofrecer mis servicios
+          Ofrecer mi ayuda
         </Link>
       </div>
 
-      <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+      <div className="mt-4 rounded-xl border border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)] px-4 py-3 text-sm text-[#8f2418]">
         <strong>Verifica antes de confiar.</strong> Este sitio no comprueba
         títulos ni registros: publicamos el número que cada persona informa para
         que tú lo consultes en el registro oficial. En salud, atender sin serlo
@@ -83,79 +105,101 @@ export default async function Profesionales({
 
       {profesionales.length > 0 && (
         <>
-          <div className="mt-5 flex flex-wrap gap-1.5">
-            <Link
-              href={enlace({ profesion: undefined })}
-              className={`rounded-full px-3 py-1.5 text-xs ring-1 ring-inset transition ${
-                !profesion
-                  ? "bg-slate-900 text-white ring-slate-900"
-                  : "bg-white text-slate-700 ring-slate-300 hover:bg-slate-50"
-              }`}
-            >
+          <p className="mt-5 text-sm text-[var(--color-apagado)]">
+            <strong className="text-[var(--color-tinta)]">
+              {profesionales.length}
+            </strong>{" "}
+            {profesionales.length === 1 ? "profesional" : "profesionales"}
+            {deSalud.length > 0 && otros.length > 0
+              ? ` · ${deSalud.length} de salud, ${otros.length} de otras áreas`
+              : ""}
+          </p>
+
+          <BotonCompartir
+            className="mt-3"
+            texto="Profesionales que ayudan gratis tras el sismo: psicología, medicina, enfermería y revisión de viviendas."
+          />
+
+          <div className="chips-scroll -mx-4 mt-4 flex gap-1.5 overflow-x-auto px-4">
+            <Link href={enlace({ profesion: undefined })} className={chip(!profesion)}>
               Todas
             </Link>
             {presentes.map((p) => (
               <Link
                 key={p.id}
                 href={enlace({ profesion: p.id })}
-                className={`rounded-full px-3 py-1.5 text-xs ring-1 ring-inset transition ${
-                  profesion === p.id
-                    ? "bg-slate-900 text-white ring-slate-900"
-                    : "bg-white text-slate-700 ring-slate-300 hover:bg-slate-50"
-                }`}
+                className={chip(profesion === p.id)}
               >
                 <span aria-hidden>{p.emoji}</span> {p.label}
               </Link>
             ))}
-          </div>
-
-          <div className="mt-2 flex flex-wrap gap-1.5">
             {(["presencial", "remoto"] as const).map((m) => (
               <Link
                 key={m}
                 href={enlace({ modalidad: modalidad === m ? undefined : m })}
-                className={`rounded-full px-3 py-1.5 text-xs ring-1 ring-inset transition ${
-                  modalidad === m
-                    ? "bg-slate-700 text-white ring-slate-700"
-                    : "bg-white text-slate-600 ring-slate-300 hover:bg-slate-50"
-                }`}
+                className={chip(modalidad === m)}
               >
                 {MODALIDADES[m].label}
               </Link>
             ))}
           </div>
-
-          <p className="mt-4 text-sm text-slate-600">
-            <strong className="text-slate-900">{profesionales.length}</strong>{" "}
-            {profesionales.length === 1 ? "profesional" : "profesionales"}
-          </p>
-
-          <BotonCompartir
-            className="mt-3"
-            texto="Profesionales ofreciendo atención gratuita tras el sismo: psicología, medicina, enfermería y más."
-          />
         </>
       )}
 
-      <section className="mt-6 grid gap-3 sm:grid-cols-2">
-        {profesionales.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center sm:col-span-2">
-            <p className="text-slate-600">
-              Todavía no hay profesionales registrados{profesion ? " en esa área" : ""}.
-            </p>
-            <Link
-              href="/ofrecer-servicio"
-              className="mt-3 inline-block rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
-            >
-              Ofrecer mis servicios
-            </Link>
-          </div>
-        ) : (
-          profesionales.map((p) => (
-            <TarjetaProfesional key={p.id} profesional={p} />
-          ))
-        )}
-      </section>
+      {profesionales.length === 0 ? (
+        <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-borde-fuerte)] bg-white p-8 text-center">
+          <p className="text-[var(--color-apagado)]">
+            Todavía no hay profesionales registrados
+            {profesion ? " en esa área" : ""}.
+          </p>
+          <Link
+            href="/ofrecer-servicio"
+            className="mt-3 inline-block rounded-lg bg-[var(--color-tinta)] px-4 py-2.5 text-sm font-bold text-white"
+          >
+            Ofrecer mi ayuda
+          </Link>
+        </div>
+      ) : (
+        <>
+          {/*
+            Salud va primero y con encabezado propio. La jerarquía la comunica
+            el ORDEN, no el título de la página: así queda claro de qué va esto
+            sin tener que esconder las demás áreas.
+          */}
+          {deSalud.length > 0 && (
+            <section className="mt-7">
+              <h2 className="text-lg font-extrabold tracking-tight">🩺 Salud</h2>
+              <p className="mb-3 mt-0.5 text-[13.5px] text-[var(--color-apagado)]">
+                Psicología, medicina, enfermería, veterinaria. Es lo que más
+                falta en las semanas siguientes, cuando lo agudo ya pasó.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {deSalud.map((p) => (
+                  <TarjetaProfesional key={p.id} profesional={p} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {otros.length > 0 && (
+            <section className="mt-8">
+              <h2 className="text-lg font-extrabold tracking-tight">
+                🏗️ Otras áreas
+              </h2>
+              <p className="mb-3 mt-0.5 text-[13.5px] text-[var(--color-apagado)]">
+                Ingeniería y arquitectura para saber si una vivienda quedó
+                habitable —una de las preguntas más frecuentes después de un
+                sismo—, asesoría jurídica y trabajo social.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {otros.map((p) => (
+                  <TarjetaProfesional key={p.id} profesional={p} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
     </div>
   );
 }
