@@ -123,7 +123,7 @@ export default async function Home({
         </h1>
         <p className="mt-2 max-w-2xl text-slate-600">{copia.bajada}</p>
         <div className="mt-5">
-          <AccionesRapidas />
+          <AccionesRapidas modo={modo} />
         </div>
 
         {/* La ubicación es lo primero en "necesito ayuda": quien no tiene
