@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import AsistenteUbicacion from "./AsistenteUbicacion";
 import SelectorCiudad from "./SelectorCiudad";
+import AvisoPublico from "./AvisoPublico";
 import type { Ciudad } from "@/lib/tipos";
 
 const input =
@@ -343,6 +344,10 @@ export default function FormularioConvocatoria({
             placeholder="Mayor de edad · buena condición física · con carro · enfermería"
           />
         </label>
+
+        <AvisoPublico campos="El punto de encuentro, el nombre de quien coordina y el teléfono">
+          Lo ve cualquiera que entre al sitio, se haya apuntado o no.
+        </AvisoPublico>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">

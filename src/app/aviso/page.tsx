@@ -180,22 +180,28 @@ export default function Aviso() {
           <strong>lo retiramos o lo corregimos</strong>. No hace falta explicar
           por qué.
         </p>
+        <p>
+          Cada lugar, donación y convocatoria se corrige o se retira con el{" "}
+          <strong>enlace privado</strong> que se entrega al publicarlo. Es el
+          camino más rápido y no depende de nadie.
+        </p>
         {CONTACTO ? (
           <p>
-            Escribinos a{" "}
+            Si perdiste ese enlace, o si el dato lo publicó otra persona,
+            escribinos a{" "}
             <a
               href={`mailto:${CONTACTO}`}
               className="font-medium text-blue-700 underline"
             >
               {CONTACTO}
-            </a>
-            .
+            </a>{" "}
+            y lo resolvemos.
           </p>
         ) : (
-          <p className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            Falta configurar el correo de contacto para solicitudes de
-            corrección o retiro (variable <code>NEXT_PUBLIC_CONTACTO</code>).
-            Sin un canal de contacto, este compromiso no se puede cumplir.
+          <p>
+            Si perdiste ese enlace, o si el dato lo publicó otra persona,
+            contactanos por el mismo medio por el que llegaste a este sitio y lo
+            resolvemos.
           </p>
         )}
       </Seccion>

@@ -8,6 +8,7 @@ import type { Ciudad } from "@/lib/tipos";
 
 import AsistenteUbicacion from "./AsistenteUbicacion";
 import SelectorCiudad from "./SelectorCiudad";
+import AvisoPublico from "./AvisoPublico";
 
 type Seleccion = Record<string, NivelId | "">;
 
@@ -156,6 +157,11 @@ export default function FormularioRegistro({
         <legend className="px-1 text-sm font-semibold text-slate-900">
           1. El lugar
         </legend>
+
+        <AvisoPublico campos="El nombre, la dirección y el teléfono del lugar">
+          Aparecen en el mapa para que la gente pueda llegar y confirmar antes
+          de salir: es el propósito del sitio.
+        </AvisoPublico>
 
         <div>
           <span className="mb-2 block text-xs font-medium text-slate-600">
@@ -342,9 +348,9 @@ export default function FormularioRegistro({
         <legend className="px-1 text-sm font-semibold text-slate-900">
           2. Contacto
         </legend>
-        <p className="text-xs text-slate-500">
-          El teléfono se publica para que la gente confirme antes de ir. No
-          pongas un número personal si no querés que sea público.
+        <p className="text-xs text-slate-600">
+          Poné el teléfono <strong>del lugar</strong>, no el tuyo: va a sonar a
+          cualquier hora, y a mucha gente.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">

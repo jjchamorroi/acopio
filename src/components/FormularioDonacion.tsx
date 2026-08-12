@@ -9,6 +9,7 @@ import type { Ciudad } from "@/lib/tipos";
 
 import AsistenteUbicacion from "./AsistenteUbicacion";
 import SelectorCiudad from "./SelectorCiudad";
+import AvisoPublico from "./AvisoPublico";
 
 type Sugerencia = {
   id: string;
@@ -320,11 +321,12 @@ export default function FormularioDonacion({
           3. Cómo te contactan
         </legend>
 
-        <div className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-          Tu teléfono <strong>sí se publica</strong>, para que un acopio o un
-          voluntario pueda coordinar la recogida. Si no querés que sea público,
-          mejor llevá la donación directamente a un acopio.
-        </div>
+        <AvisoPublico campos="Tu nombre y tu teléfono">
+          Es lo que permite que un acopio o un voluntario coordine la recogida.
+          Tu <strong>dirección exacta no se publica</strong>: en el mapa solo se
+          ve una zona de unos 300 metros. Si preferís que tu número no sea
+          público, llevá la donación directamente a un acopio.
+        </AvisoPublico>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
