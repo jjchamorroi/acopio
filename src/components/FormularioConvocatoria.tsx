@@ -63,8 +63,8 @@ export default function FormularioConvocatoria({
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!ciudad) return setError("Elegí el municipio.");
-    if (!punto) return setError("Marcá en el mapa el punto de encuentro.");
+    if (!ciudad) return setError("Elige el municipio.");
+    if (!punto) return setError("Marca en el mapa el punto de encuentro.");
 
     setEnviando(true);
     try {
@@ -117,10 +117,10 @@ export default function FormularioConvocatoria({
         </p>
 
         <div className="mt-4 rounded-md border border-emerald-300 bg-white p-4">
-          <p className="text-sm font-medium text-slate-900">Guardá este enlace</p>
+          <p className="text-sm font-medium text-slate-900">Guarda este enlace</p>
           <p className="mt-1 text-xs text-slate-600">
             Es con lo que ves <strong>quiénes se apuntaron y sus teléfonos</strong>,
-            y con lo que podés cancelarla. No lo vamos a volver a mostrar.
+            y con lo que puedes cancelarla. No lo vamos a volver a mostrar.
           </p>
           <code className="mt-2 block break-all rounded bg-slate-100 p-3 text-xs">
             {typeof window !== "undefined" ? window.location.origin : ""}
@@ -173,7 +173,7 @@ export default function FormularioConvocatoria({
 
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Explicá para qué *
+            Explica para qué *
           </span>
           <textarea
             className={input}

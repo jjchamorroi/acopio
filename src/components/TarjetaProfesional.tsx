@@ -51,7 +51,7 @@ export default function TarjetaProfesional({
           <strong>Registro profesional:</strong>{" "}
           <span className="font-mono">{p.registro}</span>
           <span className="mt-0.5 block text-slate-500">
-            Podés verificarlo en el registro oficial antes de contactar.
+            Puedes verificarlo en el registro oficial antes de contactar.
           </span>
         </p>
       ) : (

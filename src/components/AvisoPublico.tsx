@@ -24,12 +24,12 @@ export default function AvisoPublico({
       <p>
         <span aria-hidden>👁</span>{" "}
         <strong>{campos} se publica en internet</strong> y cualquiera puede
-        verlo, copiarlo o compartirlo. Usá datos institucionales, no personales.
+        verlo, copiarlo o compartirlo. Usa datos institucionales, no personales.
       </p>
       {children && <p className="mt-1">{children}</p>}
       <p className="mt-1">
-        Podés corregirlo o retirarlo cuando quieras con el enlace privado que
-        recibís al terminar.{" "}
+        Puedes corregirlo o retirarlo cuando quieras con el enlace privado que
+        recibes al terminar.{" "}
         <Link href="/aviso" className="font-medium underline">
           Aviso legal
         </Link>

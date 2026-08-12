@@ -116,7 +116,7 @@ export default async function DetalleAcopio({
       {centro.tipo === "sangre" && (
         <p className="mt-4 rounded-md border border-rose-300 bg-rose-50 px-4 py-3 text-rose-900">
           <strong>🩸 Tipos de sangre que necesitan: </strong>
-          {centro.tipos_sangre ?? "no lo informaron — llamá para preguntar"}
+          {centro.tipos_sangre ?? "no lo informaron — llama para preguntar"}
         </p>
       )}
 
@@ -134,14 +134,14 @@ export default async function DetalleAcopio({
             ? "🐾 Este albergue recibe personas con mascotas."
             : centro.acepta_mascotas === false
               ? "🚫 Este albergue no puede recibir mascotas."
-              : "🐾 No informaron si reciben mascotas. Preguntá al llamar antes de ir con tu animal."}
+              : "🐾 No informaron si reciben mascotas. Pregunta al llamar antes de ir con tu animal."}
         </p>
       )}
 
       {centro.estado === "pendiente" && (
         <p className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Este acopio lo reportó alguien de la comunidad y todavía no ha sido
-          confirmado. <strong>Llamá antes de ir.</strong>
+          confirmado. <strong>Llama antes de ir.</strong>
         </p>
       )}
 
@@ -180,7 +180,7 @@ export default async function DetalleAcopio({
               )
                 .map((n) => buscarCategoria(n.categoria)?.label ?? n.categoria)
                 .join(", ")}.`
-            : `${centro.nombre}, en ${centro.ciudad_nombre}. Mirá qué necesita:`
+            : `${centro.nombre}, en ${centro.ciudad_nombre}. Mira qué necesita:`
         }
       />
 

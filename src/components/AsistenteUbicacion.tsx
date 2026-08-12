@@ -151,13 +151,13 @@ export default function AsistenteUbicacion({
 
       {sinResultados && (
         <p className="text-xs text-slate-500">
-          No se encontró. Buscá una calle o un punto de referencia cercano
-          (un parque, una iglesia) y de ahí marcá a mano.
+          No se encontró. Busca una calle o un punto de referencia cercano
+          (un parque, una iglesia) y de ahí marca a mano.
         </p>
       )}
 
       <p className="text-xs text-slate-500">
-        La búsqueda solo acerca el mapa. <strong>El punto lo marcás vos</strong>{" "}
+        La búsqueda solo acerca el mapa. <strong>El punto lo marcas tú</strong>{" "}
         tocando el mapa: es lo que después usa el navegador de quien vaya.
       </p>
 
@@ -172,14 +172,14 @@ export default function AsistenteUbicacion({
               <span className="text-slate-600">Marcaste en: </span>
               <strong className="text-slate-900">{ubicacion}</strong>
               <span className="mt-0.5 block text-xs text-slate-500">
-                Si esto no coincide con la dirección que escribiste, corregí el
+                Si esto no coincide con la dirección que escribiste, corrige el
                 punto antes de continuar.
               </span>
             </>
           ) : (
             <span className="text-slate-600">
               Punto marcado. No pudimos identificar la zona automáticamente —
-              revisá que sea el sitio correcto.
+              revisa que sea el sitio correcto.
             </span>
           )}
         </div>

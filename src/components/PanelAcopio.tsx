@@ -258,7 +258,7 @@ export default function PanelAcopio({
         <div>
           <h2 className="text-sm font-semibold text-slate-900">Tipo de lugar</h2>
           <p className="mt-0.5 text-xs text-slate-600">
-            Si quedó mal clasificado, corregilo acá. Cambiarlo cambia en qué
+            Si quedó mal clasificado, corrígelo acá. Cambiarlo cambia en qué
             listado aparece: un acopio se muestra a quien quiere donar, un
             albergue también a quien busca dónde dormir.
           </p>
@@ -409,7 +409,7 @@ export default function PanelAcopio({
             ¿Qué necesitan ahora?
           </h2>
           <p className="text-xs text-slate-500">
-            Actualizá esto varias veces al día si podés. Es lo que ve la gente
+            Actualiza esto varias veces al día si puedes. Es lo que ve la gente
             antes de salir de la casa con el carro cargado.
           </p>
         </div>
@@ -522,7 +522,7 @@ export default function PanelAcopio({
             Historial de cambios
           </h2>
           <p className="mt-0.5 text-xs text-slate-600">
-            Si alguien modificó algo por error, restaurá el estado anterior. La
+            Si alguien modificó algo por error, restaura el estado anterior. La
             reversión también queda registrada.
           </p>
           <ul className="mt-3 divide-y divide-slate-100">

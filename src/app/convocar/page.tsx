@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Convocar voluntarios",
   description:
-    "Publicá qué hay que hacer, cuándo y cuántas personas hacen falta.",
+    "Publica qué hay que hacer, cuándo y cuántas personas hacen falta.",
 };
 
 export default async function Convocar() {
@@ -19,12 +19,12 @@ export default async function Convocar() {
         Convocar voluntarios
       </h1>
       <p className="mt-2 text-slate-600">
-        Decí qué hay que hacer, cuándo y cuántas personas hacen falta. Al
-        terminar recibís un enlace privado para ver quiénes se apuntaron.
+        Di qué hay que hacer, cuándo y cuántas personas hacen falta. Al
+        terminar recibes un enlace privado para ver quiénes se apuntaron.
       </p>
 
       <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        Convocá solo si vas a estar ahí para recibir a la gente. Una
+        Convoca solo si vas a estar ahí para recibir a la gente. Una
         convocatoria sin nadie que coordine deja a un grupo de voluntarios
         parados en una esquina.
       </div>

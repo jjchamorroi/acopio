@@ -74,10 +74,10 @@ export default function PanelAdmin() {
       `Vas a ELIMINAR "${nombre}" y todo su historial. No se puede deshacer.
 
 ` +
-        `Si el lugar existió y solo dejó de recibir, usá "Cerrar" en vez de esto.
+        `Si el lugar existió y solo dejó de recibir, usa "Cerrar" en vez de esto.
 
 ` +
-        `Escribí ELIMINAR para confirmar:`
+        `Escribe ELIMINAR para confirmar:`
     );
     if (escrito !== "ELIMINAR") return;
 
@@ -98,11 +98,11 @@ export default function PanelAdmin() {
       `Vas a ELIMINAR la convocatoria "${titulo}". No se puede deshacer.
 
 ` +
-        `Si simplemente ya no se hace, usá "Cancelar" — así conservás los ` +
+        `Si simplemente ya no se hace, usa "Cancelar" — así conservas los ` +
         `teléfonos de quienes se apuntaron para avisarles.
 
 ` +
-        `Escribí ELIMINAR para confirmar:`
+        `Escribe ELIMINAR para confirmar:`
     );
     if (escrito !== "ELIMINAR") return;
 

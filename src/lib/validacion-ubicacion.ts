@@ -46,7 +46,7 @@ export async function validarUbicacionEnCiudad(
   if (distancia > LIMITE_ABSOLUTO_KM) {
     return (
       `El punto marcado está a ${Math.round(distancia)} km de ${elegida.nombre}. ` +
-      `Revisá que hayas marcado en el mapa el lugar correcto.`
+      `Revisa que hayas marcado en el mapa el lugar correcto.`
     );
   }
 
@@ -62,7 +62,7 @@ export async function validarUbicacionEnCiudad(
     return (
       `Elegiste ${elegida.nombre}, pero el punto que marcaste está ` +
       `${cerca} de ${masCercana.nombre}. ` +
-      `Corregí la ciudad o el punto en el mapa.`
+      `Corrige la ciudad o el punto en el mapa.`
     );
   }
 

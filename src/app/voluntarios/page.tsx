@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const descripcion =
       cs.length === 0
         ? "Convocatorias abiertas para ir a ayudar tras el sismo."
-        : `${cs.length} convocatorias abiertas${plazas > 0 ? ` · faltan ${plazas} personas` : ""}. Mirá qué hay que hacer, cuándo y qué llevar.`;
+        : `${cs.length} convocatorias abiertas${plazas > 0 ? ` · faltan ${plazas} personas` : ""}. Mira qué hay que hacer, cuándo y qué llevar.`;
     return {
       title: "Se necesitan voluntarios",
       description: descripcion,
@@ -54,7 +54,7 @@ export default async function Voluntarios({
           </h1>
           <p className="mt-2 max-w-2xl text-slate-600">
             Convocatorias abiertas: qué hay que hacer, cuándo, dónde y qué
-            llevar. Apuntate solo si vas a ir — el cupo que ocupás es el de
+            llevar. Apúntate solo si vas a ir — el cupo que ocupas es el de
             otra persona.
           </p>
         </div>
@@ -82,8 +82,8 @@ export default async function Voluntarios({
             className="mt-3"
             texto={
               plazas > 0
-                ? `Faltan ${plazas} voluntarios para las jornadas de esta semana por el sismo. Mirá qué hay que hacer y apuntate:`
-                : "Convocatorias de voluntarios por el sismo. Mirá qué hay que hacer:"
+                ? `Faltan ${plazas} voluntarios para las jornadas de esta semana por el sismo. Mira qué hay que hacer y apúntate:`
+                : "Convocatorias de voluntarios por el sismo. Mira qué hay que hacer:"
             }
           />
         </>

@@ -94,7 +94,7 @@ export default function SelectorCiudad({
           value={texto}
           autoComplete="off"
           required={requerido && !valor}
-          placeholder="Escribí el municipio: Ibagué, Quibdó, Tuluá…"
+          placeholder="Escribe el municipio: Ibagué, Quibdó, Tuluá…"
           onFocus={() => setAbierto(true)}
           onChange={(e) => {
             setTexto(e.target.value);

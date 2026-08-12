@@ -46,7 +46,7 @@ export default function FormularioProfesional({
     e.preventDefault();
     setError(null);
     if (necesitaCiudad && !ciudad) {
-      setError("Indicá el municipio donde podés atender presencialmente.");
+      setError("Indica el municipio donde puedes atender presencialmente.");
       return;
     }
 
@@ -91,15 +91,15 @@ export default function FormularioProfesional({
           Registro enviado
         </h2>
         <p className="mt-2 text-sm text-emerald-900">
-          Ya aparecés en el directorio marcado como{" "}
+          Ya apareces en el directorio marcado como{" "}
           <strong>sin verificar</strong>. Alguien del equipo va a confirmar tus
           datos antes de ponerte el sello.
         </p>
 
         <div className="mt-4 rounded-md border border-emerald-300 bg-white p-4">
-          <p className="text-sm font-medium text-slate-900">Guardá este enlace</p>
+          <p className="text-sm font-medium text-slate-900">Guarda este enlace</p>
           <p className="mt-1 text-xs text-slate-600">
-            Con él actualizás tu disponibilidad o te das de baja. No lo vamos a
+            Con él actualizas tu disponibilidad o te das de baja. No lo vamos a
             volver a mostrar.
           </p>
           <code className="mt-2 block break-all rounded bg-slate-100 p-3 text-xs">
@@ -131,7 +131,7 @@ export default function FormularioProfesional({
     <form onSubmit={enviar} className="space-y-6">
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
         <legend className="px-1 text-sm font-semibold text-slate-900">
-          1. Quién sos
+          1. Quién eres
         </legend>
 
         <AvisoPublico campos="Tu nombre, tu profesión y tu número de registro">
@@ -186,7 +186,7 @@ export default function FormularioProfesional({
           />
           {datosProfesion?.registroObligatorio && (
             <span className="mt-1 block text-xs text-slate-500">
-              Sin este número nadie puede comprobar que ejercés, y en salud eso
+              Sin este número nadie puede comprobar que ejerces, y en salud eso
               importa: quien atiende sin serlo hace daño.
             </span>
           )}
@@ -195,12 +195,12 @@ export default function FormularioProfesional({
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
         <legend className="px-1 text-sm font-semibold text-slate-900">
-          2. Qué ofrecés
+          2. Qué ofreces
         </legend>
 
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Describilo *
+            Descríbelo *
           </span>
           <textarea
             className={input}
@@ -216,7 +216,7 @@ export default function FormularioProfesional({
 
         <div>
           <span className="mb-2 block text-xs font-medium text-slate-600">
-            ¿Cómo atendés? *
+            ¿Cómo atiendes? *
           </span>
           <div className="flex flex-wrap gap-1.5">
             {(Object.keys(MODALIDADES) as ModalidadId[]).map((m) => {
@@ -243,7 +243,7 @@ export default function FormularioProfesional({
         {necesitaCiudad && (
           <div className="block">
             <span className="mb-1 block text-xs font-medium text-slate-600">
-              Municipio donde atendés *
+              Municipio donde atiendes *
             </span>
             <SelectorCiudad valor={ciudad} onCambio={setCiudad} requerido />
           </div>
@@ -293,10 +293,10 @@ export default function FormularioProfesional({
           <span className="text-sm text-slate-800">
             Publicar mi teléfono
             <span className="mt-0.5 block text-xs text-slate-600">
-              Si lo publicás te pueden llamar directo, que es lo más rápido para
-              quien necesita ayuda. Pensalo bien igual: en salud mental un
+              Si lo publicas te pueden llamar directo, que es lo más rápido para
+              quien necesita ayuda. Piénsalo bien igual: en salud mental un
               número abierto puede sonar a cualquier hora y agotarte en una
-              semana. Si lo dejás sin marcar, dejá un correo abajo.
+              semana. Si lo dejas sin marcar, deja un correo abajo.
             </span>
           </span>
         </label>
@@ -314,7 +314,7 @@ export default function FormularioProfesional({
             placeholder="tu@correo.com"
           />
           <span className="mt-1 block text-xs text-slate-500">
-            Si lo escribís, se publica.
+            Si lo escribes, se publica.
           </span>
         </label>
 
@@ -333,7 +333,7 @@ export default function FormularioProfesional({
       )}
 
       <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-        Al registrarte declarás que la información es cierta y que estás
+        Al registrarte declaras que la información es cierta y que estás
         habilitado para ejercer. Publicar datos falsos sobre una profesión de
         salud puede tener consecuencias legales.{" "}
         <Link href="/aviso" className="font-medium text-slate-700 underline">

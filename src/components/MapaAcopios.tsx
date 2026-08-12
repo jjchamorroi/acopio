@@ -126,7 +126,7 @@ export default function MapaAcopios({
                       : `Faltan ${faltan} de ${v.cupo}`}
                 </p>
                 {v.que_llevar && (
-                  <p className="text-slate-600">Llevá: {v.que_llevar}</p>
+                  <p className="text-slate-600">Lleva: {v.que_llevar}</p>
                 )}
                 <p>
                   <Link
@@ -189,13 +189,13 @@ export default function MapaAcopios({
                       ? "🐾 Acepta mascotas"
                       : c.acepta_mascotas === false
                         ? "🚫 No recibe mascotas"
-                        : "🐾 Mascotas: preguntá al llamar"}
+                        : "🐾 Mascotas: pregunta al llamar"}
                   </p>
                 )}
 
                 {c.estado === "pendiente" && (
                   <p className="rounded bg-amber-50 px-2 py-1 text-amber-800">
-                    Sin verificar — confirmá por teléfono antes de ir.
+                    Sin verificar — confirma por teléfono antes de ir.
                   </p>
                 )}
                 {c.es_demo && (

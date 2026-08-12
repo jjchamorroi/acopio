@@ -60,15 +60,15 @@ export default function FormularioDonacion({
     e.preventDefault();
     setError(null);
     if (!categoria) {
-      setError("Elegí qué tipo de cosa vas a donar.");
+      setError("Elige qué tipo de cosa vas a donar.");
       return;
     }
     if (!ciudad) {
-      setError("Elegí el municipio.");
+      setError("Elige el municipio.");
       return;
     }
     if (!punto) {
-      setError("Marcá en el mapa la zona donde está la donación.");
+      setError("Marca en el mapa la zona donde está la donación.");
       return;
     }
 
@@ -116,7 +116,7 @@ export default function FormularioDonacion({
           </h2>
           <p className="mt-1 text-sm text-emerald-900">
             En el mapa aparece solo la <strong>zona aproximada</strong>. Tu
-            dirección exacta no se publica: la coordinás por teléfono con quien
+            dirección exacta no se publica: la coordinas por teléfono con quien
             venga.
           </p>
         </div>
@@ -124,11 +124,11 @@ export default function FormularioDonacion({
         {resultado.sugerencias.length > 0 ? (
           <section>
             <h3 className="text-base font-semibold text-slate-900">
-              Si podés llevarlo vos, acá lo necesitan
+              Si puedes llevarlo tú, acá lo necesitan
             </h3>
             <p className="mb-3 text-sm text-slate-600">
               Estos lugares cerca tuyo pidieron{" "}
-              <strong>{cat?.label?.toLowerCase() ?? categoria}</strong>. Llamá
+              <strong>{cat?.label?.toLowerCase() ?? categoria}</strong>. Llama
               antes de salir.
             </p>
             <ul className="space-y-2">
@@ -187,10 +187,10 @@ export default function FormularioDonacion({
 
         <div className="rounded-lg border border-slate-300 bg-white p-4">
           <p className="text-sm font-medium text-slate-900">
-            Guardá este enlace
+            Guarda este enlace
           </p>
           <p className="mt-1 text-xs text-slate-600">
-            Es con lo que marcás la donación como entregada. No lo vamos a
+            Es con lo que marcas la donación como entregada. No lo vamos a
             volver a mostrar.
           </p>
           <code className="mt-2 block break-all rounded bg-slate-100 p-3 text-xs">
@@ -224,7 +224,7 @@ export default function FormularioDonacion({
     <form onSubmit={enviar} className="space-y-6">
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
         <legend className="px-1 text-sm font-semibold text-slate-900">
-          1. Qué tenés para donar
+          1. Qué tienes para donar
         </legend>
 
         <div>
@@ -302,7 +302,7 @@ export default function FormularioDonacion({
 
         <div>
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Marcá en el mapa dónde está *
+            Marca en el mapa dónde está *
           </span>
           <AsistenteUbicacion
             valor={punto}
@@ -324,8 +324,8 @@ export default function FormularioDonacion({
         <AvisoPublico campos="Tu nombre y tu teléfono">
           Es lo que permite que un acopio o un voluntario coordine la recogida.
           Tu <strong>dirección exacta no se publica</strong>: en el mapa solo se
-          ve una zona de unos 300 metros. Si preferís que tu número no sea
-          público, llevá la donación directamente a un acopio.
+          ve una zona de unos 300 metros. Si prefieres que tu número no sea
+          público, lleva la donación directamente a un acopio.
         </AvisoPublico>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -380,9 +380,9 @@ export default function FormularioDonacion({
       )}
 
       <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-        Al publicar autorizás que se muestre tu teléfono y una zona aproximada
-        —nunca tu dirección exacta—. Podés retirar la donación cuando quieras
-        con el enlace privado que recibís.{" "}
+        Al publicar autorizas que se muestre tu teléfono y una zona aproximada
+        —nunca tu dirección exacta—. Puedes retirar la donación cuando quieras
+        con el enlace privado que recibes.{" "}
         <Link href="/aviso" className="font-medium text-slate-700 underline">
           Aviso legal
         </Link>

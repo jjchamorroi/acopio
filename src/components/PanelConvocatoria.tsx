@@ -167,7 +167,7 @@ export default function PanelConvocatoria({
       <p className="mt-0.5 text-xs text-blue-800">
         {modoAdmin
           ? "Estás viendo esto con la clave de administración. Los datos de los voluntarios no son públicos."
-          : "Estos datos solo los ves vos, con este enlace. No se publican."}
+          : "Estos datos solo los ves tú, con este enlace. No se publican."}
       </p>
 
       {error && (
@@ -185,7 +185,7 @@ export default function PanelConvocatoria({
         <p className="mt-3 text-sm text-blue-800">Cargando…</p>
       ) : confirmadas.length === 0 ? (
         <p className="mt-3 text-sm text-blue-800">
-          Todavía no se ha apuntado nadie. Compartí el enlace de la convocatoria.
+          Todavía no se ha apuntado nadie. Comparte el enlace de la convocatoria.
         </p>
       ) : (
         <ul className="mt-3 divide-y divide-blue-200 rounded-md border border-blue-200 bg-white">

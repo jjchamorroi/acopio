@@ -2,82 +2,67 @@ import Link from "next/link";
 import type { ModoId } from "@/lib/tipos-lugar";
 
 /**
- * Las cosas que se pueden hacer, a la vista.
+ * Del rediseño, nota 01: «Las cuatro tarjetas de entrada pesan lo mismo, así
+ * que ninguna guía».
  *
- * En celular la barra superior se colapsa en un botón "Menú", así que quien
- * entraba veía un mapa y ninguna pista de que también podía ofrecer lo que
- * tiene, convocar gente o pedir ayuda. Un mapa sin salidas visibles se lee
- * como una consulta, no como algo en lo que se participa.
- *
- * Van con verbos en primera persona —"tengo", "quiero", "necesito"— porque la
- * persona llega pensando desde su situación, no desde las categorías nuestras.
- *
- * Ninguna se pinta como "seleccionada". Justo encima hay un selector de dos
- * posiciones donde el relleno oscuro SÍ significa "estás acá"; usar el mismo
- * lenguaje para una simple sugerencia hacía creer que la opción de donar
- * venía activada de fábrica.
+ * Ahora hay dos acciones dominantes —por donde entra casi todo el tráfico— y
+ * el resto como enlaces secundarios. Que todo pese igual no es neutralidad:
+ * es dejar sin ayuda a alguien que llegó con afán.
  */
-const ACCIONES = [
-  {
-    href: "/donar",
-    emoji: "🎁",
-    titulo: "Tengo algo para donar",
-    ayuda: "Te decimos quién lo necesita cerca",
-    /** Modo del mapa que esta acción abre; si ya estás ahí, se oculta. */
-    modo: null as ModoId | null,
-  },
-  {
-    href: "/?modo=ayuda",
-    emoji: "🆘",
-    titulo: "Necesito ayuda",
-    ayuda: "Comedores y albergues abiertos",
-    modo: "ayuda" as ModoId,
-  },
-  {
-    href: "/?modo=voluntarios",
-    emoji: "🙋",
-    titulo: "Quiero ser voluntario",
-    ayuda: "Jornadas con cupo abierto",
-    modo: "voluntarios" as ModoId,
-  },
-  {
-    href: "/profesionales",
-    emoji: "🩺",
-    titulo: "Necesito atención",
-    ayuda: "Psicología y salud, gratis",
-    modo: null as ModoId | null,
-  },
-  {
-    href: "/registrar",
-    emoji: "📍",
-    titulo: "Registrar un lugar",
-    ayuda: "Acopio, albergue, comedor…",
-    modo: null as ModoId | null,
-  },
-];
-
 export default function AccionesRapidas({ modo }: { modo?: ModoId }) {
-  // Ofrecerle "necesito ayuda" a quien ya está en necesito ayuda es ruido que
-  // le quita sitio a las salidas que sí no ha visto.
-  const visibles = ACCIONES.filter((a) => a.modo === null || a.modo !== modo);
+  const enAyuda = modo === "ayuda";
 
   return (
-    <nav aria-label="¿Qué querés hacer?" className="grid gap-2 sm:grid-cols-2">
-      {visibles.map((a) => (
+    <div className="flex flex-col gap-3">
+      <div className="grid gap-2.5 sm:grid-cols-2">
         <Link
-          key={a.href}
-          href={a.href}
-          className="flex items-center gap-3 rounded-lg border border-slate-300 bg-white p-4 transition hover:border-slate-400 hover:bg-slate-50"
+          href="/donar"
+          className="flex items-center gap-3.5 rounded-2xl bg-[var(--color-marino)] p-4 text-white transition hover:bg-[var(--color-marino-oscuro)]"
         >
           <span aria-hidden className="text-2xl leading-none">
-            {a.emoji}
+            🎁
           </span>
           <span className="min-w-0">
-            <span className="block font-medium text-slate-900">{a.titulo}</span>
-            <span className="block text-xs text-slate-500">{a.ayuda}</span>
+            <span className="block text-base font-bold">
+              Tengo algo para donar
+            </span>
+            <span className="block text-[13px] text-[var(--color-marino-tenue)]">
+              Te decimos quién lo necesita cerca
+            </span>
           </span>
         </Link>
-      ))}
-    </nav>
+
+        {!enAyuda && (
+          <Link
+            href="/?modo=ayuda"
+            className="flex items-center gap-3.5 rounded-2xl border-[1.5px] border-[#f0c4bc] bg-[var(--color-urgente-fondo)] p-4 transition hover:brightness-[0.98]"
+          >
+            <span aria-hidden className="text-2xl leading-none">
+              🆘
+            </span>
+            <span className="min-w-0">
+              <span className="block text-base font-bold text-[#8f2418]">
+                Necesito ayuda
+              </span>
+              <span className="block text-[13px] text-[#9a5a4e]">
+                Comedores y albergues abiertos ahora
+              </span>
+            </span>
+          </Link>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-semibold text-[var(--color-marino)]">
+        <Link href="/?modo=voluntarios" className="underline underline-offset-[3px]">
+          Ser voluntario
+        </Link>
+        <Link href="/profesionales" className="underline underline-offset-[3px]">
+          Atención profesional gratuita
+        </Link>
+        <Link href="/registrar" className="underline underline-offset-[3px]">
+          Registrar un lugar
+        </Link>
+      </div>
+    </div>
   );
 }

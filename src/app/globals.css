@@ -1,10 +1,48 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/*
+  Sistema de diseño — Red de Acopio
+  Tomado del rediseño hecho en Claude Design.
+
+  La paleta es cálida y de contraste alto a propósito: el sitio se abre en la
+  calle, con sol, en un teléfono de gama media y con afán. Los grises fríos por
+  defecto de Tailwind se lavan en esas condiciones.
+*/
 @theme {
-  --color-urgente: #dc2626;
-  --color-necesita: #f59e0b;
-  --color-sobra: #0891b2;
+  /* Tinta y superficies */
+  --color-tinta: #10151c;
+  --color-tinta-suave: #3c434f;
+  --color-texto: #4a5261;
+  --color-apagado: #5b6371;
+  --color-tenue: #7b818c;
+  --color-etiqueta: #8a8f99;
+
+  --color-lienzo: #e7e8e4;
+  --color-superficie: #f5f5f2;
+  --color-hueso: #f7f8f4;
+  --color-borde: #e0e2dc;
+  --color-borde-fuerte: #cfd3ca;
+  --color-borde-suave: #eef0ea;
+
+  /* Azul institucional: acciones principales */
+  --color-marino: #14335c;
+  --color-marino-oscuro: #0b1d36;
+  --color-marino-tenue: #b9c8de;
+
+  /* Urgencia */
+  --color-urgente: #c8321f;
+  --color-urgente-texto: #a8281a;
+  --color-urgente-fondo: #fdf1ef;
+  --color-urgente-borde: #f2cbc3;
+
+  /* Abierto / verificado */
+  --color-abierto: #0a6b41;
+  --color-abierto-fondo: #e6f4ec;
+
+  /* Acento: solo para lo que debe saltar una vez por pantalla */
+  --color-acento: #f2c14e;
+  --color-acento-texto: #8a5a12;
 }
 
 html {
@@ -12,7 +50,9 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  background: var(--color-lienzo);
+  color: var(--color-tinta);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Leaflet pinta sus tiles por encima de todo si no se le baja el z-index,
@@ -25,4 +65,14 @@ body {
 .leaflet-popup-content {
   margin: 12px 14px;
   min-width: 200px;
+}
+
+/* Los chips de filtro se desbordan a propósito en móvil: se arrastran de lado
+   en vez de apilarse y empujar el contenido hacia abajo. La barra se oculta
+   porque en un teléfono no aporta y roba altura. */
+.chips-scroll {
+  scrollbar-width: none;
+}
+.chips-scroll::-webkit-scrollbar {
+  display: none;
 }

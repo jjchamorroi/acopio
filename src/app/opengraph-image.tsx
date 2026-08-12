@@ -68,7 +68,7 @@ export default async function Image() {
               maxWidth: 1000,
             }}
           >
-            ¿Dónde hace falta lo que podés donar?
+            ¿Dónde hace falta lo que puedes donar?
           </div>
         </div>
 

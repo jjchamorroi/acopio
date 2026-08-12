@@ -139,7 +139,7 @@ export default async function DetalleConvocatoria({
         className="mt-4"
         texto={
           faltan !== null && faltan > 0
-            ? `Faltan ${faltan} personas para "${c.titulo}" en ${c.ciudad_nombre}, ${formatearFranja(c.inicia, c.termina).toLowerCase()}. ¿Te apuntás?`
+            ? `Faltan ${faltan} personas para "${c.titulo}" en ${c.ciudad_nombre}, ${formatearFranja(c.inicia, c.termina).toLowerCase()}. ¿Te apuntas?`
             : `"${c.titulo}" en ${c.ciudad_nombre}, ${formatearFranja(c.inicia, c.termina).toLowerCase()}.`
         }
       />

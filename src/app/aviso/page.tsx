@@ -86,8 +86,8 @@ export default function Aviso() {
           siempre disponible.
         </p>
         <p className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
-          <strong>Llamá siempre antes de desplazarte.</strong> Un dato de hace
-          unas horas puede haber cambiado, y el viaje perdido lo hacés vos.
+          <strong>Llama siempre antes de desplazarte.</strong> Un dato de hace
+          unas horas puede haber cambiado, y el viaje perdido lo haces tú.
         </p>
       </Seccion>
 
@@ -151,7 +151,7 @@ export default function Aviso() {
             convocatoria, para poder llamar.
           </li>
           <li>
-            <strong>Ubicación del navegador:</strong> si la compartís para ver
+            <strong>Ubicación del navegador:</strong> si la compartes para ver
             lo más cercano, se usa en ese momento y{" "}
             <strong>no se guarda</strong>.
           </li>
@@ -166,10 +166,10 @@ export default function Aviso() {
           vendemos estos datos a nadie.
         </p>
         <p>
-          Como titular podés conocer, actualizar, rectificar y suprimir tus
+          Como titular puedes conocer, actualizar, rectificar y suprimir tus
           datos, y revocar la autorización. Los lugares y las donaciones tienen
           un enlace privado para editarse o retirarse en cualquier momento; si
-          lo perdiste, escribinos.
+          lo perdiste, escríbenos.
         </p>
       </Seccion>
 
@@ -188,7 +188,7 @@ export default function Aviso() {
         {CONTACTO ? (
           <p>
             Si perdiste ese enlace, o si el dato lo publicó otra persona,
-            escribinos a{" "}
+            escríbenos a{" "}
             <a
               href={`mailto:${CONTACTO}`}
               className="font-medium text-blue-700 underline"
@@ -200,7 +200,7 @@ export default function Aviso() {
         ) : (
           <p>
             Si perdiste ese enlace, o si el dato lo publicó otra persona,
-            contactanos por el mismo medio por el que llegaste a este sitio y lo
+            contáctanos por el mismo medio por el que llegaste a este sitio y lo
             resolvemos.
           </p>
         )}
@@ -215,7 +215,7 @@ export default function Aviso() {
 
       <p className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-600">
         En resumen: esto es un tablero comunitario hecho para que la ayuda
-        llegue antes. Úsalo con criterio, confirmá por teléfono y, ante la duda,
+        llegue antes. Úsalo con criterio, confirma por teléfono y, ante la duda,
         seguí a los organismos de socorro.
       </p>
 

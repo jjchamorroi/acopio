@@ -125,7 +125,7 @@ export async function POST(
           {
             error: "El cupo ya está completo",
             detalle:
-              "Mirá otras convocatorias: seguro hay más manos haciendo falta cerca.",
+              "Mira otras convocatorias: seguro hay más manos haciendo falta cerca.",
           },
           { status: 409 }
         );

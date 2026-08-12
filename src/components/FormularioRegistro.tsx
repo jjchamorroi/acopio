@@ -51,11 +51,11 @@ export default function FormularioRegistro({
     setError(null);
 
     if (!ciudad) {
-      setError("Elegí el municipio.");
+      setError("Elige el municipio.");
       return;
     }
     if (!punto) {
-      setError("Marcá la ubicación exacta en el mapa antes de continuar.");
+      setError("Marca la ubicación exacta en el mapa antes de continuar.");
       return;
     }
 
@@ -118,10 +118,10 @@ export default function FormularioRegistro({
 
         <div className="mt-4 rounded-md border border-emerald-300 bg-white p-4">
           <p className="text-sm font-medium text-slate-900">
-            Guardá este enlace. Es el único.
+            Guarda este enlace. Es el único.
           </p>
           <p className="mt-1 text-xs text-slate-600">
-            Con él actualizás qué necesitan sin crear ninguna cuenta. No lo
+            Con él actualizas qué necesitan sin crear ninguna cuenta. No lo
             vamos a volver a mostrar y no lo podemos recuperar.
           </p>
           <code className="mt-3 block break-all rounded bg-slate-100 p-3 text-xs">
@@ -328,7 +328,7 @@ export default function FormularioRegistro({
 
         <div>
           <span className="mb-1 block text-xs font-medium text-slate-600">
-            Ubicación exacta * — tocá el mapa donde queda la entrada
+            Ubicación exacta * — toca el mapa donde queda la entrada
           </span>
           <AsistenteUbicacion
             valor={punto}
@@ -349,7 +349,7 @@ export default function FormularioRegistro({
           2. Contacto
         </legend>
         <p className="text-xs text-slate-600">
-          Poné el teléfono <strong>del lugar</strong>, no el tuyo: va a sonar a
+          Pon el teléfono <strong>del lugar</strong>, no el tuyo: va a sonar a
           cualquier hora, y a mucha gente.
         </p>
 
@@ -387,7 +387,7 @@ export default function FormularioRegistro({
           3. ¿Qué necesitan?
         </legend>
         <p className="text-xs text-slate-500">
-          Marcá solo lo que aplique. Decir <strong>qué les sobra</strong> es tan
+          Marca solo lo que aplique. Decir <strong>qué les sobra</strong> es tan
           útil como decir qué les falta: evita que sigan llegando camiones de lo
           mismo.
         </p>
@@ -450,9 +450,9 @@ export default function FormularioRegistro({
       )}
 
       <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-        Al registrar el lugar confirmás que los datos son ciertos y autorizás
-        su publicación en el mapa. Podés corregirlos o retirarlos cuando
-        quieras con el enlace privado que recibís.{" "}
+        Al registrar el lugar confirmas que los datos son ciertos y autorizas
+        su publicación en el mapa. Puedes corregirlos o retirarlos cuando
+        quieras con el enlace privado que recibes.{" "}
         <Link href="/aviso" className="font-medium text-slate-700 underline">
           Aviso legal
         </Link>

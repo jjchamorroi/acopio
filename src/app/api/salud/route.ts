@@ -26,7 +26,7 @@ export async function GET() {
         ok: false,
         base: "sin conexión",
         ayuda:
-          "Revisá que DATABASE_URL apunte a la base y que esté levantada.",
+          "Revisa que DATABASE_URL apunte a la base y que esté levantada.",
       },
       { status: 503 }
     );

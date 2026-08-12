@@ -64,7 +64,7 @@ export async function DELETE(
       {
         error: `Hay ${inscritos} ${inscritos === 1 ? "persona apuntada" : "personas apuntadas"}`,
         detalle:
-          "Si la borrás perdés sus teléfonos y no vas a poder avisarles que no vayan. Cancelarla es casi siempre lo correcto.",
+          "Si la borras pierdes sus teléfonos y no vas a poder avisarles que no vayan. Cancelarla es casi siempre lo correcto.",
         inscritos,
       },
       { status: 409 }
@@ -165,7 +165,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error: "La convocatoria no puede terminar antes de empezar",
-          detalle: "Revisá las dos fechas: la de fin quedó antes que la de inicio.",
+          detalle: "Revisa las dos fechas: la de fin quedó antes que la de inicio.",
         },
         { status: 400 }
       );

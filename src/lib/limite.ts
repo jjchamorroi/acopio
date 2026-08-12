@@ -103,7 +103,7 @@ export function respuesta429(resultado: ResultadoLimite, mensaje: string) {
     {
       error: mensaje,
       reintentar_en_segundos: resultado.reintentarEn,
-      detalle: `Volvé a intentarlo en ${minutos} minuto${minutos === 1 ? "" : "s"}.`,
+      detalle: `Vuelve a intentarlo en ${minutos} minuto${minutos === 1 ? "" : "s"}.`,
     },
     {
       status: 429,

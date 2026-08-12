@@ -73,10 +73,10 @@ export default async function Profesionales({
       </div>
 
       <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        <strong>Verificá antes de confiar.</strong> Este sitio no comprueba
+        <strong>Verifica antes de confiar.</strong> Este sitio no comprueba
         títulos ni registros: publicamos el número que cada persona informa para
-        que vos lo consultes en el registro oficial. En salud, atender sin serlo
-        hace daño real — desconfiá de quien no publique su registro.
+        que tú lo consultes en el registro oficial. En salud, atender sin serlo
+        hace daño real — desconfía de quien no publique su registro.
       </div>
 
       {profesionales.length > 0 && (

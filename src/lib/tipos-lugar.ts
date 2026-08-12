@@ -103,23 +103,23 @@ export function tipoLugar(id: string) {
 export const MODOS = {
   donar: {
     label: "Quiero donar",
-    titulo: "¿Dónde hace falta lo que podés donar?",
+    titulo: "¿Dónde hace falta lo que puedes donar?",
     bajada:
-      "Elegí qué querés donar y el mapa te muestra quién lo está pidiendo hoy.",
+      "Elige qué quieres donar y el mapa te muestra quién lo está pidiendo hoy.",
     vacio: "Todavía no hay lugares registrados que reciban donaciones acá.",
   },
   ayuda: {
     label: "Necesito ayuda",
     titulo: "¿Dónde puedo recibir ayuda?",
     bajada:
-      "Comedores, albergues y puntos de atención abiertos ahora. Llamá antes de ir: la información la aporta la comunidad.",
+      "Comedores, albergues y puntos de atención abiertos ahora. Llama antes de ir: la información la aporta la comunidad.",
     vacio: "Todavía no hay lugares registrados que entreguen ayuda acá.",
   },
   voluntarios: {
     label: "Puedo ir a ayudar",
     titulo: "¿Dónde hacen falta manos?",
     bajada:
-      "Jornadas con día, hora y cupo. Apuntate solo si vas a ir: el lugar que ocupás es el de otra persona.",
+      "Jornadas con día, hora y cupo. Apúntate solo si vas a ir: el lugar que ocupas es el de otra persona.",
     vacio: "No hay convocatorias abiertas acá en este momento.",
   },
 } as const;

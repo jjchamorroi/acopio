@@ -444,3 +444,21 @@ export async function obtenerProfesional(
   );
   return filas[0] ?? null;
 }
+
+
+/**
+ * Cuándo se tocó por última vez cualquier lugar.
+ *
+ * Alimenta el "Actualizado hace X" del encabezado. Del rediseño: un tablero de
+ * emergencia tiene que demostrar que está vivo, porque quien llega no sabe si
+ * mira algo de hoy o una página abandonada hace tres semanas.
+ */
+export async function ultimaActualizacion(): Promise<string | null> {
+  return conCache("ultima-actualizacion", 60, async () => {
+    const filas = await query<{ ultima: string | null }>(
+      `SELECT max(actualizado_en) AS ultima FROM centro_acopio
+        WHERE estado <> 'cerrado'`
+    );
+    return filas[0]?.ultima ?? null;
+  });
+}

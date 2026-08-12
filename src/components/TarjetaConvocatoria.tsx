@@ -106,7 +106,7 @@ export default function TarjetaConvocatoria({
 
       {c.que_llevar && (
         <p className="mt-2 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-900">
-          <strong>Llevá:</strong> {c.que_llevar}
+          <strong>Lleva:</strong> {c.que_llevar}
         </p>
       )}
 

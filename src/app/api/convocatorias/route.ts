@@ -57,7 +57,7 @@ export async function POST(req: Request) {
   // sigue vigente.
   if (Date.parse(d.termina) < Date.now()) {
     return NextResponse.json(
-      { error: "La convocatoria ya terminó. Revisá la fecha." },
+      { error: "La convocatoria ya terminó. Revisa la fecha." },
       { status: 400 }
     );
   }

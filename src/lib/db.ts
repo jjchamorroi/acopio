@@ -16,7 +16,7 @@ export function getPool(): Pool {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error(
-      "Falta DATABASE_URL. Copiá .env.example a .env y completalo."
+      "Falta DATABASE_URL. Copia .env.example a .env y complétalo."
     );
   }
 

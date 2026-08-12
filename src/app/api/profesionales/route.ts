@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   // forma de que alguien sepa si le sirve.
   if (d.modalidad !== "remoto" && !d.ciudad_slug) {
     return NextResponse.json(
-      { error: "Indicá el municipio donde podés atender presencialmente" },
+      { error: "Indica el municipio donde puedes atender presencialmente" },
       { status: 400 }
     );
   }
