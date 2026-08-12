@@ -377,6 +377,15 @@ export default function FormularioConvocatoria({
         </p>
       )}
 
+      <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+        Convocar no traslada a este sitio ninguna responsabilidad sobre la
+        jornada: quien convoca la organiza y responde por ella. Los trabajos
+        con riesgo deben coordinarse con un organismo de socorro.{" "}
+        <Link href="/aviso" className="font-medium text-slate-700 underline">
+          Aviso legal
+        </Link>
+      </p>
+
       <button
         type="submit"
         disabled={enviando}

@@ -148,17 +148,37 @@ export default function RootLayout({
         <footer className="border-t border-slate-200 bg-white">
           <div className="mx-auto max-w-6xl px-4 py-6 text-xs leading-relaxed text-slate-500">
             <p>
-              Proyecto ciudadano sin ánimo de lucro. La información la aportan
-              las personas que usan el sitio y{" "}
               <strong className="text-slate-700">
-                puede estar desactualizada
+                Iniciativa ciudadana, voluntaria y sin ánimo de lucro.
+              </strong>{" "}
+              No pertenece ni representa a ninguna entidad pública, medio,
+              organismo de socorro ni empresa. La información la aportan las
+              personas que usan el sitio, se ofrece{" "}
+              <strong className="text-slate-700">tal como está</strong> y{" "}
+              <strong className="text-slate-700">
+                puede estar desactualizada o ser incorrecta
               </strong>
-              : llamá al acopio antes de desplazarte.
+              : llamá antes de desplazarte. Quien decide moverse, entregar o
+              recibir algo lo hace bajo su propio criterio y riesgo.
             </p>
             <p className="mt-2">
               En emergencia, la línea oficial es el{" "}
               <strong className="text-slate-700">123</strong>. Este sitio no
-              reemplaza a los organismos de socorro.
+              reemplaza a la UNGRD, la Cruz Roja, la Defensa Civil ni a las
+              alcaldías: ante cualquier contradicción, hacé caso a ellos.
+            </p>
+            <p className="mt-3">
+              <Link
+                href="/aviso"
+                className="font-medium text-slate-600 underline hover:text-slate-900"
+              >
+                Aviso legal y tratamiento de datos
+              </Link>
+              <span className="mx-2">·</span>
+              <span>
+                ¿Aparece algo tuyo que no debería? Lo retiramos sin
+                explicaciones.
+              </span>
             </p>
           </div>
         </footer>

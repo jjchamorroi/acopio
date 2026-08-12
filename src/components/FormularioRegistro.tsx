@@ -443,6 +443,15 @@ export default function FormularioRegistro({
         </p>
       )}
 
+      <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+        Al registrar el lugar confirmás que los datos son ciertos y autorizás
+        su publicación en el mapa. Podés corregirlos o retirarlos cuando
+        quieras con el enlace privado que recibís.{" "}
+        <Link href="/aviso" className="font-medium text-slate-700 underline">
+          Aviso legal
+        </Link>
+      </p>
+
       <button
         type="submit"
         disabled={enviando}

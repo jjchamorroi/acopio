@@ -152,7 +152,9 @@ export default function Apuntarse({
         <form onSubmit={apuntarse} className="mt-4 space-y-3">
           <p className="text-xs text-slate-600">
             Tus datos los ve <strong>solo quien organiza</strong>, para poder
-            llamarte. No se publican en ningún lado.
+            llamarte. No se publican en ningún lado. Al apuntarte asumís los
+            riesgos de la actividad: este sitio publica la convocatoria pero no
+            la organiza ni la supervisa.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block">

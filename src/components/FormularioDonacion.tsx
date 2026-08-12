@@ -377,6 +377,15 @@ export default function FormularioDonacion({
         </p>
       )}
 
+      <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+        Al publicar autorizás que se muestre tu teléfono y una zona aproximada
+        —nunca tu dirección exacta—. Podés retirar la donación cuando quieras
+        con el enlace privado que recibís.{" "}
+        <Link href="/aviso" className="font-medium text-slate-700 underline">
+          Aviso legal
+        </Link>
+      </p>
+
       <button
         type="submit"
         disabled={enviando}
