@@ -6,6 +6,7 @@ import BotonCompartir from "@/components/BotonCompartir";
 import AccionesRapidas from "@/components/AccionesRapidas";
 import UrgentesDestacados from "@/components/UrgentesDestacados";
 import Filtros from "@/components/Filtros";
+import EnlaceMascotas from "@/components/EnlaceMascotas";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import TarjetaConvocatoria from "@/components/TarjetaConvocatoria";
 import {
@@ -312,6 +313,15 @@ export default async function Home({
           />
         </section>
       </div>
+
+      {/* La tarjeta completa solo donde viene al caso: quien busca ayuda o
+          quien está filtrando lugares para animales. En los demás modos basta
+          con el botón chico de arriba. */}
+      {(modo === "ayuda" || p.tipo === "animales") && (
+        <div className="mt-6">
+          <EnlaceMascotas />
+        </div>
+      )}
     </div>
   );
 }

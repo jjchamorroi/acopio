@@ -1,4 +1,5 @@
 import Link from "next/link";
+import EnlaceMascotas from "@/components/EnlaceMascotas";
 import type { ModoId } from "@/lib/tipos-lugar";
 
 /**
@@ -80,14 +81,18 @@ export default function AccionesRapidas({ modo }: { modo?: ModoId }) {
         )}
       </div>
 
-      {/* Se arrastran de lado en móvil: tres tarjetas apiladas empujarían el
-          mapa fuera de la primera pantalla. */}
-      <div className="chips-scroll -mx-4 flex gap-2.5 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0">
+      {/* Se arrastran de lado en móvil: cuatro tarjetas apiladas empujarían el
+          mapa fuera de la primera pantalla.
+
+          En pantalla ancha se reparten con flex y no con grid de N columnas:
+          cuántas hay depende del modo —y desde que existe el enlace a Ubica tu
+          Peludo son tres o cuatro—, así que un grid fijo dejaba un hueco. */}
+      <div className="chips-scroll -mx-4 flex gap-2.5 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         {secundarias.map((a) => (
           <Link
             key={a.href}
             href={a.href}
-            className="flex min-w-[168px] shrink-0 items-center gap-2.5 rounded-xl border border-[var(--color-borde)] bg-white px-3.5 py-3 transition hover:border-[var(--color-borde-fuerte)] hover:bg-[var(--color-hueso)]"
+            className="flex min-w-[168px] shrink-0 items-center gap-2.5 rounded-xl border border-[var(--color-borde)] bg-white px-3.5 py-3 transition hover:border-[var(--color-borde-fuerte)] hover:bg-[var(--color-hueso)] sm:flex-1 sm:shrink"
           >
             <span aria-hidden className="text-xl leading-none">
               {a.emoji}
@@ -97,6 +102,7 @@ export default function AccionesRapidas({ modo }: { modo?: ModoId }) {
             </span>
           </Link>
         ))}
+        <EnlaceMascotas compacto />
       </div>
     </div>
   );

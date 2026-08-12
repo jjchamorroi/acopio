@@ -38,7 +38,7 @@ export default function Aviso() {
         Aviso legal y tratamiento de datos
       </h1>
       <p className="mt-2 text-sm text-slate-500">
-        Última actualización: 11 de agosto de 2026
+        Última actualización: 12 de agosto de 2026
       </p>
 
       <p className="mt-6 rounded-lg border border-slate-300 bg-slate-50 p-4 text-slate-800">
@@ -123,11 +123,28 @@ export default function Aviso() {
           <strong>Cruz Roja Colombiana</strong>, la{" "}
           <strong>Defensa Civil</strong>, los bomberos y las alcaldías. Ante
           cualquier contradicción entre lo que dice este sitio y lo que dicen
-          ellos, <strong>hacé caso a ellos</strong>.
+          ellos, <strong>hazles caso a ellos</strong>.
         </p>
       </Seccion>
 
-      <Seccion titulo="6. Datos personales">
+      <Seccion titulo="6. Enlaces a otros sitios">
+        <p>
+          Enlazamos a iniciativas ciudadanas que ya cubren algo que aquí no
+          hacemos, en vez de duplicarlas: si los reportes se reparten entre dos
+          sitios, nadie encuentra nada. Hoy enlazamos a{" "}
+          <strong>Ubica tu Peludo</strong>, para mascotas perdidas por el sismo.
+        </p>
+        <p>
+          Esos sitios son <strong>ajenos</strong>. No los operamos, no los
+          controlamos, no revisamos lo que publican y no responden ante
+          nosotros ni nosotros por ellos. Su contenido, su disponibilidad y el
+          tratamiento que le den a tus datos se rigen por{" "}
+          <strong>sus propias condiciones</strong>, no por este aviso. Enlazar
+          no es avalar.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="7. Datos personales">
         <p>
           Tratamos datos personales conforme a la{" "}
           <strong>Ley 1581 de 2012</strong> y el Decreto 1377 de 2013.
@@ -173,7 +190,7 @@ export default function Aviso() {
         </p>
       </Seccion>
 
-      <Seccion titulo="7. Corregir o retirar información">
+      <Seccion titulo="8. Corregir o retirar información">
         <p>
           Si aparece algo incorrecto, desactualizado o publicado sin tu
           consentimiento —tu lugar, tu teléfono, tu institución—{" "}
@@ -206,7 +223,7 @@ export default function Aviso() {
         )}
       </Seccion>
 
-      <Seccion titulo="8. Cambios">
+      <Seccion titulo="9. Cambios">
         <p>
           Este aviso puede cambiar a medida que el sitio cambie. La fecha de
           arriba indica la última actualización.
@@ -216,7 +233,7 @@ export default function Aviso() {
       <p className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-600">
         En resumen: esto es un tablero comunitario hecho para que la ayuda
         llegue antes. Úsalo con criterio, confirma por teléfono y, ante la duda,
-        seguí a los organismos de socorro.
+        sigue a los organismos de socorro.
       </p>
 
       <Link
