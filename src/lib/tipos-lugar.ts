@@ -102,7 +102,11 @@ export function tipoLugar(id: string) {
  */
 export const MODOS = {
   donar: {
+    // `label` es el título largo; `corto` es lo que va en el selector, donde
+    // en un teléfono de 360 px cada botón tiene 106 px: "Puedo ir a ayudar"
+    // se partía en tres líneas y dejaba los tres botones de alturas distintas.
     label: "Quiero donar",
+    corto: "Donar",
     titulo: "¿Dónde hace falta lo que puedes donar?",
     bajada:
       "Elige qué quieres donar y el mapa te muestra quién lo está pidiendo hoy.",
@@ -110,6 +114,7 @@ export const MODOS = {
   },
   ayuda: {
     label: "Necesito ayuda",
+    corto: "Necesito ayuda",
     titulo: "¿Dónde puedo recibir ayuda?",
     bajada:
       "Comedores, albergues y puntos de atención abiertos ahora. Llama antes de ir: la información la aporta la comunidad.",
@@ -117,6 +122,7 @@ export const MODOS = {
   },
   voluntarios: {
     label: "Puedo ir a ayudar",
+    corto: "Ser voluntario",
     titulo: "¿Dónde hacen falta manos?",
     bajada:
       "Jornadas con día, hora y cupo. Apúntate solo si vas a ir: el lugar que ocupas es el de otra persona.",

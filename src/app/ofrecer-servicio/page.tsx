@@ -4,7 +4,7 @@ import { buscarCiudades } from "@/lib/consultas";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Ofrecer mis servicios",
+  title: "Ofrecer atención gratuita",
   description:
     "Si eres profesional de la salud u otra área y puedes atender gratis tras el sismo, regístrate en el directorio.",
 };
@@ -15,7 +15,7 @@ export default async function OfrecerServicio() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
       <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-        Ofrecer mis servicios
+        Ofrecer atención gratuita
       </h1>
       <p className="mt-2 text-slate-600">
         Si puedes atender gratis a personas afectadas por el sismo, regístrate

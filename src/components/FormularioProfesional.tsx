@@ -5,7 +5,8 @@ import Link from "next/link";
 import SelectorCiudad from "./SelectorCiudad";
 import AvisoPublico from "./AvisoPublico";
 import {
-  PROFESIONES,
+  PROFESIONES_SALUD,
+  PROFESIONES_OTRAS,
   MODALIDADES,
   profesion as buscarProfesion,
   type ProfesionId,
@@ -163,11 +164,20 @@ export default function FormularioProfesional({
             value={prof}
             onChange={(e) => setProf(e.target.value as ProfesionId)}
           >
-            {PROFESIONES.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.emoji} {p.label}
-              </option>
-            ))}
+            <optgroup label="Salud">
+              {PROFESIONES_SALUD.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.emoji} {p.label}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Otras áreas">
+              {PROFESIONES_OTRAS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.emoji} {p.label}
+                </option>
+              ))}
+            </optgroup>
           </select>
         </label>
 

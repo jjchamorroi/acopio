@@ -51,7 +51,7 @@ const ENLACES = [
   { href: "/", texto: "Mapa de lugares" },
   { href: "/donar", texto: "Tengo algo para donar" },
   { href: "/?modo=voluntarios", texto: "Voluntarios" },
-  { href: "/profesionales", texto: "Atención profesional" },
+  { href: "/profesionales", texto: "Atención en salud" },
   { href: "/donaciones", texto: "Donaciones ofrecidas" },
 ];
 

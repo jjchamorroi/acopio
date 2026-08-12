@@ -2,18 +2,44 @@ import Link from "next/link";
 import type { ModoId } from "@/lib/tipos-lugar";
 
 /**
- * Del rediseño, nota 01: «Las cuatro tarjetas de entrada pesan lo mismo, así
- * que ninguna guía».
+ * Del rediseño, nota 01: las cuatro tarjetas pesaban lo mismo, así que ninguna
+ * guiaba. Pero convertir las secundarias en enlaces de texto se llevó por
+ * delante los íconos, que son lo que hace la pantalla legible de un vistazo.
  *
- * Ahora hay dos acciones dominantes —por donde entra casi todo el tráfico— y
- * el resto como enlaces secundarios. Que todo pese igual no es neutralidad:
- * es dejar sin ayuda a alguien que llegó con afán.
+ * La jerarquía la dan el tamaño y el color, no la existencia del ícono: dos
+ * tarjetas grandes y de color para lo que hace el 90 % de la gente, y tres
+ * pequeñas —con su ícono— para el resto.
  */
+
+const SECUNDARIAS = [
+  {
+    href: "/?modo=voluntarios",
+    emoji: "🙋",
+    titulo: "Ser voluntario",
+    modo: "voluntarios" as ModoId,
+  },
+  {
+    href: "/profesionales",
+    emoji: "🩺",
+    titulo: "Necesito atención en salud",
+    modo: null as ModoId | null,
+  },
+  {
+    href: "/registrar",
+    emoji: "📍",
+    titulo: "Registrar un lugar",
+    modo: null as ModoId | null,
+  },
+];
+
 export default function AccionesRapidas({ modo }: { modo?: ModoId }) {
   const enAyuda = modo === "ayuda";
+  const secundarias = SECUNDARIAS.filter(
+    (a) => a.modo === null || a.modo !== modo
+  );
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2.5">
       <div className="grid gap-2.5 sm:grid-cols-2">
         <Link
           href="/donar"
@@ -52,16 +78,23 @@ export default function AccionesRapidas({ modo }: { modo?: ModoId }) {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-semibold text-[var(--color-marino)]">
-        <Link href="/?modo=voluntarios" className="underline underline-offset-[3px]">
-          Ser voluntario
-        </Link>
-        <Link href="/profesionales" className="underline underline-offset-[3px]">
-          Atención profesional gratuita
-        </Link>
-        <Link href="/registrar" className="underline underline-offset-[3px]">
-          Registrar un lugar
-        </Link>
+      {/* Se arrastran de lado en móvil: tres tarjetas apiladas empujarían el
+          mapa fuera de la primera pantalla. */}
+      <div className="chips-scroll -mx-4 flex gap-2.5 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0">
+        {secundarias.map((a) => (
+          <Link
+            key={a.href}
+            href={a.href}
+            className="flex min-w-[168px] shrink-0 items-center gap-2.5 rounded-xl border border-[var(--color-borde)] bg-white px-3.5 py-3 transition hover:border-[var(--color-borde-fuerte)] hover:bg-[var(--color-hueso)]"
+          >
+            <span aria-hidden className="text-xl leading-none">
+              {a.emoji}
+            </span>
+            <span className="text-[13.5px] font-bold leading-tight">
+              {a.titulo}
+            </span>
+          </Link>
+        ))}
       </div>
     </div>
   );

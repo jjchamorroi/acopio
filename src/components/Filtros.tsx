@@ -145,13 +145,13 @@ export default function Filtros({
               type="button"
               onClick={() => cambiarModo(id)}
               aria-pressed={activo}
-              className={`rounded-lg px-2 py-2.5 text-center text-[13px] font-bold transition sm:text-sm ${
+              className={`flex min-h-[42px] items-center justify-center rounded-lg px-1.5 py-2 text-center text-[12.5px] font-bold leading-tight transition sm:text-sm ${
                 activo
                   ? "bg-white text-[var(--color-tinta)] shadow-sm"
                   : "text-[var(--color-apagado)] hover:text-[var(--color-tinta)]"
               }`}
             >
-              {MODOS[id].label}
+              {MODOS[id].corto}
             </button>
           );
         })}

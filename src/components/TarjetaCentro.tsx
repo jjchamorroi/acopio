@@ -69,14 +69,14 @@ export default function TarjetaCentro({
           </p>
         </div>
 
-        <div className="shrink-0 text-right">
+        <div className="max-w-[38%] shrink-0 text-right">
           {distancia && (
             <div className="text-[17px] font-extrabold tracking-tight">
               {distancia}
             </div>
           )}
           <div
-            className={`text-xs font-semibold ${
+            className={`text-xs font-semibold leading-tight ${
               abierto === false
                 ? "text-[var(--color-urgente-texto)]"
                 : "text-[var(--color-abierto)]"

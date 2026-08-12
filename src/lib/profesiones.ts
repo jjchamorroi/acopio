@@ -11,6 +11,7 @@
 export const PROFESIONES = [
   {
     id: "psicologia",
+    grupo: "salud" as const,
     label: "Psicología",
     emoji: "🧠",
     registroObligatorio: true,
@@ -18,6 +19,7 @@ export const PROFESIONES = [
   },
   {
     id: "medicina",
+    grupo: "salud" as const,
     label: "Medicina general",
     emoji: "🩺",
     registroObligatorio: true,
@@ -25,6 +27,7 @@ export const PROFESIONES = [
   },
   {
     id: "medicina_especializada",
+    grupo: "salud" as const,
     label: "Medicina especializada",
     emoji: "🏥",
     registroObligatorio: true,
@@ -32,6 +35,7 @@ export const PROFESIONES = [
   },
   {
     id: "psiquiatria",
+    grupo: "salud" as const,
     label: "Psiquiatría",
     emoji: "💊",
     registroObligatorio: true,
@@ -39,6 +43,7 @@ export const PROFESIONES = [
   },
   {
     id: "enfermeria",
+    grupo: "salud" as const,
     label: "Enfermería",
     emoji: "💉",
     registroObligatorio: true,
@@ -46,6 +51,7 @@ export const PROFESIONES = [
   },
   {
     id: "fisioterapia",
+    grupo: "salud" as const,
     label: "Fisioterapia",
     emoji: "🦵",
     registroObligatorio: true,
@@ -53,6 +59,7 @@ export const PROFESIONES = [
   },
   {
     id: "odontologia",
+    grupo: "salud" as const,
     label: "Odontología",
     emoji: "🦷",
     registroObligatorio: true,
@@ -60,6 +67,7 @@ export const PROFESIONES = [
   },
   {
     id: "nutricion",
+    grupo: "salud" as const,
     label: "Nutrición",
     emoji: "🥗",
     registroObligatorio: true,
@@ -67,6 +75,7 @@ export const PROFESIONES = [
   },
   {
     id: "veterinaria",
+    grupo: "salud" as const,
     label: "Veterinaria",
     emoji: "🐾",
     registroObligatorio: true,
@@ -74,6 +83,7 @@ export const PROFESIONES = [
   },
   {
     id: "trabajo_social",
+    grupo: "otra" as const,
     label: "Trabajo social",
     emoji: "🤝",
     registroObligatorio: false,
@@ -81,6 +91,7 @@ export const PROFESIONES = [
   },
   {
     id: "juridica",
+    grupo: "otra" as const,
     label: "Asesoría jurídica",
     emoji: "⚖️",
     registroObligatorio: false,
@@ -88,6 +99,7 @@ export const PROFESIONES = [
   },
   {
     id: "ingenieria",
+    grupo: "otra" as const,
     label: "Ingeniería o arquitectura",
     emoji: "🏗️",
     registroObligatorio: false,
@@ -95,6 +107,7 @@ export const PROFESIONES = [
   },
   {
     id: "otra",
+    grupo: "otra" as const,
     label: "Otra",
     emoji: "🧰",
     registroObligatorio: false,
@@ -103,6 +116,14 @@ export const PROFESIONES = [
 ] as const;
 
 export type ProfesionId = (typeof PROFESIONES)[number]["id"];
+
+/**
+ * "Profesionales" a secas no dice nada: puede ser cualquier cosa. La mayoría
+ * de lo que hace falta tras un sismo es SALUD —y sobre todo salud mental— así
+ * que el directorio se presenta como tal, con las demás áreas aparte.
+ */
+export const PROFESIONES_SALUD = PROFESIONES.filter((p) => p.grupo === "salud");
+export const PROFESIONES_OTRAS = PROFESIONES.filter((p) => p.grupo === "otra");
 export const PROFESION_IDS = PROFESIONES.map((p) => p.id) as string[];
 
 export function profesion(id: string) {

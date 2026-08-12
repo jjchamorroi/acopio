@@ -60,7 +60,7 @@ function Cifra({
 }) {
   return (
     <div
-      className={`flex min-w-[104px] flex-1 flex-col gap-1 rounded-2xl border p-4 sm:flex-none sm:basis-[132px] ${
+      className={`flex min-w-[124px] shrink-0 flex-col gap-1 rounded-2xl border p-4 sm:basis-[132px] ${
         urgente
           ? "border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)]"
           : "border-[var(--color-borde)] bg-[var(--color-hueso)]"
@@ -74,7 +74,7 @@ function Cifra({
         {valor}
       </span>
       <span
-        className={`text-[13px] font-semibold ${
+        className={`text-[13px] font-semibold leading-tight ${
           urgente ? "text-[#8f2418]" : "text-[var(--color-apagado)]"
         }`}
       >
@@ -183,7 +183,9 @@ export default async function Home({
           <AccionesRapidas modo={modo} />
         </div>
 
-        <div className="flex gap-3">
+        {/* Se arrastran de lado en móvil en vez de comprimirse: con tres
+            tarjetas a 101 px, "albergues abiertos" se partía en tres líneas. */}
+        <div className="chips-scroll -mx-4 flex gap-3 overflow-x-auto px-4 lg:mx-0 lg:px-0">
           {esVoluntarios ? (
             <>
               <Cifra valor={convocatorias.length} etiqueta="convocatorias" />

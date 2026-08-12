@@ -12,20 +12,20 @@ export async function generateMetadata(): Promise<Metadata> {
     const ps = await listarProfesionales({});
     const descripcion =
       ps.length === 0
-        ? "Profesionales que ofrecen atención gratuita tras el sismo."
-        : `${ps.length} profesionales ofrecen atención gratuita: psicología, medicina, enfermería y más.`;
+        ? "Médicos, psicólogos y enfermeros que ofrecen atención gratuita tras el sismo."
+        : `${ps.length} profesionales de la salud ofrecen atención gratuita: psicología, medicina, enfermería y más.`;
     return {
-      title: "Atención profesional gratuita",
+      title: "Atención de salud gratuita",
       description: descripcion,
-      openGraph: { title: "Atención profesional gratuita", description: descripcion },
+      openGraph: { title: "Atención de salud gratuita", description: descripcion },
       twitter: {
         card: "summary_large_image",
-        title: "Atención profesional gratuita",
+        title: "Atención de salud gratuita",
         description: descripcion,
       },
     };
   } catch {
-    return { title: "Atención profesional gratuita" };
+    return { title: "Atención de salud gratuita" };
   }
 }
 
@@ -57,11 +57,13 @@ export default async function Profesionales({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Atención profesional gratuita
+            Profesionales de la salud
           </h1>
-          <p className="mt-2 max-w-2xl text-slate-600">
-            Psicólogos, médicos, enfermeros y otros profesionales que ofrecen su
-            trabajo sin cobrar tras el sismo.
+          <p className="mt-2 max-w-2xl text-[var(--color-apagado)]">
+            Psicólogos, médicos, enfermeros y veterinarios que atienden{" "}
+            <strong className="text-[var(--color-tinta)]">sin cobrar</strong> a
+            personas afectadas por el sismo. También hay asesoría jurídica,
+            trabajo social e ingeniería.
           </p>
         </div>
         <Link
