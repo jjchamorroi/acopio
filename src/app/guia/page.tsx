@@ -79,9 +79,10 @@ const INDICE = [
   [5, "Subsidio de arriendo"],
   [6, "Otras ayudas ya confirmadas"],
   [7, "Cuidado con las estafas"],
-  [8, "Dónde NO hay albergue"],
-  [9, "Riesgos dentro de los albergues"],
-  [10, "Lo que el Estado todavía no publica"],
+  [8, "Tus derechos NO están suspendidos"],
+  [9, "Dónde NO hay albergue"],
+  [10, "Riesgos dentro de los albergues"],
+  [11, "Lo que el Estado todavía no publica"],
 ] as const;
 
 export default function Guia() {
@@ -494,7 +495,78 @@ export default function Guia() {
         </Dato>
       </Seccion>
 
-      <Seccion n={8} titulo="8. Dónde NO hay albergue">
+      <Seccion n={8} titulo="8. Tus derechos NO están suspendidos">
+        <p>
+          Salió en la prensa que «se suspendieron los términos judiciales» en
+          los siete departamentos afectados, y mucha gente entendió que hasta
+          septiembre no puede reclamar nada. <strong>Es al revés.</strong>
+        </p>
+        <p>
+          Es cierto que la suspensión se prorrogó{" "}
+          <strong className="text-[var(--color-tinta)]">
+            hasta el 11 de septiembre de 2026
+          </strong>{" "}
+          para los procesos ordinarios en los distritos judiciales de Armenia,
+          Buga, Cali, Ibagué, Manizales, Pereira, Popayán y Quibdó. Pero el
+          mismo Acuerdo dice, con todas las letras, que eso
+        </p>
+        <blockquote className="border-l-[3px] border-[var(--color-borde-fuerte)] pl-4 italic">
+          «no suspende, limita ni afecta el derecho a formular acciones de
+          tutela, hábeas corpus, solicitudes de audiencias de control de
+          garantías con personas privadas de la libertad o de actos urgentes,
+          ni los términos constitucionales o legales establecidos para su
+          trámite y decisión.»
+        </blockquote>
+        <p>
+          Lo que hicieron fue{" "}
+          <strong className="text-[var(--color-tinta)]">
+            trasladar esos casos a juzgados de otras ciudades
+          </strong>{" "}
+          —«despachos itinerantes»— para que sigan resolviéndose mientras las
+          sedes afectadas se revisan. Y el Acuerdo es explícito en que el
+          trámite se hace <em>«sin trasladar al usuario cargas derivadas de la
+          contingencia»</em>: el problema de infraestructura es de ellos, no
+          tuyo.
+        </p>
+        <Ojo>
+          <strong>Qué significa esto en la práctica.</strong> Si no te dejan
+          entrar a un albergue, si te niegan la ayuda a la que tienes derecho o
+          si te exigen requisitos que nadie publicó,{" "}
+          <strong>puedes poner una tutela hoy mismo</strong>. No tienes que
+          esperar a septiembre. La tutela es gratuita, no necesita abogado y se
+          puede presentar por los canales digitales de la Rama Judicial.
+        </Ojo>
+        <p>
+          Para <strong>hábeas corpus</strong> —si alguien está privado de la
+          libertad de forma irregular— hay turnos las 24 horas:{" "}
+          <em>«todos los días y horas son hábiles para su recepción y
+          trámite»</em>, incluidos festivos y vacancia judicial.
+        </p>
+        <p>
+          En el directorio hay{" "}
+          <Link
+            href="/profesionales?profesion=juridica"
+            className="font-bold text-[var(--color-marino)] underline"
+          >
+            abogados que asesoran gratis
+          </Link>{" "}
+          si no sabes por dónde empezar.
+        </p>
+        <Dato>
+          Fuente: <strong>Acuerdo PCSJA26-12567 de 2026</strong> del Consejo
+          Superior de la Judicatura, que prorroga el PCSJA26-12564.{" "}
+          <a
+            href="/documentos/acuerdo-PCSJA26-12567.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="font-bold underline"
+          >
+            Leer el Acuerdo completo (PDF, 13 páginas) ↗
+          </a>
+        </Dato>
+      </Seccion>
+
+      <Seccion n={9} titulo="9. Dónde NO hay albergue">
         <p>Tres vacíos confirmados que conviene tener presentes:</p>
         <ul className="ml-5 list-disc space-y-2.5">
           <li>
@@ -529,7 +601,7 @@ export default function Guia() {
         </ul>
       </Seccion>
 
-      <Seccion n={9} titulo="9. Riesgos dentro de los albergues">
+      <Seccion n={10} titulo="10. Riesgos dentro de los albergues">
         <p className="font-bold text-[var(--color-tinta)]">
           Riesgo para mujeres y niñas
         </p>
@@ -577,7 +649,7 @@ export default function Guia() {
         </p>
       </Seccion>
 
-      <Seccion n={10} titulo="10. Lo que el Estado todavía no publica">
+      <Seccion n={11} titulo="11. Lo que el Estado todavía no publica">
         <p>
           Vale la pena decirlo con todas las letras, porque explica por qué es
           tan difícil orientar a alguien —y por qué existe este sitio:
