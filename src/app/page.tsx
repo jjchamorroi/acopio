@@ -29,7 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
     const urgentes = centros.filter((c) =>
       c.necesidades.some((n) => n.nivel === "urgente")
     ).length;
-    const albergues = centros.filter((c) => c.tipo === "albergue").length;
+    // Igual que en la página: sin filtro de modo, o diría "2 albergues"
+    // habiendo diecisiete, y eso acabaría en la vista previa de WhatsApp.
+    const albergues = (await listarCentros({ tipo: "albergue" })).length;
 
     const partes = [
       `${centros.length} ${centros.length === 1 ? "lugar activo" : "lugares activos"}`,
@@ -54,19 +56,24 @@ function Cifra({
   valor,
   etiqueta,
   urgente = false,
+  href,
 }: {
   valor: number;
   etiqueta: string;
   urgente?: boolean;
+  /** Si se pasa, la cifra lleva a la vista donde se ven esos lugares. */
+  href?: string;
 }) {
-  return (
-    <div
-      className={`flex min-w-[124px] shrink-0 flex-col gap-1 rounded-2xl border p-4 sm:basis-[132px] ${
-        urgente
-          ? "border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)]"
-          : "border-[var(--color-borde)] bg-[var(--color-hueso)]"
-      }`}
-    >
+  const clases = `flex min-w-[124px] shrink-0 flex-col gap-1 rounded-2xl border p-4 sm:basis-[132px] ${
+    href ? "transition hover:border-[var(--color-borde-fuerte)]" : ""
+  } ${
+    urgente
+      ? "border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)]"
+      : "border-[var(--color-borde)] bg-[var(--color-hueso)]"
+  }`;
+
+  const contenido = (
+    <>
       <span
         className={`text-[34px] font-extrabold leading-none tracking-tight ${
           urgente ? "text-[var(--color-urgente-texto)]" : ""
@@ -81,7 +88,15 @@ function Cifra({
       >
         {etiqueta}
       </span>
-    </div>
+    </>
+  );
+
+  return href ? (
+    <Link href={href} className={clases}>
+      {contenido}
+    </Link>
+  ) : (
+    <div className={clases}>{contenido}</div>
   );
 }
 
@@ -114,8 +129,10 @@ export default async function Home({
     ? await listarConvocatorias({ ciudad: p.ciudad })
     : [];
 
-  const [ciudades, centrosCrudos] = await Promise.all([
+  const [ciudades, todosLosAlbergues, centrosCrudos] = await Promise.all([
     listarCiudadesConLugares(),
+    // Sin filtro de modo, a propósito: ver el comentario de `albergues`.
+    listarCentros({ ciudad: p.ciudad, tipo: "albergue" }),
     esVoluntarios
       ? Promise.resolve([])
       : ubicado
@@ -163,7 +180,15 @@ export default async function Home({
   const urgentes = centros.filter((c) =>
     c.necesidades.some((n) => n.nivel === "urgente")
   ).length;
-  const albergues = centros.filter((c) => c.tipo === "albergue").length;
+
+  // Los albergues NO se cuentan sobre la lista filtrada.
+  //
+  // El modo "donar" solo muestra lugares que reciben donaciones, y la mayoría
+  // de los albergues no reciben: alojan gente. Contarlos ahí decía "2
+  // albergues abiertos" habiendo diecisiete, y quien lo leía entendía que en
+  // todo el país hay dos. La cifra responde "¿cuántos albergues hay?", que no
+  // depende de si vine a donar o a pedir ayuda.
+  const albergues = todosLosAlbergues.length;
   const plazas = convocatorias.reduce(
     (n, c) => n + (c.cupo === null ? 0 : Math.max(0, c.cupo - c.inscritos)),
     0
@@ -209,6 +234,13 @@ export default async function Home({
                   valor={albergues}
                   etiqueta={
                     albergues === 1 ? "albergue abierto" : "albergues abiertos"
+                  }
+                  // La mayoría no recibe donaciones, así que en este modo no
+                  // están en la lista de abajo. El enlace lleva a donde sí.
+                  href={
+                    p.ciudad
+                      ? `/?modo=ayuda&tipo=albergue&ciudad=${p.ciudad}`
+                      : "/?modo=ayuda&tipo=albergue"
                   }
                 />
               )}
