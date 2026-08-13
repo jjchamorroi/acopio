@@ -22,10 +22,22 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { createHash, randomBytes } from "node:crypto";
 import pg from "pg";
 
-// Sanidad geográfica: un punto más lejos que esto del centro de su municipio
-// casi siempre significa que la coordenada quedó mal. Los municipios
-// colombianos son grandes, así que el margen es generoso a propósito.
-const RADIO_MAX_KM = 30;
+// Sanidad geográfica. El límite duro solo busca cazar una coordenada
+// traspuesta o con el signo cambiado, que cae a cientos de kilómetros; por eso
+// es tan holgado. Entre medias se avisa pero se importa: el punto de `ciudad`
+// es el centroide del ÁREA municipal, y en municipios grandes y rurales eso
+// queda legítimamente lejos del casco urbano.
+const RADIO_MAX_KM = 80;
+const RADIO_AVISO_KM = 25;
+
+// El lote nombra los municipios como los nombra la prensa; nuestra tabla usa
+// el nombre oficial del DANE. No es un error de nadie, hay que traducir.
+const ALIAS_MUNICIPIO = {
+  cartagena: "cartagena de indias",
+  "litoral del san juan": "el litoral del san juan",
+  "bogota d.c.": "bogota",
+  "bogota, d.c.": "bogota",
+};
 
 const MAPA_TIPO = { animal: "animales" };
 
@@ -139,7 +151,7 @@ async function main() {
   );
 
   const tokens = [];
-  const r = { creados: 0, actualizados: 0, omitidos: 0, aprox: 0, exactos: 0 };
+  const r = { creados: 0, actualizados: 0, omitidos: 0, aprox: 0, exactos: 0, lejanos: 0 };
 
   for (const lugar of lugares) {
     // Los cerrados no entran: el propio lote dice a dónde redirigir, y un
@@ -156,9 +168,11 @@ async function main() {
       continue;
     }
 
+    const muni = normalizar(lugar.municipio);
+    const oficial = ALIAS_MUNICIPIO[muni] ?? muni;
     const ciudad =
-      indice.get(`${normalizar(lugar.municipio)}|${normalizar(lugar.departamento)}`) ??
-      ciudades.find((c) => normalizar(c.nombre) === normalizar(lugar.municipio));
+      indice.get(`${oficial}|${normalizar(lugar.departamento)}`) ??
+      ciudades.find((c) => normalizar(c.nombre) === oficial);
 
     if (!ciudad) {
       console.log(`⊘ ${lugar.nombre} — municipio desconocido: ${lugar.municipio}, ${lugar.departamento}`);
@@ -174,6 +188,10 @@ async function main() {
       console.log(`⊘ ${lugar.nombre} — a ${km.toFixed(1)} km de ${ciudad.nombre}, se omite`);
       r.omitidos++;
       continue;
+    }
+    if (km > RADIO_AVISO_KM) {
+      console.log(`  ⚠ ${lugar.nombre.slice(0, 44)} queda a ${km.toFixed(1)} km del punto de ${ciudad.nombre}`);
+      r.lejanos++;
     }
 
     const aproximada = lugar.precision_ubicacion === "aproximada";
@@ -216,9 +234,22 @@ async function main() {
            lng = EXCLUDED.lng,
            tipo = EXCLUDED.tipo,
            responsable = EXCLUDED.responsable,
-           telefono = EXCLUDED.telefono,
-           horario = EXCLUDED.horario,
-           notas = EXCLUDED.notas,
+           -- El lote NUNCA borra información que ya está.
+           --
+           -- Con edicion_manual gana siempre lo que hay en la base: alguien
+           -- lo curó a mano y sabe más que el lote (el comunicado oficial de un
+           -- albergue publicaba el 119, que es la línea de bomberos).
+           -- Sin la marca, el lote actualiza, pero un nulo suyo no puede
+           -- reemplazar un dato existente.
+           telefono = CASE WHEN centro_acopio.edicion_manual
+                        THEN centro_acopio.telefono
+                        ELSE COALESCE(EXCLUDED.telefono, centro_acopio.telefono) END,
+           horario  = CASE WHEN centro_acopio.edicion_manual
+                        THEN centro_acopio.horario
+                        ELSE COALESCE(EXCLUDED.horario, centro_acopio.horario) END,
+           notas    = CASE WHEN centro_acopio.edicion_manual
+                        THEN centro_acopio.notas
+                        ELSE COALESCE(EXCLUDED.notas, centro_acopio.notas) END,
            alerta = EXCLUDED.alerta,
            no_recibe = EXCLUDED.no_recibe,
            estado = EXCLUDED.estado,
@@ -231,7 +262,7 @@ async function main() {
            fuente_url = EXCLUDED.fuente_url,
            fuente_fecha = EXCLUDED.fuente_fecha,
            actualizado_en = now()
-         RETURNING id, (xmax = 0) AS creado`,
+         RETURNING id, (xmax = 0) AS creado, edicion_manual`,
         [
           lugar.id,
           lugar.nombre,
@@ -259,18 +290,30 @@ async function main() {
         ]
       );
 
-      const { id, creado } = rows[0];
+      const { id, creado, edicion_manual } = rows[0];
       creado ? r.creados++ : r.actualizados++;
       if (creado) tokens.push({ id, nombre: lugar.nombre, token });
 
-      // Se reemplazan en bloque: si el lote de hoy ya no menciona una
-      // categoría, es que dejó de necesitarla.
-      await cliente.query("DELETE FROM necesidad WHERE centro_id = $1", [id]);
-      for (const n of necesidades(lugar)) {
-        await cliente.query(
-          "INSERT INTO necesidad (centro_id, categoria, nivel) VALUES ($1,$2,$3)",
-          [id, n.categoria, n.nivel]
-        );
+      if (edicion_manual) {
+        // Ficha curada a mano: el lote SUMA lo que sepa, sin borrar lo que
+        // alguien averiguó por su cuenta.
+        for (const n of necesidades(lugar)) {
+          await cliente.query(
+            `INSERT INTO necesidad (centro_id, categoria, nivel) VALUES ($1,$2,$3)
+             ON CONFLICT (centro_id, categoria) DO NOTHING`,
+            [id, n.categoria, n.nivel]
+          );
+        }
+      } else {
+        // Se reemplazan en bloque: si el lote de hoy ya no menciona una
+        // categoría, es que dejó de necesitarla.
+        await cliente.query("DELETE FROM necesidad WHERE centro_id = $1", [id]);
+        for (const n of necesidades(lugar)) {
+          await cliente.query(
+            "INSERT INTO necesidad (centro_id, categoria, nivel) VALUES ($1,$2,$3)",
+            [id, n.categoria, n.nivel]
+          );
+        }
       }
 
       await cliente.query("COMMIT");
@@ -293,7 +336,8 @@ async function main() {
 
   console.log(
     `\nResumen: ${r.creados} creados, ${r.actualizados} actualizados, ${r.omitidos} omitidos` +
-      ` · ubicación ${r.exactos} exacta / ${r.aprox} aproximada`
+      ` · ubicación ${r.exactos} exacta / ${r.aprox} aproximada` +
+      (r.lejanos ? ` · ${r.lejanos} lejos del centro (revisar)` : "")
   );
 
   await pool.end();

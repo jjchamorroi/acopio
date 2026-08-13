@@ -106,7 +106,7 @@ export default function MapaAcopios({
               fillOpacity: 0.9,
             }}
           >
-            <Popup>
+            <Popup maxWidth={280} maxHeight={220} autoPanPadding={[24, 24]}>
               <div className="space-y-1.5">
                 <p className="font-medium text-emerald-700">
                   {formatearFranja(v.inicia, v.termina)}
@@ -162,7 +162,7 @@ export default function MapaAcopios({
               fillOpacity: 0.9,
             }}
           >
-            <Popup>
+            <Popup maxWidth={280} maxHeight={260} autoPanPadding={[24, 24]}>
               <div className="space-y-2">
                 <div>
                   <span

@@ -147,6 +147,16 @@ ALTER TABLE centro_acopio
 CREATE UNIQUE INDEX IF NOT EXISTS centro_acopio_origen_id_idx
   ON centro_acopio (origen_id) WHERE origen_id IS NOT NULL;
 
+-- "Una persona curó esta ficha; el lote la complementa pero no la pisa."
+--
+-- Nace de un error real: se fusionaron tres fichas del mismo acopio a mano
+-- —teléfono, horario y catorce necesidades— y el siguiente lote lo borró todo,
+-- porque el UPDATE del upsert sobrescribe con lo que traiga el lote, incluidos
+-- los nulos. Con esta marca el importador conserva el contacto y FUSIONA las
+-- necesidades en vez de reemplazarlas.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS edicion_manual boolean NOT NULL DEFAULT false;
+
 -- El constraint se recrea cuando aparece un tipo nuevo. Sin esto, una base ya
 -- desplegada rechazaría el tipo aunque el código lo soporte. Se compara contra
 -- el último añadido.

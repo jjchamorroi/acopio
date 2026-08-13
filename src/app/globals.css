@@ -67,6 +67,27 @@ body {
   min-width: 200px;
 }
 
+/* Los popups con ficha completa son más altos que el mapa en móvil, y cuando
+   eso pasa el autoPan de Leaflet no puede salvarlos: se quedan cortados por el
+   borde del recuadro. Con `maxHeight` Leaflet mete el contenido en un
+   contenedor con scroll y le pone esta clase; sin estilo, el corte se sigue
+   viendo como un error en vez de como "hay más abajo". */
+.leaflet-popup-scrolled {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-bottom: 1px solid var(--color-borde, #e3e5df);
+  /* Sombra de desvanecido pegada al borde inferior: solo aparece cuando
+     todavía queda contenido por leer. */
+  background:
+    linear-gradient(white 30%, rgba(255, 255, 255, 0)) top / 100% 14px no-repeat,
+    linear-gradient(rgba(255, 255, 255, 0), white 70%) bottom / 100% 14px no-repeat,
+    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.12), transparent) top /
+      100% 6px no-repeat,
+    radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.12), transparent)
+      bottom / 100% 6px no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+
 /* Los chips de filtro se desbordan a propósito en móvil: se arrastran de lado
    en vez de apilarse y empujar el contenido hacia abajo. La barra se oculta
    porque en un teléfono no aporta y roba altura. */

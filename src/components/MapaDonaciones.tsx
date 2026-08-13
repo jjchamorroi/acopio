@@ -72,7 +72,7 @@ export default function MapaDonaciones({
               fillOpacity: 0.25,
             }}
           >
-            <Popup>
+            <Popup maxWidth={280} maxHeight={220} autoPanPadding={[24, 24]}>
               <div className="space-y-1.5">
                 <p className="font-semibold text-slate-900">
                   <span aria-hidden>{cat?.emoji}</span> {d.descripcion}

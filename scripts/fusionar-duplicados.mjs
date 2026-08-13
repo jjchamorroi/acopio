@@ -109,8 +109,13 @@ async function main() {
       }
 
       if (aplicar) {
+        // `edicion_manual` es lo que hace durable la fusión: sin ella, el
+        // siguiente lote sobrescribe el teléfono y borra las necesidades
+        // fusionadas. Pasó de verdad la primera vez.
         await cliente.query(
-          "UPDATE centro_acopio SET telefono = $2, horario = $3, actualizado_en = now() WHERE id = $1",
+          `UPDATE centro_acopio
+              SET telefono = $2, horario = $3, edicion_manual = true, actualizado_en = now()
+            WHERE id = $1`,
           [destino.id, telefono, horario]
         );
         await cliente.query("DELETE FROM necesidad WHERE centro_id = $1", [destino.id]);
