@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ContactosUtiles from "@/components/ContactosUtiles";
+import AvisoRecopilacion from "@/components/AvisoRecopilacion";
 
 /**
  * Guía práctica para quien perdió la vivienda.
@@ -106,6 +107,8 @@ export default function Guia() {
         <strong>ningún trámite se paga</strong>. Quien le cobre por inscribirlo
         o por “acelerar” la ayuda lo está estafando.
       </Ojo>
+
+      <AvisoRecopilacion className="mt-4" />
 
       <nav className="mt-6 rounded-2xl border border-[var(--color-borde)] bg-white p-4">
         <p className="text-[13px] font-bold uppercase tracking-wider text-[var(--color-etiqueta)]">

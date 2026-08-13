@@ -7,6 +7,7 @@ import AccionesRapidas from "@/components/AccionesRapidas";
 import UrgentesDestacados from "@/components/UrgentesDestacados";
 import Filtros from "@/components/Filtros";
 import EnlaceMascotas from "@/components/EnlaceMascotas";
+import AvisoRecopilacion from "@/components/AvisoRecopilacion";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import TarjetaConvocatoria from "@/components/TarjetaConvocatoria";
 import {
@@ -254,6 +255,10 @@ export default async function Home({
           <Filtros ciudades={ciudades} modo={modo} ubicado={ubicado} />
         </Suspense>
       </div>
+
+      {/* Antes del listado, no al pie: un aviso que se lee después de haber
+          salido de la casa llega tarde. */}
+      <AvisoRecopilacion className="mt-5" compacto />
 
       {!esVoluntarios && (
         <div className="pt-6">
