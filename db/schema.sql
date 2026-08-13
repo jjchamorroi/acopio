@@ -147,6 +147,45 @@ ALTER TABLE centro_acopio
 CREATE UNIQUE INDEX IF NOT EXISTS centro_acopio_origen_id_idx
   ON centro_acopio (origen_id) WHERE origen_id IS NOT NULL;
 
+-- ---------------------------------------------------------------------------
+-- Daño documentado por municipio.
+--
+-- Es la otra mitad de la pregunta. La tabla de lugares dice DÓNDE hay ayuda;
+-- esta dice DÓNDE hizo falta. Cruzarlas es lo único que responde "a quién no
+-- está llegando nadie", que es una pregunta que ningún mapa de puntos puede
+-- contestar por sí solo: un municipio sin puntos se ve igual que un municipio
+-- sin daño — vacío.
+--
+-- Los conteos de ayuda NO se guardan acá a propósito: se calculan contra
+-- centro_acopio en cada consulta. Si se congelaran, la página seguiría
+-- diciendo "sin ayuda" un día después de que alguien abriera un acopio ahí.
+CREATE TABLE IF NOT EXISTS dano_municipio (
+  ciudad_slug   text PRIMARY KEY REFERENCES ciudad(slug),
+  destruidas    int,
+  averiadas     int,
+  muertos       int,
+  heridos       int,
+  familias      int,
+  personas      int,
+  -- Vías cortadas. Cambia por completo la logística: no basta con que alguien
+  -- quiera llevar ayuda, hay que poder entrar.
+  incomunicado  boolean NOT NULL DEFAULT false,
+  -- Reportado explícitamente como sin ayuda por la fuente, aunque tengamos
+  -- algún punto cargado: son cosas distintas y ambas importan.
+  sin_ayuda     boolean NOT NULL DEFAULT false,
+  -- Territorio étnico. La Defensoría reportó 32 asentamientos indígenas sin
+  -- información suficiente; invisibilizarlos en el agregado es parte del
+  -- problema que este cruce intenta mostrar.
+  etnico        boolean NOT NULL DEFAULT false,
+  gravedad      numeric,
+  nota          text,
+  fuente        text,
+  actualizado_en timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS dano_municipio_gravedad_idx
+  ON dano_municipio (gravedad DESC);
+
 -- "Una persona curó esta ficha; el lote la complementa pero no la pisa."
 --
 -- Nace de un error real: se fusionaron tres fichas del mismo acopio a mano

@@ -150,6 +150,58 @@ export default function MapaAcopios({
         // Así el mapa comunica las dos cosas sin necesidad de leer nada.
         const tieneUrgencia = urgentes.length > 0;
 
+        // Una ficha de AUSENCIA no puede parecerse a un punto al que ir.
+        //
+        // Se dibuja hueca y a rayas rojas: en un mapa lleno de círculos
+        // rellenos, lo vacío se lee como "acá no hay", que es exactamente lo
+        // que dice. Un círculo sólido —del color que fuera— se leería como un
+        // lugar más, y mandaría a alguien del epicentro a buscar un techo que
+        // no existe.
+        if (c.es_alerta) {
+          return (
+            <CircleMarker
+              key={c.id}
+              center={[c.lat, c.lng]}
+              radius={13}
+              pathOptions={{
+                color: "#b91c1c",
+                weight: 3,
+                dashArray: "4 3",
+                fillColor: "#fee2e2",
+                fillOpacity: 0.45,
+              }}
+            >
+              <Popup maxWidth={280} maxHeight={240} autoPanPadding={[24, 24]}>
+                <div className="space-y-1.5">
+                  <p className="font-bold text-red-800">⚠️ AQUÍ NO HAY</p>
+                  <p className="font-semibold text-slate-900">{c.nombre}</p>
+                  {c.alerta && <p className="text-red-900">{c.alerta}</p>}
+                  {c.necesidades.length > 0 && (
+                    <p className="text-slate-700">
+                      <strong>Hace falta:</strong>{" "}
+                      {c.necesidades
+                        .map(
+                          (n) =>
+                            buscarCategoria(n.categoria)?.label ?? n.categoria
+                        )
+                        .join(", ")}
+                    </p>
+                  )}
+                  {/* Sin "cómo llegar" a propósito: no hay a dónde llegar. */}
+                  <p>
+                    <Link
+                      href={`/acopio/${c.id}`}
+                      className="font-medium text-blue-700 underline"
+                    >
+                      Ver el detalle
+                    </Link>
+                  </p>
+                </div>
+              </Popup>
+            </CircleMarker>
+          );
+        }
+
         return (
           <CircleMarker
             key={c.id}

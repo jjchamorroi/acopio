@@ -55,6 +55,7 @@ const ENLACES = [
   // Va antes que "donaciones ofrecidas" a propósito: quien perdió la casa
   // necesita esto más que ver qué está ofreciendo la gente.
   { href: "/guia", texto: "Perdí mi vivienda" },
+  { href: "/brecha", texto: "Quién queda por fuera" },
   { href: "/donaciones", texto: "Donaciones ofrecidas" },
 ];
 

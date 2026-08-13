@@ -469,3 +469,53 @@ export async function ultimaActualizacion(): Promise<string | null> {
     return filas[0]?.ultima ?? null;
   });
 }
+
+/** Una fila del cruce entre daño documentado y presencia de ayuda. */
+export type BrechaMunicipio = {
+  ciudad_slug: string;
+  nombre: string;
+  departamento: string;
+  destruidas: number | null;
+  averiadas: number | null;
+  muertos: number | null;
+  familias: number | null;
+  incomunicado: boolean;
+  sin_ayuda: boolean;
+  etnico: boolean;
+  gravedad: number | null;
+  nota: string | null;
+  fuente: string | null;
+  /** Puntos de ayuda que tenemos hoy ahí. Se calcula, no se guarda. */
+  puntos: number;
+  albergues: number;
+};
+
+/**
+ * Dónde hubo daño y no está llegando nadie.
+ *
+ * El conteo de puntos se calcula contra centro_acopio en cada consulta y no se
+ * guarda en dano_municipio. Es deliberado: si se congelara, la página seguiría
+ * denunciando un vacío que alguien ya llenó, y la denuncia perdería el sentido
+ * en cuanto sirviera para algo.
+ *
+ * Las fichas de ausencia (`es_alerta`) no cuentan como punto de ayuda: dicen
+ * justamente que ahí no hay nada.
+ */
+export async function brechaAtencion(): Promise<BrechaMunicipio[]> {
+  return conCache("brecha-atencion", 300, () =>
+    query<BrechaMunicipio>(
+      `SELECT d.ciudad_slug, ci.nombre, ci.departamento,
+              d.destruidas, d.averiadas, d.muertos, d.familias,
+              d.incomunicado, d.sin_ayuda, d.etnico, d.gravedad, d.nota, d.fuente,
+              (SELECT count(*) FROM centro_acopio c
+                WHERE c.ciudad_slug = d.ciudad_slug
+                  AND NOT c.es_alerta AND c.estado <> 'cerrado')::int AS puntos,
+              (SELECT count(*) FROM centro_acopio c
+                WHERE c.ciudad_slug = d.ciudad_slug AND c.tipo = 'albergue'
+                  AND NOT c.es_alerta AND c.estado <> 'cerrado')::int AS albergues
+         FROM dano_municipio d
+         JOIN ciudad ci ON ci.slug = d.ciudad_slug
+        ORDER BY d.gravedad DESC NULLS LAST, ci.nombre`
+    )
+  );
+}
