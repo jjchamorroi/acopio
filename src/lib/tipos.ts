@@ -53,6 +53,19 @@ export type CentroPublico = {
   no_recibe: string | null;
   /** El punto es el del municipio, no el de la puerta. */
   ubicacion_aproximada: boolean;
+  /**
+   * No es un lugar sino una AUSENCIA: "el epicentro no tiene albergue".
+   * Se publica por las necesidades que arrastra, nunca como sitio al que ir.
+   */
+  es_alerta: boolean;
+  /** Cupo del albergue, en texto libre: "Copada", "amplían a 2.500". */
+  capacidad: string | null;
+  /** Cuánta gente hay dentro, con su fecha: "249 personas al 13 de agosto". */
+  ocupacion: string | null;
+  /** Qué ofrece, separado por " · ": alimentación, salud, apoyo psicosocial. */
+  servicios: string | null;
+  /** Si exigen censo previo para entrar. La pregunta que evita un viaje en vano. */
+  requisitos_ingreso: string | null;
   /** De dónde salió el dato cuando no lo publicó quien administra el lugar. */
   fuente_nombre: string | null;
   fuente_url: string | null;

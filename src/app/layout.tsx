@@ -52,6 +52,9 @@ const ENLACES = [
   { href: "/donar", texto: "Tengo algo para donar" },
   { href: "/?modo=voluntarios", texto: "Voluntarios" },
   { href: "/profesionales", texto: "Ayuda profesional" },
+  // Va antes que "donaciones ofrecidas" a propósito: quien perdió la casa
+  // necesita esto más que ver qué está ofreciendo la gente.
+  { href: "/guia", texto: "Perdí mi vivienda" },
   { href: "/donaciones", texto: "Donaciones ofrecidas" },
 ];
 

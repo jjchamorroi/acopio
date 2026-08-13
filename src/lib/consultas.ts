@@ -50,6 +50,7 @@ const SELECT_CENTRO = `
     c.tipo, c.recibe_donaciones, c.entrega_ayuda, c.acepta_mascotas, c.atiende, c.tipos_sangre,
     c.alerta, c.no_recibe, c.ubicacion_aproximada,
     c.fuente_nombre, c.fuente_url, c.fuente_fecha,
+    c.es_alerta, c.capacidad, c.ocupacion, c.servicios, c.requisitos_ingreso,
     COALESCE(
       (SELECT json_agg(json_build_object(
                 'categoria', n.categoria,

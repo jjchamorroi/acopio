@@ -154,9 +154,14 @@ async function main() {
   const r = { creados: 0, actualizados: 0, omitidos: 0, aprox: 0, exactos: 0, lejanos: 0 };
 
   for (const lugar of lugares) {
+    // Las fichas de AUSENCIA vienen con vigente=false —correcto, no son un
+    // servicio operando— pero son justo las que no se pueden callar: "el
+    // epicentro no tiene albergue y necesita carpas". Entran marcadas.
+    const esAlerta = lugar.es_alerta === true;
+
     // Los cerrados no entran: el propio lote dice a dónde redirigir, y un
     // punto cerrado en el mapa es un viaje perdido garantizado.
-    if (lugar.vigente === false) {
+    if (lugar.vigente === false && !esAlerta) {
       console.log(`⊘ ${lugar.nombre} — CERRADO, se omite`);
       r.omitidos++;
       continue;
@@ -201,9 +206,15 @@ async function main() {
     const rol = ROLES[lugar.rol] ?? ROLES.punto_donacion;
     const estado = lugar.verificado === true ? "verificado" : "pendiente";
 
-    // Tri-estado a propósito: solo se afirma que admite mascotas cuando el
-    // lote lo dice con todas las letras. El resto queda en "no se sabe".
-    const mascotas = /admite mascotas/i.test(lugar.notas ?? "") ? true : null;
+    // Tri-estado a propósito: solo se afirma que admite mascotas cuando consta.
+    // El lote ya trae el dato estructurado; el rastreo en las notas queda de
+    // respaldo para las fichas viejas que no lo traían.
+    const mascotas =
+      typeof lugar.admite_mascotas === "boolean"
+        ? lugar.admite_mascotas
+        : /admite mascotas/i.test(lugar.notas ?? "")
+          ? true
+          : null;
 
     console.log(
       `${aproximada ? "≈" : "✓"} ${lugar.municipio.padEnd(18)} ` +
@@ -225,8 +236,9 @@ async function main() {
            responsable, telefono, horario, notas, alerta, no_recibe,
            estado, recibe_donaciones, entrega_ayuda, acepta_mascotas,
            tipos_sangre, ubicacion_aproximada,
-           fuente_nombre, fuente_url, fuente_fecha, admin_token_hash
-         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
+           fuente_nombre, fuente_url, fuente_fecha, admin_token_hash,
+           es_alerta, capacidad, ocupacion, servicios, requisitos_ingreso
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28)
          ON CONFLICT (origen_id) WHERE origen_id IS NOT NULL DO UPDATE SET
            nombre = EXCLUDED.nombre,
            direccion = EXCLUDED.direccion,
@@ -261,6 +273,11 @@ async function main() {
            fuente_nombre = EXCLUDED.fuente_nombre,
            fuente_url = EXCLUDED.fuente_url,
            fuente_fecha = EXCLUDED.fuente_fecha,
+           es_alerta = EXCLUDED.es_alerta,
+           capacidad = COALESCE(EXCLUDED.capacidad, centro_acopio.capacidad),
+           ocupacion = COALESCE(EXCLUDED.ocupacion, centro_acopio.ocupacion),
+           servicios = COALESCE(EXCLUDED.servicios, centro_acopio.servicios),
+           requisitos_ingreso = COALESCE(EXCLUDED.requisitos_ingreso, centro_acopio.requisitos_ingreso),
            actualizado_en = now()
          RETURNING id, (xmax = 0) AS creado, edicion_manual`,
         [
@@ -287,6 +304,11 @@ async function main() {
           lugar.fuente?.url ?? null,
           lugar.fuente?.fecha_publicacion ?? null,
           hash,
+          esAlerta,
+          lugar.capacidad ?? null,
+          lugar.ocupacion ?? null,
+          lugar.servicios?.length ? lugar.servicios.join(" · ") : null,
+          lugar.requisitos_ingreso ?? null,
         ]
       );
 

@@ -157,6 +157,28 @@ CREATE UNIQUE INDEX IF NOT EXISTS centro_acopio_origen_id_idx
 ALTER TABLE centro_acopio
   ADD COLUMN IF NOT EXISTS edicion_manual boolean NOT NULL DEFAULT false;
 
+-- Una ficha que no es un lugar sino una AUSENCIA.
+--
+-- "San José del Palmar: SIN ALBERGUE HABILITADO. La gente del epicentro duerme
+-- a la intemperie." Eso no es un sitio al que ir, y pintarlo como un albergue
+-- más mandaría a alguien del epicentro a buscar un techo que no existe.
+--
+-- Pero tampoco se puede callar: son las fichas que traen las necesidades más
+-- urgentes del país —carpas, agua, medicamentos— y son exactamente la
+-- información que un donante necesita. Se publican, marcadas, sin botón de
+-- "cómo llegar" y sin contarse como albergue disponible.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS es_alerta boolean NOT NULL DEFAULT false;
+
+-- Datos de albergue. Llegan en pocas fichas porque casi ninguna alcaldía los
+-- publica, y justo por eso valen: son las tres preguntas que hay que hacer
+-- antes de trasladarse con una familia a cuestas.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS capacidad text,
+  ADD COLUMN IF NOT EXISTS ocupacion text,
+  ADD COLUMN IF NOT EXISTS servicios text,
+  ADD COLUMN IF NOT EXISTS requisitos_ingreso text;
+
 -- El constraint se recrea cuando aparece un tipo nuevo. Sin esto, una base ya
 -- desplegada rechazaría el tipo aunque el código lo soporte. Se compara contra
 -- el último añadido.

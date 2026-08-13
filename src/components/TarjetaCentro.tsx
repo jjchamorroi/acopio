@@ -40,15 +40,28 @@ export default function TarjetaCentro({
         : `${(distanciaM / 1000).toFixed(1).replace(".", ",")} km`;
 
   return (
-    <article className="flex flex-col gap-3 rounded-2xl border border-[var(--color-borde)] bg-white p-4">
+    <article
+      className={`flex flex-col gap-3 rounded-2xl border p-4 ${
+        // Una ficha de ausencia no puede parecerse a un lugar al que ir.
+        centro.es_alerta
+          ? "border-[1.5px] border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)]"
+          : "border-[var(--color-borde)] bg-white"
+      }`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-1.5">
             <span
               className="rounded-md px-2 py-1 text-xs font-bold text-white"
-              style={{ backgroundColor: tipo?.color ?? "#3c434f" }}
+              style={{
+                backgroundColor: centro.es_alerta
+                  ? "var(--color-urgente-texto)"
+                  : (tipo?.color ?? "#3c434f"),
+              }}
             >
-              {tipo?.emoji} {tipo?.corto ?? centro.tipo}
+              {centro.es_alerta
+                ? "⚠️ AQUÍ NO HAY"
+                : `${tipo?.emoji} ${tipo?.corto ?? centro.tipo}`}
             </span>
             {urgentes.length > 0 && (
               <span className="rounded-md bg-[var(--color-urgente-fondo)] px-2 py-1 text-xs font-extrabold tracking-wide text-[var(--color-urgente-texto)]">
@@ -63,41 +76,47 @@ export default function TarjetaCentro({
             </Link>
           </h3>
 
-          <p className="text-[13.5px] text-[var(--color-apagado)]">
-            {centro.direccion}
-            {centro.atiende ? ` · Atiende a ${centro.atiende}` : ""}
-          </p>
+          {!centro.es_alerta && (
+            <p className="text-[13.5px] text-[var(--color-apagado)]">
+              {centro.direccion}
+              {centro.atiende ? ` · Atiende a ${centro.atiende}` : ""}
+            </p>
+          )}
 
           {/* Muchas alcaldías anunciaron albergues sin publicar la dirección
               exacta. El punto es el del municipio, y quien va a salir de la
               casa tiene que saberlo antes, no al llegar. */}
-          {centro.ubicacion_aproximada && (
+          {centro.ubicacion_aproximada && !centro.es_alerta && (
             <p className="text-[12.5px] font-semibold text-[var(--color-etiqueta)]">
               📍 Ubicación aproximada — confirma la dirección antes de ir
             </p>
           )}
         </div>
 
-        <div className="max-w-[38%] shrink-0 text-right">
-          {distancia && (
-            <div className="text-[17px] font-extrabold tracking-tight">
-              {distancia}
+        {/* Un horario o una distancia en una ficha de ausencia sugerirían que
+            hay algo abierto a donde llegar. */}
+        {!centro.es_alerta && (
+          <div className="max-w-[38%] shrink-0 text-right">
+            {distancia && (
+              <div className="text-[17px] font-extrabold tracking-tight">
+                {distancia}
+              </div>
+            )}
+            <div
+              className={`text-xs font-semibold leading-tight ${
+                abierto === false
+                  ? "text-[var(--color-urgente-texto)]"
+                  : "text-[var(--color-abierto)]"
+              }`}
+            >
+              {abierto === true
+                ? "Abierto ahora"
+                : abierto === false
+                  ? "Cerrado ahora"
+                  : (centro.horario ?? "Sin horario")}
             </div>
-          )}
-          <div
-            className={`text-xs font-semibold leading-tight ${
-              abierto === false
-                ? "text-[var(--color-urgente-texto)]"
-                : "text-[var(--color-abierto)]"
-            }`}
-          >
-            {abierto === true
-              ? "Abierto ahora"
-              : abierto === false
-                ? "Cerrado ahora"
-                : (centro.horario ?? "Sin horario")}
           </div>
-        </div>
+        )}
       </div>
 
       {centro.es_demo && (
@@ -115,7 +134,7 @@ export default function TarjetaCentro({
         </p>
       )}
 
-      {centro.tipo === "albergue" && (
+      {centro.tipo === "albergue" && !centro.es_alerta && (
         <p
           className={`rounded-lg px-3 py-2 text-[13px] font-semibold ${
             centro.acepta_mascotas === true
@@ -130,6 +149,37 @@ export default function TarjetaCentro({
             : centro.acepta_mascotas === false
               ? "🚫 No recibe mascotas"
               : "🐾 Mascotas: pregunta al llamar"}
+        </p>
+      )}
+
+      {/* Las tres preguntas que hay que hacer ANTES de trasladarse con una
+          familia a cuestas: ¿hay cupo?, ¿exigen censo previo?, ¿qué ofrecen?
+          Casi ninguna alcaldía las publica, y justo por eso valen cuando sí. */}
+      {(centro.ocupacion || centro.capacidad || centro.requisitos_ingreso) && (
+        <dl className="flex flex-col gap-1 rounded-lg bg-[var(--color-hueso)] px-3 py-2 text-[12.5px]">
+          {(centro.ocupacion || centro.capacidad) && (
+            <div>
+              <dt className="inline font-bold">Ocupación: </dt>
+              <dd className="inline text-[var(--color-apagado)]">
+                {centro.ocupacion ?? centro.capacidad}
+              </dd>
+            </div>
+          )}
+          {centro.requisitos_ingreso && (
+            <div>
+              <dt className="inline font-bold">Para entrar: </dt>
+              <dd className="inline text-[var(--color-apagado)]">
+                {centro.requisitos_ingreso}
+              </dd>
+            </div>
+          )}
+        </dl>
+      )}
+
+      {centro.servicios && (
+        <p className="text-[12.5px] text-[var(--color-apagado)]">
+          <span className="font-bold text-[var(--color-tinta)]">Ofrece:</span>{" "}
+          {centro.servicios}
         </p>
       )}
 
@@ -202,16 +252,20 @@ export default function TarjetaCentro({
             Llamar
           </a>
         )}
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${centro.lat},${centro.lng}`}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-4 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)]"
-        >
-          {/* Con ubicación aproximada, "Cómo llegar" mentiría: la ruta lleva al
-              centro del municipio, no a la puerta. */}
-          {centro.ubicacion_aproximada ? "Ver la zona" : "Cómo llegar"}
-        </a>
+        {/* Sin "cómo llegar" en una ficha de ausencia: es lo único que de
+            verdad no se puede ofrecer, porque no hay a dónde llegar. */}
+        {!centro.es_alerta && (
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${centro.lat},${centro.lng}`}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-4 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)]"
+          >
+            {/* Con ubicación aproximada, "Cómo llegar" mentiría: la ruta lleva
+                al centro del municipio, no a la puerta. */}
+            {centro.ubicacion_aproximada ? "Ver la zona" : "Cómo llegar"}
+          </a>
+        )}
       </div>
 
       {/* Nota 06: la frescura vale más que el sello. "Verificado" dice que
