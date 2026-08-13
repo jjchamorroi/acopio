@@ -19,3 +19,7 @@ respaldos/
 # Datos recopilados de terceros, sin verificar y sin su consentimiento.
 # Es material de trabajo para llamar, no para publicar.
 investigacion/
+
+# Enlaces privados de edición de los lugares importados. Quien tenga uno puede
+# editar o borrar ese lugar sin ninguna otra credencial: son contraseñas.
+tokens-*.json

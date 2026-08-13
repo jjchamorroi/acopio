@@ -67,6 +67,15 @@ export default function TarjetaCentro({
             {centro.direccion}
             {centro.atiende ? ` · Atiende a ${centro.atiende}` : ""}
           </p>
+
+          {/* Muchas alcaldías anunciaron albergues sin publicar la dirección
+              exacta. El punto es el del municipio, y quien va a salir de la
+              casa tiene que saberlo antes, no al llegar. */}
+          {centro.ubicacion_aproximada && (
+            <p className="text-[12.5px] font-semibold text-[var(--color-etiqueta)]">
+              📍 Ubicación aproximada — confirma la dirección antes de ir
+            </p>
+          )}
         </div>
 
         <div className="max-w-[38%] shrink-0 text-right">
@@ -94,6 +103,15 @@ export default function TarjetaCentro({
       {centro.es_demo && (
         <p className="rounded-md bg-[var(--color-hueso)] px-2 py-1 text-xs text-[var(--color-tenue)]">
           Dato de prueba — este lugar no existe.
+        </p>
+      )}
+
+      {/* Por encima de todo lo demás: "la Alcaldía pidió NO llevar alimentos
+          por ahora" cambia por completo si vale la pena ir, y enterrarlo entre
+          las notas equivale a no publicarlo. */}
+      {centro.alerta && (
+        <p className="rounded-lg border border-[var(--color-urgente-borde)] bg-[var(--color-urgente-fondo)] px-3 py-2 text-[13px] font-semibold text-[#8f2418]">
+          ⚠️ {centro.alerta}
         </p>
       )}
 
@@ -166,6 +184,15 @@ export default function TarjetaCentro({
         </p>
       )}
 
+      {/* Distinto de "ya no reciben": eso es una categoría que se llenó, esto
+          es lo que el lugar nunca acepta. Casi todos rechazan medicamentos,
+          perecederos y ropa usada, y quien llega con eso se devuelve cargado. */}
+      {modo === "donar" && centro.no_recibe && (
+        <p className="text-[13px] text-[var(--color-etiqueta)]">
+          No reciben: {centro.no_recibe}
+        </p>
+      )}
+
       <div className="flex items-center gap-2">
         {centro.telefono && (
           <a
@@ -181,13 +208,15 @@ export default function TarjetaCentro({
           rel="noreferrer"
           className="rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-4 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)]"
         >
-          Cómo llegar
+          {/* Con ubicación aproximada, "Cómo llegar" mentiría: la ruta lleva al
+              centro del municipio, no a la puerta. */}
+          {centro.ubicacion_aproximada ? "Ver la zona" : "Cómo llegar"}
         </a>
       </div>
 
       {/* Nota 06: la frescura vale más que el sello. "Verificado" dice que
           alguien llamó alguna vez; "hace 20 min" dice si el dato sirve hoy. */}
-      <div className="flex items-center gap-2 border-t border-[var(--color-borde-suave)] pt-2.5 text-xs text-[var(--color-tenue)]">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-[var(--color-borde-suave)] pt-2.5 text-xs text-[var(--color-tenue)]">
         <span
           className={`font-bold ${
             centro.estado === "verificado"
@@ -199,6 +228,26 @@ export default function TarjetaCentro({
         </span>
         <span aria-hidden>·</span>
         <span className={fresco.clase}>Confirmado {fresco.texto}</span>
+
+        {/* Decir de dónde salió el dato es lo que separa "no lo hemos
+            comprobado" de "nos lo inventamos". Quien duda va y comprueba. */}
+        {centro.fuente_nombre && (
+          <>
+            <span aria-hidden>·</span>
+            {centro.fuente_url ? (
+              <a
+                href={centro.fuente_url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="underline decoration-dotted hover:text-[var(--color-tinta)]"
+              >
+                según {centro.fuente_nombre} ↗
+              </a>
+            ) : (
+              <span>según {centro.fuente_nombre}</span>
+            )}
+          </>
+        )}
       </div>
     </article>
   );

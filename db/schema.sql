@@ -103,6 +103,50 @@ ALTER TABLE centro_acopio
 ALTER TABLE centro_acopio
   ADD COLUMN IF NOT EXISTS tipos_sangre text;
 
+-- Un aviso corto y destacado, por encima de todo lo demás. Nace de los datos
+-- oficiales de Manizales: "la Alcaldía pidió NO llevar alimentos por ahora".
+-- Eso no es una nota al pie —cambia por completo si vale la pena ir— y
+-- enterrarlo entre las notas equivale a no publicarlo.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS alerta text;
+
+-- Qué NO recibe, en texto libre separado por " · ". Evita el viaje perdido:
+-- casi todos los acopios rechazan medicamentos, perecederos y ropa usada, y
+-- quien llega con eso se devuelve con la carga puesta.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS no_recibe text;
+
+-- De dónde salió el dato cuando no lo publicó quien administra el lugar.
+-- "Verificado" en este sitio significa que alguien del equipo llamó; un lugar
+-- tomado de prensa no lo está, pero decir de qué medio viene y enlazar la nota
+-- permite que cualquiera compruebe por su cuenta en vez de creernos.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS fuente_nombre text,
+  ADD COLUMN IF NOT EXISTS fuente_url text,
+  ADD COLUMN IF NOT EXISTS fuente_fecha date;
+
+-- El punto es el del municipio, no el de la puerta.
+--
+-- Muchas alcaldías anunciaron albergues sin publicar dirección exacta (los 6
+-- de Pereira, con ~480 personas alojadas, entre ellos). Dejarlos fuera del
+-- mapa los vuelve invisibles; ponerlos sin avisar manda gente a una esquina
+-- equivocada. Se publican con el centro del municipio y este marcador, que la
+-- tarjeta muestra para que nadie salga de casa creyendo que tiene la dirección.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS ubicacion_aproximada boolean NOT NULL DEFAULT false;
+
+-- Identificador estable del lote del que vino un lugar importado.
+--
+-- Sin esto, volver a correr la importación duplicaría los 76 registros, y en
+-- una emergencia el lote se rehace cada día. Con él, la segunda corrida
+-- ACTUALIZA lo que cambió y no toca nada más. Es NULL en todo lo que registró
+-- gente por el formulario, así que el índice es parcial.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS origen_id text;
+
+CREATE UNIQUE INDEX IF NOT EXISTS centro_acopio_origen_id_idx
+  ON centro_acopio (origen_id) WHERE origen_id IS NOT NULL;
+
 -- El constraint se recrea cuando aparece un tipo nuevo. Sin esto, una base ya
 -- desplegada rechazaría el tipo aunque el código lo soporte. Se compara contra
 -- el último añadido.

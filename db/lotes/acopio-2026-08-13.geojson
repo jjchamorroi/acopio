@@ -1,0 +1,3181 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4886316,
+          5.0559021
+        ]
+      },
+      "properties": {
+        "id": "manizales-centro-de-acopio-coliseo-menor-ramon-marin-vargas",
+        "nombre": "Centro de acopio Coliseo Menor Ramón Marín Vargas",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Unidad Deportiva Palogrande, entrada A por la Avenida Lindsay",
+        "geocode_query": "Coliseo Menor Ramón Marín Vargas, Unidad Deportiva Palogrande, Manizales, Caldas, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": null,
+        "responsable": "Alcaldía de Manizales",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": "La Alcaldía pidió NO llevar alimentos por ahora (stock saturado). Ropa: solo nueva con etiqueta.",
+        "necesidades": {
+          "otros": "necesita",
+          "ropa_calzado": "sobra",
+          "alimentos_no_perecederos": "sobra",
+          "aseo_personal": "urgente",
+          "panales_formula": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos",
+          "Alimentos perecederos",
+          "Ropa interior",
+          "Artículos de segunda mano",
+          "Comida preparada en casa",
+          "Ropa usada: solo se acepta ropa nueva con etiqueta"
+        ],
+        "sangre": null,
+        "notas": "Centro principal de clasificación y distribución de Manizales: desde aquí se surten los albergues. También recibe equipos ortopédicos (sillas de ruedas, muletas, caminadores, bastones). IMPORTANTE: la Alcaldía pidió SUSPENDER temporalmente la entrega de alimentos para poder organizar el stock, y la ropa ya está cubierta por el volumen donado.",
+        "fuente": {
+          "nombre": "Alcaldía de Manizales - Centro de Información",
+          "url": "https://centrodeinformacion.manizales.gov.co/comunicado-de-prensa-sobre-manizales-fortalece-la-atencion-a-las-familias-afectadas-por-el-sismo-en-el-coliseo-mayor-jorge-arango-uribe/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4882592,
+          5.0582306
+        ]
+      },
+      "properties": {
+        "id": "manizales-albergue-temporal-coliseo-mayor-jorge-arango-uribe",
+        "nombre": "Albergue temporal Coliseo Mayor Jorge Arango Uribe",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Unidad Deportiva Palogrande, Manizales",
+        "geocode_query": "Coliseo Mayor Jorge Arango Uribe, Manizales, Caldas, Colombia",
+        "horario": "Abierto 24 horas",
+        "telefono": "119",
+        "responsable": "Alcaldía de Manizales - Secretaría del Deporte",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": "Las donaciones se entregan en el Coliseo Menor, no aquí.",
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "aseo_personal": "urgente",
+          "panales_formula": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos",
+          "Alimentos perecederos",
+          "Ropa interior",
+          "Artículos de segunda mano",
+          "Comida preparada en casa",
+          "Alimentos: suspendidos temporalmente por la Alcaldía"
+        ],
+        "sangre": null,
+        "notas": "Albergue principal de Manizales. La Alcaldía reportó 142 personas alojadas al 11 de agosto (La Patria habló de 243). Admite mascotas de las familias: había 18 perros y 3 gatos al 12 de agosto. Ofrece alimentación, acompañamiento psicosocial y recreación para niños. Abierto a cualquier persona que no pueda volver a su vivienda o la considere insegura. OJO: las donaciones NO se reciben aquí sino en el Coliseo Menor.",
+        "fuente": {
+          "nombre": "Alcaldía de Manizales - Centro de Información",
+          "url": "https://centrodeinformacion.manizales.gov.co/comunicado-de-prensa-sobre-manizales-fortalece-la-atencion-a-las-familias-afectadas-por-el-sismo-en-el-coliseo-mayor-jorge-arango-uribe/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4886045,
+          5.0570073
+        ]
+      },
+      "properties": {
+        "id": "manizales-unidad-de-proteccion-animal-upa-punto-veterinario-del-alberg",
+        "nombre": "Unidad de Protección Animal (UPA) - punto veterinario del albergue",
+        "tipo": "animal",
+        "rol": "ambos",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Albergue temporal del Coliseo, Unidad Deportiva Palogrande. Las donaciones de alimento se reciben en el Coliseo Menor (entrada A, Avenida Lindsay)",
+        "geocode_query": "Unidad Deportiva Palogrande, Manizales, Caldas, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Unidad de Protección Animal, Secretaría del Medio Ambiente de Manizales, con apoyo del Grupo de Carabineros de la Policía Nacional",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "insumos_veterinarios": "necesita",
+          "guacales_correas": "necesita",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Veterinarios de la UPA atienden a los animales alojados en el albergue del Coliseo. El alimento donado se distribuye de forma organizada en barrios, sectores rurales y veredas afectadas.",
+        "fuente": {
+          "nombre": "Alcaldía de Manizales - Centro de Información",
+          "url": "https://centrodeinformacion.manizales.gov.co/donaciones-de-alimento-para-perros-y-gatos-seran-distribuidas-en-zonas-afectadas-por-el-sismo/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4819544,
+          5.0510856
+        ]
+      },
+      "properties": {
+        "id": "manizales-centro-de-acopio-cruz-roja-colombiana-seccional-caldas",
+        "nombre": "Centro de acopio Cruz Roja Colombiana Seccional Caldas",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Avenida Kevin Ángel, carrera 21 # 69-350",
+        "geocode_query": "Avenida Kevin Ángel, carrera 21 # 69-350, Manizales, Caldas, Colombia",
+        "horario": "Abierto desde el 11 de agosto (horario específico no publicado; llamar antes)",
+        "telefono": null,
+        "responsable": "Cruz Roja Colombiana Seccional Caldas",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "panales_formula": "necesita",
+          "linternas_pilas": "necesita",
+          "insumos_veterinarios": "necesita",
+          "guacales_correas": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [
+          "Productos usados, abiertos o en mal estado",
+          "Alimentos con vencimiento menor a 3 meses"
+        ],
+        "sangre": null,
+        "notas": "EXIGE que todo esté nuevo, sellado y en perfecto estado, con vencimiento superior a 3 meses. Recibe: atún, salchichas enlatadas, panela, fríjol, arroz, leche en polvo, pasta, sal, harina, azúcar, café, chocolate y aceite; cepillos, crema dental, jabón, desodorante, toallas higiénicas, papel higiénico y pañales; sábanas, mantas, hamacas, ollas, sartenes, bolsas de basura, vajillas, ventiladores, linternas y colchonetas; y para mascotas concentrado, camas, cobijas, correas, comederos, medicamentos y juguetes.",
+        "fuente": {
+          "nombre": "La Patria",
+          "url": "https://www.lapatria.com/manizales/ayudas-para-damnificados-en-manizales-por-el-terremoto-que-donar-y-donde-llevarlo",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4914175,
+          5.0587763
+        ]
+      },
+      "properties": {
+        "id": "manizales-centro-de-acopio-universidad-de-caldas",
+        "nombre": "Centro de acopio Universidad de Caldas",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Coliseo de la Universidad de Caldas, carrera 27, zona del Velódromo, detrás de la Normal Superior de Caldas, sector Estadio Palogrande",
+        "geocode_query": "Coliseo Universidad de Caldas, carrera 27, Manizales, Caldas, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Universidad de Caldas",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "ropa_calzado": "necesita",
+          "alimento_mascotas": "necesita",
+          "insumos_veterinarios": "necesita",
+          "aseo_personal": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "panales_formula": "urgente",
+          "agua": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Además del acopio funciona como punto de servicios: primeros auxilios y rescate/traslado de mascotas, atención médica presencial y virtual, salud mental y primeros auxilios psicológicos, y asesoría jurídica sobre pólizas de vivienda. A diferencia de los coliseos municipales, SÍ recibe ropa en buen estado y pañales de adulto e infantiles.",
+        "fuente": {
+          "nombre": "La Patria",
+          "url": "https://www.lapatria.com/manizales/universidad-de-caldas-habilita-centro-de-acopio-en-manizales-para-damnificados-del-sismo",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.50096,
+          5.0602104
+        ]
+      },
+      "properties": {
+        "id": "manizales-banco-de-alimentos-de-manizales",
+        "nombre": "Banco de Alimentos de Manizales",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Calle 49 # 27A-85",
+        "geocode_query": "Calle 49 # 27A-85, Manizales, Caldas, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Banco de Alimentos de Manizales (red ABACO)",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "aseo_personal": "necesita",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos",
+          "Ropa",
+          "Productos vencidos o perecederos"
+        ],
+        "sangre": null,
+        "notas": "Parte del corredor humanitario de ABACO. WhatsApp nacional de ABACO para donaciones en especie: 313 245 7978.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/datos/este-es-el-mapa-completo-de-los-centros-de-acopio-habilitados-en-colombia-para-ayudar-a-los-damnificados-del-terremoto-de-magnitud-7-3577654",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4897585,
+          5.0582543
+        ]
+      },
+      "properties": {
+        "id": "manizales-punto-de-donacion-de-sangre-cancha-auxiliar-palogrande",
+        "nombre": "Punto de donación de sangre Cancha Auxiliar Palogrande",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Canchas auxiliares contiguas a la estación de Bomberos Palogrande, Unidad Deportiva Palogrande",
+        "geocode_query": "Estación de Bomberos Palogrande, Manizales, Caldas, Colombia",
+        "horario": "Instalado el 10 de agosto desde las 12:30 p.m. Sin horario permanente publicado: LLAMAR ANTES.",
+        "telefono": "310 456 0822",
+        "responsable": "Cruz Roja Colombiana Seccional Caldas, con el Hemocentro del Café",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": "desconocido",
+        "alerta": "No hay confirmación posterior al 12 de agosto de que siga instalado. Llamar al 310 456 0822 antes de ir.",
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "O-",
+            "O+"
+          ],
+          "tipos_aceptados": [
+            "Todos los grupos sanguíneos"
+          ],
+          "requisitos": "18 a 65 años, buen estado de salud, pareja estable mínimo 6 meses, documento de identidad original",
+          "espera_estimada": "2 a 2,5 horas por alta afluencia (reporte del 11 de agosto)"
+        },
+        "notas": "La Cruz Roja pide comunicarse con el punto antes de desplazarse para confirmar condiciones y horario.",
+        "fuente": {
+          "nombre": "Cruz Roja Colombiana",
+          "url": "https://www.cruzrojacolombiana.org/cruz-roja-colombiana-despliega-capacidades-para-dar-respuesta-tras-las-afectaciones-por-sismo-en-colombia/",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4826682,
+          5.0515805
+        ]
+      },
+      "properties": {
+        "id": "manizales-hemocentro-del-cafe",
+        "nombre": "Hemocentro del Café",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": "Carrera 21 # 70-06",
+        "geocode_query": "Carrera 21 # 70-06, Manizales, Caldas, Colombia",
+        "horario": "Recibiendo donantes desde el 10 de agosto; horario permanente no publicado",
+        "telefono": null,
+        "responsable": "Hemocentro del Café",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "O-",
+            "O+"
+          ],
+          "tipos_aceptados": [
+            "Todos los grupos sanguíneos"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad, buen estado de salud, sin tatuajes, piercings ni maquillaje permanente en los últimos 6 meses",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre de referencia del Eje Cafetero. La dirección proviene de prensa y no está confirmada institucionalmente.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/datos/este-es-el-mapa-completo-de-los-centros-de-acopio-habilitados-en-colombia-para-ayudar-a-los-damnificados-del-terremoto-de-magnitud-7-3577654",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.5049698,
+          5.045801
+        ]
+      },
+      "properties": {
+        "id": "manizales-albergue-temporal-sic-de-aranjuez",
+        "nombre": "Albergue temporal SIC de Aranjuez",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Manizales",
+        "departamento": "Caldas",
+        "direccion": null,
+        "geocode_query": "Albergue temporal SIC de Aranjuez, Manizales, Caldas, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Manizales",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": "Sin dirección publicada. Confirmar con la Alcaldía antes de remitir a alguien aquí.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Mencionado como el tercer albergue de Manizales junto a los coliseos Mayor y Menor. No hay dirección, capacidad ni necesidades publicadas, y no aparece en los comunicados oficiales revisados.",
+        "fuente": {
+          "nombre": "Revista Cambio",
+          "url": "https://cambiocolombia.com/pais/articulo/2026/8/donde-y-que-puede-donar-para-ayudar-a-los-damnificados-estos-son-los-centros-de-acopio-en-las-ciudades-principales-de-colombia",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.5119333,
+          5.0453576
+        ]
+      },
+      "properties": {
+        "id": "villamaria-punto-de-acopio-del-concejo-municipal-de-villamaria",
+        "nombre": "Punto de acopio del Concejo Municipal de Villamaría",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Villamaría",
+        "departamento": "Caldas",
+        "direccion": "Sede del Concejo Municipal de Villamaría",
+        "geocode_query": "Sede del Concejo Municipal de Villamaría, Villamaría, Caldas, Colombia",
+        "horario": "Lunes a viernes, 8:00 a.m. - 12:00 m. y 2:00 p.m. - 5:30 p.m.",
+        "telefono": "606 893 2810",
+        "responsable": "Alcaldía de Villamaría",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La Alcaldía también habilitó donaciones económicas en la cuenta de ahorros Davivienda 085200076066.",
+        "fuente": {
+          "nombre": "Alcaldía de Villamaría",
+          "url": "https://www.villamaria-caldas.gov.co/",
+          "fecha_publicacion": null
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.4954319,
+          5.0398694
+        ]
+      },
+      "properties": {
+        "id": "villamaria-punto-de-recepcion-de-materiales-de-construccion-antiguas-b",
+        "nombre": "Punto de recepción de materiales de construcción - antiguas bodegas VARTA",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Villamaría",
+        "departamento": "Caldas",
+        "direccion": "Antiguas bodegas VARTA, Villamaría",
+        "geocode_query": "Antiguas bodegas VARTA, Villamaría, Villamaría, Caldas, Colombia",
+        "horario": null,
+        "telefono": "606 893 2810",
+        "responsable": "Alcaldía de Villamaría",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "herramientas": "necesita",
+          "otros": "urgente"
+        },
+        "no_recibe": [
+          "Alimentos",
+          "Ropa",
+          "Cualquier ayuda que no sea material de construcción"
+        ],
+        "sangre": null,
+        "notas": "EXCLUSIVAMENTE materiales de construcción. Contactar a la Administración Municipal antes de trasladar cargas grandes.",
+        "fuente": {
+          "nombre": "Alcaldía de Villamaría",
+          "url": "https://www.villamaria-caldas.gov.co/",
+          "fecha_publicacion": null
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.5166158,
+          5.0468818
+        ]
+      },
+      "properties": {
+        "id": "villamaria-albergue-del-coliseo-de-villamaria",
+        "nombre": "Albergue del coliseo de Villamaría",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Villamaría",
+        "departamento": "Caldas",
+        "direccion": null,
+        "geocode_query": "Coliseo municipal de Villamaría, Caldas, Colombia",
+        "horario": null,
+        "telefono": "606 893 2810",
+        "responsable": "Alcaldía de Villamaría",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": "Confirmar por teléfono antes de acudir: 606 893 2810.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La Alcaldía anunció un albergue de emergencia en el coliseo municipal. Las instrucciones de acceso se publican por código QR en el portal municipal, por lo que no hay dirección ni horario en texto.",
+        "fuente": {
+          "nombre": "Alcaldía de Villamaría",
+          "url": "https://www.villamaria-caldas.gov.co/",
+          "fecha_publicacion": null
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6226506,
+          5.0203763
+        ]
+      },
+      "properties": {
+        "id": "palestina-centro-de-acopio-de-la-cabecera-municipal-de-palestina",
+        "nombre": "Centro de acopio de la cabecera municipal de Palestina",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Palestina",
+        "departamento": "Caldas",
+        "direccion": "Cabecera municipal de Palestina (dirección exacta no publicada)",
+        "geocode_query": "Cabecera municipal de Palestina (dirección exacta no publicada), Palestina, Caldas, Colombia",
+        "horario": null,
+        "telefono": "311 307 0843",
+        "responsable": "Alcaldía de Palestina, con voluntarios de la filial del Once Caldas",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "ropa_calzado": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "El sismo afectó 165 viviendas en el municipio. Unos 20 jóvenes voluntarios apoyan traslados y recolección. El teléfono es del coordinador de voluntarios.",
+        "fuente": {
+          "nombre": "La Patria",
+          "url": "https://www.lapatria.com/caldas/jovenes-de-este-municipio-metropolitano-de-caldas-se-unen-para-ayudar-las-familias-afectadas",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7024436,
+          5.1116566
+        ]
+      },
+      "properties": {
+        "id": "palestina-centro-de-acopio-de-la-corregiduria-de-arauca",
+        "nombre": "Centro de acopio de la Corregiduría de Arauca",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Palestina",
+        "departamento": "Caldas",
+        "direccion": "Corregiduría de Arauca, corregimiento de Arauca",
+        "geocode_query": "Corregiduría de Arauca, corregimiento de Arauca, Palestina, Caldas, Colombia",
+        "horario": null,
+        "telefono": "311 307 0843",
+        "responsable": "Alcaldía de Palestina, con voluntarios de la filial del Once Caldas",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "ropa_calzado": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": null,
+        "fuente": {
+          "nombre": "La Patria",
+          "url": "https://www.lapatria.com/caldas/jovenes-de-este-municipio-metropolitano-de-caldas-se-unen-para-ayudar-las-familias-afectadas",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7235638,
+          4.8056354
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-consota",
+        "nombre": "Café Consota",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Manzanas 7 y 8, Villa Consota, sector Cuba",
+        "geocode_query": "Villa Consota, Cuba, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7188198,
+          4.8033461
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-perla-del-otun",
+        "nombre": "Café Perla del Otún",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Diagonal a la iglesia del sector 2.500 Lotes",
+        "geocode_query": "Barrio 2500 Lotes, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6732744,
+          4.7884238
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-el-remanso",
+        "nombre": "Café El Remanso",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Avenida principal del barrio El Remanso, al lado del centro de salud",
+        "geocode_query": "Barrio El Remanso, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6721199,
+          4.8083516
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-kennedy",
+        "nombre": "Café Kennedy",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Parque principal del barrio Kennedy, al lado de la cancha",
+        "geocode_query": "Parque principal barrio Kennedy, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7151412,
+          4.8164322
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-ormaza",
+        "nombre": "Café Ormazá",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Calle 3 bis # 5-38, avenida del Río",
+        "geocode_query": "Calle 3 bis # 5-38, avenida del Río, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7028701,
+          4.8090286
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-san-nicolas",
+        "nombre": "Café San Nicolás",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Carrera 14 bis # 28-38, antigua estación de Policía",
+        "geocode_query": "Carrera 14 bis # 28-38, antigua estación de Policía, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7298805,
+          4.8250922
+        ]
+      },
+      "properties": {
+        "id": "pereira-cafe-comuna-del-cafe",
+        "nombre": "Café Comuna del Café",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Carrera 3 con calle 59A, sector A, Parque Industrial",
+        "geocode_query": "Carrera 3 con calle 59A, sector A, Parque Industrial, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "ropa_calzado": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 7 CAFE (Centros de Atención Familiar y Empresarial) que la Alcaldía de Pereira habilitó como centros de acopio. Reciben ropa de niño y adulto en perfecto estado, recipientes desechables para alimentos, elementos de aseo, cobijas, colchonetas y alimento para mascotas. Ninguna fuente institucional ni de prensa mayor publicó horario ni teléfono: confirmar antes de ir.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7274849,
+          4.8036257
+        ]
+      },
+      "properties": {
+        "id": "pereira-centro-de-acopio-de-ayudas-humanitarias-de-la-gobernacion-de-r",
+        "nombre": "Centro de acopio de ayudas humanitarias de la Gobernación de Risaralda",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Avenida de Las Américas, Calle 95, Lote 1",
+        "geocode_query": "Avenida de Las Américas, Calle 95, Lote 1, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": "606 351 5445",
+        "responsable": "Gobernación de Risaralda",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "necesita",
+          "insumos_veterinarios": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "agua": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Punto de acopio departamental. Arma paquetes nutricionales y los distribuye de inmediato a los 14 municipios afectados de Risaralda (no almacena). También recibe combustible para vehículos de emergencia y maquinaria, e insumos para atención animal. El teléfono es la línea general de la Gobernación.",
+        "fuente": {
+          "nombre": "Gobernación de Risaralda",
+          "url": "https://www.risaralda.gov.co/publicaciones/164019/asi-avanza-la-recoleccion-de-ayudas-humanitarias-por-parte-de-la-gobernacion-de-risaralda/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7089893,
+          4.8153655
+        ]
+      },
+      "properties": {
+        "id": "pereira-albergue-coliseo-mayor-de-pereira",
+        "nombre": "Albergue Coliseo Mayor de Pereira",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "Coliseo Mayor, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin dirección exacta publicada por la Alcaldía.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 6 albergues oficiales de Pereira, que al 12 de agosto acogían cerca de 480 personas en total. Ofrecen colchonetas, alimentación, apoyo psicosocial y atención en salud. La Alcaldía no publicó direcciones exactas ni capacidad por sede.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/emergencia-en-pereira-avanzan-labores-de-busqueda-y-rescate/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7006683,
+          4.8001216
+        ]
+      },
+      "properties": {
+        "id": "pereira-albergue-ecoparque-el-vergel",
+        "nombre": "Albergue Ecoparque El Vergel",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "Ecoparque El Vergel, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin dirección exacta publicada por la Alcaldía.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 6 albergues oficiales de Pereira, que al 12 de agosto acogían cerca de 480 personas en total. Ofrecen colchonetas, alimentación, apoyo psicosocial y atención en salud. La Alcaldía no publicó direcciones exactas ni capacidad por sede.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/emergencia-en-pereira-avanzan-labores-de-busqueda-y-rescate/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7326062,
+          4.7988585
+        ]
+      },
+      "properties": {
+        "id": "pereira-albergue-parque-el-oso",
+        "nombre": "Albergue Parque El Oso",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "Parque El Oso, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin dirección exacta publicada por la Alcaldía.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 6 albergues oficiales de Pereira, que al 12 de agosto acogían cerca de 480 personas en total. Ofrecen colchonetas, alimentación, apoyo psicosocial y atención en salud. La Alcaldía no publicó direcciones exactas ni capacidad por sede.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/emergencia-en-pereira-avanzan-labores-de-busqueda-y-rescate/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6964031,
+          4.8092321
+        ]
+      },
+      "properties": {
+        "id": "pereira-albergue-parque-olaya-herrera",
+        "nombre": "Albergue Parque Olaya Herrera",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "Parque Olaya Herrera, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin dirección exacta publicada por la Alcaldía.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Uno de los 6 albergues oficiales de Pereira, que al 12 de agosto acogían cerca de 480 personas en total. Ofrecen colchonetas, alimentación, apoyo psicosocial y atención en salud. La Alcaldía no publicó direcciones exactas ni capacidad por sede.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/emergencia-en-pereira-avanzan-labores-de-busqueda-y-rescate/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6704789,
+          4.8073126
+        ]
+      },
+      "properties": {
+        "id": "pereira-albergue-estadio-alberto-mora-mora",
+        "nombre": "Albergue Estadio Alberto Mora Mora",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Estadio Alberto Mora Mora, barrio Kennedy (frente al hospital de Kennedy)",
+        "geocode_query": "Estadio Alberto Mora Mora, Pereira, Risaralda, Colombia",
+        "horario": "Abierto 24 horas",
+        "telefono": null,
+        "responsable": "Alcaldía de Pereira",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimentos_no_perecederos": "necesita",
+          "agua": "necesita",
+          "aseo_personal": "necesita",
+          "ropa_calzado": "necesita"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Al 12 de agosto alojaba 47 personas: 28 adultos, 14 niños y 6 adultos mayores, además de 4 perros y 1 gato. ADMITE MASCOTAS. Ofrece comida, agua, ropa, duchas y atención médica prestada por personal del hospital de Kennedy. La Alcaldía hace caracterización de familias caso por caso.",
+        "fuente": {
+          "nombre": "Vanguardia",
+          "url": "https://www.vanguardia.com/colombia/2026/08/12/un-estadio-se-transforma-en-albergue-para-familias-damnificadas-por-el-terremoto/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.698811,
+          4.8180156
+        ]
+      },
+      "properties": {
+        "id": "pereira-banco-de-sangre-aleyda-mejia-gonzalez-de-angel-hospital-univer",
+        "nombre": "Banco de Sangre Aleyda Mejía González de Ángel - Hospital Universitario San Jorge",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": "Carrera 4 # 24-88",
+        "geocode_query": "Carrera 4 # 24-88, Pereira, Risaralda, Colombia",
+        "horario": "El hospital no publicó horario propio del banco de sangre: llamar antes",
+        "telefono": "606 316 9024",
+        "responsable": "ESE Hospital Universitario San Jorge de Pereira",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente",
+          "medicamentos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "Todos los grupos sanguíneos"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "La Gobernación de Risaralda reportó que el hospital requiere con urgencia oxígeno, insumos para banco de sangre y medicamentos. El hospital cerró 80 camas por daños estructurales y amplió Urgencias, que opera 24 horas. Call center: 606 351 5230.",
+        "fuente": {
+          "nombre": "Gobernación de Risaralda / Hospital Universitario San Jorge",
+          "url": "https://www.risaralda.gov.co/publicaciones/164017/hospital-san-jorge-fortalece-atencion-en-urgencias-ante-la-emergencia-por-el-terremoto/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6928677,
+          4.8223749
+        ]
+      },
+      "properties": {
+        "id": "dosquebradas-punto-alterno-del-banco-de-alimentos-de-pereira-bodega-la",
+        "nombre": "Punto alterno del Banco de Alimentos de Pereira - bodega La Badea",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Dosquebradas",
+        "departamento": "Risaralda",
+        "direccion": "Transversal 5 # 6-30, La Badea",
+        "geocode_query": "Transversal 5 # 6-30, La Badea, Dosquebradas, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Banco de Alimentos de Pereira / ABACO",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "agua": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Habilitado porque las bodegas del Banco de Alimentos de Pereira resultaron afectadas por el sismo.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/datos/este-es-el-mapa-completo-de-los-centros-de-acopio-habilitados-en-colombia-para-ayudar-a-los-damnificados-del-terremoto-de-magnitud-7-3577654",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6712747,
+          4.8338831
+        ]
+      },
+      "properties": {
+        "id": "dosquebradas-puesto-de-mando-unificado-cam-de-dosquebradas",
+        "nombre": "Puesto de Mando Unificado - CAM de Dosquebradas",
+        "tipo": "institucion",
+        "rol": "recibe_damnificados",
+        "municipio": "Dosquebradas",
+        "departamento": "Risaralda",
+        "direccion": "Centro Administrativo Municipal (CAM) de Dosquebradas",
+        "geocode_query": "Centro Administrativo Municipal (CAM) de Dosquebradas, Dosquebradas, Risaralda, Colombia",
+        "horario": "Abierto 24 horas",
+        "telefono": null,
+        "responsable": "Oficina de Gestión del Riesgo, Alcaldía de Dosquebradas",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Punto de ATENCIÓN a damnificados, no de recepción de donaciones.",
+        "necesidades": {
+          "colchonetas_cobijas": "necesita",
+          "alimentos_no_perecederos": "necesita",
+          "medicamentos": "necesita"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "NO es centro de acopio de donaciones. Es el punto de atención a familias afectadas: recepción de reportes de personas desaparecidas, censo de hogares afectados y entrega de ayudas. Se entregaron 300 frazadas y desde el 12 de agosto se reparten raciones alimentarias, medicamentos e insumos. Tiene antena Starlink.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/dosquebradas-fortalece-atencion-de-la-emergencia-con-apoyo-nacional-y-departamental/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.8123206,
+          4.8017692
+        ]
+      },
+      "properties": {
+        "id": "pereira-urgencias-veterinarias-del-bioparque-ukumari",
+        "nombre": "Urgencias veterinarias del Bioparque Ukumarí",
+        "tipo": "animal",
+        "rol": "recibe_damnificados",
+        "municipio": "Pereira",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "Bioparque Ukumarí, Pereira, Risaralda, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Bioparque Ukumarí",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": "Sin dirección ni teléfono publicados. Confirmar antes de trasladar un animal.",
+        "necesidades": {
+          "insumos_veterinarios": "necesita",
+          "alimento_mascotas": "necesita"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "El bioparque habilitó urgencias veterinarias para animales de compañía afectados. No publicó dirección operativa, horario ni teléfono.",
+        "fuente": {
+          "nombre": "El Diario (Risaralda)",
+          "url": "https://www.eldiario.com.co/actualidad/emergencia-en-pereira-avanzan-labores-de-busqueda-y-rescate/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6240274,
+          4.9119349
+        ]
+      },
+      "properties": {
+        "id": "santa-rosa-de-cabal-atencion-veterinaria-gobernacion-de-risaralda-unis",
+        "nombre": "Atención veterinaria Gobernación de Risaralda - UNISARC",
+        "tipo": "animal",
+        "rol": "ambos",
+        "municipio": "Santa Rosa de Cabal",
+        "departamento": "Risaralda",
+        "direccion": null,
+        "geocode_query": "UNISARC, Santa Rosa de Cabal, Risaralda, Colombia",
+        "horario": null,
+        "telefono": "606 351 5445",
+        "responsable": "Gobernación de Risaralda con UNISARC",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "alimento_mascotas": "urgente",
+          "insumos_veterinarios": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La Gobernación gestiona atención veterinaria a través de UNISARC para cientos de animales rescatados. Los insumos para atención animal se reciben en el centro de acopio de la Avenida de Las Américas, en Pereira.",
+        "fuente": {
+          "nombre": "Gobernación de Risaralda",
+          "url": "https://www.risaralda.gov.co/publicaciones/164019/asi-avanza-la-recoleccion-de-ayudas-humanitarias-por-parte-de-la-gobernacion-de-risaralda/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6509313,
+          4.561348
+        ]
+      },
+      "properties": {
+        "id": "armenia-centro-cultural-metropolitano-de-convenciones-recepcion-de-ayu",
+        "nombre": "Centro Cultural Metropolitano de Convenciones - recepción de ayudas humanitarias",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Armenia",
+        "departamento": "Quindío",
+        "direccion": "Centro Cultural Metropolitano de Convenciones de Armenia",
+        "geocode_query": "Centro Cultural Metropolitano de Convenciones, Armenia, Quindío, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Gobierno del Quindío - gestora social departamental Victoria Eugenia Arias",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": "Dirección exacta no publicada oficialmente.",
+        "necesidades": {
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Punto departamental. La nota oficial no publica dirección exacta ni horario. Los directorios comerciales dan dos direcciones contradictorias, por eso no se registró ninguna.",
+        "fuente": {
+          "nombre": "Gobierno del Quindío",
+          "url": "https://www.quindio.gov.co/primera-dama-anuncia-ayudas-humanitarias-para-las-familias-afectadas-por-el-terremoto",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6509313,
+          4.561348
+        ]
+      },
+      "properties": {
+        "id": "armenia-centro-cultural-metropolitano-de-convenciones-ayudas-para-anim",
+        "nombre": "Centro Cultural Metropolitano de Convenciones - ayudas para animales",
+        "tipo": "animal",
+        "rol": "punto_donacion",
+        "municipio": "Armenia",
+        "departamento": "Quindío",
+        "direccion": "Centro Cultural Metropolitano de Convenciones de Armenia",
+        "geocode_query": "Centro Cultural Metropolitano de Convenciones, Armenia, Quindío, Colombia",
+        "horario": "Desde el miércoles 12 de agosto, a partir de las 8:00 a.m.",
+        "telefono": null,
+        "responsable": "Gobierno del Quindío - equipo de Protección y Bienestar Animal (PYBA)",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "alimento_mascotas": "urgente",
+          "insumos_veterinarios": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Campaña 'Tu solidaridad es su esperanza'. Reciben concentrado para perros y gatos, medicamentos veterinarios, productos de aseo, camas y cobijas. PYBA coordina la búsqueda y reunificación de mascotas: en Armenia se reportan 216 mascotas desaparecidas.",
+        "fuente": {
+          "nombre": "Gobierno del Quindío",
+          "url": "https://www.quindio.gov.co/tu-solidaridad-es-su-esperanza-gobierno-del-quindio-activa-apoyo-para-animales-afectados-por-el-sismo",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6548507,
+          4.560808
+        ]
+      },
+      "properties": {
+        "id": "armenia-banco-de-sangre-cruz-roja-colombiana-seccional-quindio",
+        "nombre": "Banco de Sangre Cruz Roja Colombiana Seccional Quindío",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Armenia",
+        "departamento": "Quindío",
+        "direccion": "Avenida Bolívar # 23 norte-60",
+        "geocode_query": "Avenida Bolívar # 23 norte-60, Armenia, Quindío, Colombia",
+        "horario": "No publicado: la Cruz Roja pide llamar antes de desplazarse",
+        "telefono": "316 478 1842",
+        "responsable": "Cruz Roja Colombiana Seccional Quindío",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "No especificados por la fuente"
+          ],
+          "tipos_aceptados": [
+            "Todos los grupos sanguíneos"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Canal Trece reporta un teléfono adicional: 300 648 1293. La Cruz Roja advierte donar solo en puntos oficiales.",
+        "fuente": {
+          "nombre": "Cruz Roja Colombiana",
+          "url": "https://www.cruzrojacolombiana.org/cruz-roja-colombiana-despliega-capacidades-para-dar-respuesta-tras-las-afectaciones-por-sismo-en-colombia/",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.6728724,
+          4.5316874
+        ]
+      },
+      "properties": {
+        "id": "armenia-banco-de-alimentos-monsenor-roberto-lopez-londono",
+        "nombre": "Banco de Alimentos Monseñor Roberto López Londoño",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Armenia",
+        "departamento": "Quindío",
+        "direccion": "Calle 21 # 12-25",
+        "geocode_query": "Calle 21 # 12-25, Armenia, Quindío, Colombia",
+        "horario": null,
+        "telefono": "313 245 7978",
+        "responsable": "Banco de Alimentos de Armenia (red ABACO)",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "aseo_personal": "necesita",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos",
+          "Ropa",
+          "Productos vencidos o perecederos"
+        ],
+        "sangre": null,
+        "notas": "Punto de ABACO en Armenia dentro del corredor humanitario. El teléfono es el WhatsApp nacional de ABACO para donaciones en especie.",
+        "fuente": {
+          "nombre": "ABACO",
+          "url": "https://donahoy.abaco.org.co/colombia2026",
+          "fecha_publicacion": null
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.7604512,
+          4.6228359
+        ]
+      },
+      "properties": {
+        "id": "quimbaya-albergue-temporal-de-quimbaya",
+        "nombre": "Albergue temporal de Quimbaya",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Quimbaya",
+        "departamento": "Quindío",
+        "direccion": null,
+        "geocode_query": "Albergue temporal de Quimbaya, Quimbaya, Quindío, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Quimbaya",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin nombre ni dirección publicados. Confirmar con la Alcaldía de Quimbaya.",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "El alcalde confirmó un albergue abierto desde el lunes 10 de agosto, con unas 50 personas alojadas y más esperadas por las demoliciones en el barrio Grisales. Balance del municipio: ~1.000 viviendas afectadas, 450 destruidas, 800 damnificados. La fuente no publica nombre ni dirección del albergue.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/justicia/investigacion/el-drama-de-familias-en-quimbaya-quindio-tras-el-terremoto-que-dejo-1-000-viviendas-afectadas-450-destruidas-y-800-damnificados-3577820",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1832579,
+          4.4271574
+        ]
+      },
+      "properties": {
+        "id": "ibague-centro-de-acopio-ibague-solidaria-parque-deportivo",
+        "nombre": "Centro de acopio Ibagué Solidaria - Parque Deportivo",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Ibagué",
+        "departamento": "Tolima",
+        "direccion": "Parque Deportivo de Ibagué",
+        "geocode_query": "Parque Deportivo de Ibagué, Tolima, Colombia",
+        "horario": "Vigente durante la semana del 10 al 16 de agosto (horario específico no publicado)",
+        "telefono": null,
+        "responsable": "Alcaldía de Ibagué - gestora social Isabela Buendía",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "herramientas": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Punto ÚNICO vigente en Ibagué tras el cierre de la jornada en centros comerciales. Consolida todas las donaciones de la ciudad. También reciben palas y picas. Ibagué opera como ciudad donante: las ayudas se despachan hacia Pereira y otras zonas afectadas.",
+        "fuente": {
+          "nombre": "Ecos del Combeima",
+          "url": "https://www.ecosdelcombeima.com/ibague/nota-193260-ibague-habilita-el-parque-deportivo-como-centro-de-acopio-para-ayudar",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.2420299,
+          4.4440612
+        ]
+      },
+      "properties": {
+        "id": "ibague-punto-de-recepcion-de-ayudas-gobernacion-del-tolima",
+        "nombre": "Punto de recepción de ayudas - Gobernación del Tolima",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Ibagué",
+        "departamento": "Tolima",
+        "direccion": "Primer piso del edificio de la Gobernación del Tolima",
+        "geocode_query": "Gobernación del Tolima, Ibagué, Tolima, Colombia",
+        "horario": "7:00 a.m. - 6:00 p.m., jornada continua",
+        "telefono": null,
+        "responsable": "Gobernación del Tolima - gestora social Diana Córdoba",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "panales_formula": "necesita",
+          "ropa_calzado": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "agua": "urgente",
+          "medicamentos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Reciben además tapabocas, guantes de carnaza y suero de rehidratación oral.",
+        "fuente": {
+          "nombre": "Ecos del Combeima",
+          "url": "https://www.ecosdelcombeima.com/tolima/nota-193262-tolima-activa-jornada-de-solidaridad-para-apoyar-familias-afectadas-por-las",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.2134125,
+          4.4285765
+        ]
+      },
+      "properties": {
+        "id": "ibague-campana-institucional-de-donaciones-universidad-del-tolima",
+        "nombre": "Campaña institucional de donaciones - Universidad del Tolima",
+        "tipo": "recoleccion",
+        "rol": "punto_donacion",
+        "municipio": "Ibagué",
+        "departamento": "Tolima",
+        "direccion": "Campus de la Universidad del Tolima",
+        "geocode_query": "Universidad del Tolima, Ibagué, Tolima, Colombia",
+        "horario": null,
+        "telefono": "324 285 3644",
+        "responsable": "Universidad del Tolima",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "panales_formula": "necesita",
+          "medicamentos": "necesita",
+          "ropa_calzado": "necesita",
+          "linternas_pilas": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [
+          "Alimentos perecederos o próximos a vencer",
+          "Ropa dañada o sucia",
+          "Medicamentos vencidos o sin empaque original",
+          "Juguetes rotos"
+        ],
+        "sangre": null,
+        "notas": "Reciben agua potable sellada, enlatados, arroz, pasta, cobijas, sacos de dormir, colchonetas, jabón, cepillos, toallas higiénicas, pañales, gasas, alcohol, suero oral, linternas, pilas y velas. La fuente no publica los puntos exactos dentro del campus.",
+        "fuente": {
+          "nombre": "Pulzo / El Nuevo Día",
+          "url": "https://www.pulzo.com/nacion/universidad-del-tolima-campana-de-donaciones-tras-sismo-en-colombia-que-puedes-aportar-PP5271495A",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.2302065,
+          4.4379889
+        ]
+      },
+      "properties": {
+        "id": "ibague-banco-arquidiocesano-de-alimentos-de-ibague",
+        "nombre": "Banco Arquidiocesano de Alimentos de Ibagué",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Ibagué",
+        "departamento": "Tolima",
+        "direccion": "Carrera 4A Estadio # 23-42",
+        "geocode_query": "Carrera 4A Estadio # 23-42, Ibagué, Tolima, Colombia",
+        "horario": null,
+        "telefono": "608 515 1727",
+        "responsable": "Banco Arquidiocesano de Alimentos de Ibagué / ABACO",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "aseo_personal": "necesita",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos",
+          "Ropa",
+          "Productos vencidos o perecederos"
+        ],
+        "sangre": null,
+        "notas": "Punto intermedio del corredor humanitario de ABACO. Celular alterno: 316 423 7289.",
+        "fuente": {
+          "nombre": "Asocapitales / Banco Arquidiocesano de Alimentos de Ibagué",
+          "url": "https://www.asocapitales.co/actualidad/noticias/ciudades-seguras/ciudades-capitales-activan-centros-de-acopio-para-apoyar-las",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.2017459,
+          4.43663
+        ]
+      },
+      "properties": {
+        "id": "ibague-multi-centro-comercial",
+        "nombre": "MULTI Centro Comercial",
+        "tipo": "recoleccion",
+        "rol": "punto_donacion",
+        "municipio": "Ibagué",
+        "departamento": "Tolima",
+        "direccion": "Primer piso, frente al supermercado METRO",
+        "geocode_query": "MULTI Centro Comercial, Ibagué, Tolima, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Administración de MULTI Centro Comercial",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "ropa_calzado": "necesita",
+          "medicamentos": "necesita",
+          "linternas_pilas": "necesita",
+          "herramientas": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Reciben alimentos no perecederos, ropa, elementos de primeros auxilios, artículos para niños, linternas, pilas y herramientas.",
+        "fuente": {
+          "nombre": "Ecos del Combeima",
+          "url": "https://www.ecosdelcombeima.com/social/nota-193249-multi-centro-comercial-se-une-la-ayuda-para-las-familias-afectadas-por-el",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6608386,
+          5.6951139
+        ]
+      },
+      "properties": {
+        "id": "quibdo-punto-de-recepcion-de-donaciones-gobernacion-del-choco",
+        "nombre": "Punto de recepción de donaciones - Gobernación del Chocó",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Calle 31, edificio La Confianza",
+        "geocode_query": "Calle 31, edificio La Confianza, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Gobernación del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "herramientas": "necesita",
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Reciben kits de alimentos no perecederos, kits de hábitat, kits de aseo, kits de cocina, alimento para mascotas y materiales de construcción.",
+        "fuente": {
+          "nombre": "Pulzo",
+          "url": "https://www.pulzo.com/nacion/como-ayudar-choco-destruccion-luego-terremoto-74-colombia-PP5272714",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6573561,
+          5.6901162
+        ]
+      },
+      "properties": {
+        "id": "quibdo-centro-logistico-humanitario-del-choco-antigua-bodega-postobon",
+        "nombre": "Centro Logístico Humanitario del Chocó - antigua bodega Postobón",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Antigua bodega Postobón, kilómetro 4 vía Quibdó - Yuto",
+        "geocode_query": "Antigua bodega Postobón, kilómetro 4 vía Quibdó - Yuto, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Gobernación del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "herramientas": "necesita",
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Centro logístico para donaciones de GRAN VOLUMEN. Coordinar la entrega previamente.",
+        "fuente": {
+          "nombre": "Pulzo",
+          "url": "https://www.pulzo.com/nacion/como-ayudar-choco-destruccion-luego-terremoto-74-colombia-PP5272714",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6501259,
+          5.6904827
+        ]
+      },
+      "properties": {
+        "id": "quibdo-coliseo-de-boxeo-de-quibdo-alojamiento-temporal",
+        "nombre": "Coliseo de Boxeo de Quibdó - alojamiento temporal",
+        "tipo": "albergue",
+        "rol": "recibe_damnificados",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Calle 30 # 17, barrio Las Américas, frente al Comando de Policía",
+        "geocode_query": "Calle 30 # 17, barrio Las Américas, frente al Comando de Policía, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Quibdó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Habilitado para personas que perdieron su vivienda. No se publicó capacidad, horario ni teléfono.",
+        "fuente": {
+          "nombre": "Noticias RCN",
+          "url": "https://www.noticiasrcn.com/colombia/alcaldia-de-quibdo-habilita-el-coliseo-de-boxeo-como-espacio-de-alojamiento-temporal-tras-terremoto-1049632",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6609477,
+          5.6954851
+        ]
+      },
+      "properties": {
+        "id": "quibdo-hospital-san-francisco-de-asis-sos-quibdo",
+        "nombre": "Hospital San Francisco de Asís - SOS Quibdó",
+        "tipo": "institucion",
+        "rol": "recibe_damnificados",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": null,
+        "geocode_query": "Hospital San Francisco de Asís, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "ESE Hospital Departamental San Francisco de Asís",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Sin punto de entrega publicado. Contactar al hospital antes de enviar insumos.",
+        "necesidades": {
+          "otros": "necesita",
+          "medicamentos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Único hospital de referencia del Chocó, operando con sobreocupación superior al 245%. Solicita amikacina, amoxicilina, vancomicina, piperacilina/tazobactam, amlodipino, amiodarona, propofol, ketamina, fentanilo, paracetamol inyectable, tramadol y suero antiofídico. Ninguna fuente publica dirección de entrega ni teléfono.",
+        "fuente": {
+          "nombre": "Semana",
+          "url": "https://www.semana.com/nacion/articulo/sos-quibdo-hospital-san-francisco-de-asis-pide-medicamentos-e-insumos-para-atender-la-emergencia/202640/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.655428,
+          5.6929321
+        ]
+      },
+      "properties": {
+        "id": "quibdo-banco-de-alimentos-del-choco-sede-alameda-reyes",
+        "nombre": "Banco de Alimentos del Chocó - sede Alameda Reyes",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Calle 26 # 10-16, barrio Alameda Reyes",
+        "geocode_query": "Calle 26 # 10-16, barrio Alameda Reyes, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": "302 237 1423",
+        "responsable": "Fundación Banco de Alimentos del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Escribir al WhatsApp 302 237 1423 antes de ir.",
+        "necesidades": {
+          "medicamentos": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La fundación pide escribir por WhatsApp al 302 237 1423 ANTES de ir, para confirmar que haya personal recibiendo. Usa transporte aéreo de SATENA para llegar a zonas sin acceso terrestre. Donación monetaria: Bancolombia 536 000 017 95, Nequi/Daviplata 302 237 1423.",
+        "fuente": {
+          "nombre": "Banco de Alimentos del Chocó (sitio oficial)",
+          "url": "https://bancoalimentoschoco.org/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6600078,
+          5.6823421
+        ]
+      },
+      "properties": {
+        "id": "quibdo-banco-de-alimentos-del-choco-sede-los-almendros",
+        "nombre": "Banco de Alimentos del Chocó - sede Los Almendros",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Niño Jesús, sector Los Almendros, Edificio 1, piso 1",
+        "geocode_query": "Niño Jesús, sector Los Almendros, Edificio 1, piso 1, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": "302 237 1423",
+        "responsable": "Fundación Banco de Alimentos del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Escribir al WhatsApp 302 237 1423 antes de ir.",
+        "necesidades": {
+          "medicamentos": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La fundación pide escribir por WhatsApp al 302 237 1423 ANTES de ir, para confirmar que haya personal recibiendo. Usa transporte aéreo de SATENA para llegar a zonas sin acceso terrestre. Donación monetaria: Bancolombia 536 000 017 95, Nequi/Daviplata 302 237 1423.",
+        "fuente": {
+          "nombre": "Banco de Alimentos del Chocó (sitio oficial)",
+          "url": "https://bancoalimentoschoco.org/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6570845,
+          5.6982069
+        ]
+      },
+      "properties": {
+        "id": "quibdo-banco-de-alimentos-del-choco-sede-cristo-rey",
+        "nombre": "Banco de Alimentos del Chocó - sede Cristo Rey",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "Quibdó",
+        "departamento": "Chocó",
+        "direccion": "Carrera 3 # 27, esquina, barrio Cristo Rey",
+        "geocode_query": "Carrera 3 # 27, esquina, barrio Cristo Rey, Quibdó, Chocó, Colombia",
+        "horario": null,
+        "telefono": "302 237 1423",
+        "responsable": "Fundación Banco de Alimentos del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Escribir al WhatsApp 302 237 1423 antes de ir.",
+        "necesidades": {
+          "medicamentos": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "La fundación pide escribir por WhatsApp al 302 237 1423 ANTES de ir, para confirmar que haya personal recibiendo. Usa transporte aéreo de SATENA para llegar a zonas sin acceso terrestre. Donación monetaria: Bancolombia 536 000 017 95, Nequi/Daviplata 302 237 1423.",
+        "fuente": {
+          "nombre": "Banco de Alimentos del Chocó (sitio oficial)",
+          "url": "https://bancoalimentoschoco.org/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5381419,
+          3.4220133
+        ]
+      },
+      "properties": {
+        "id": "cali-coliseo-de-hockey-miguel-calero-albergue-y-punto-de-atencion",
+        "nombre": "Coliseo de Hockey Miguel Calero - albergue y punto de atención",
+        "tipo": "albergue",
+        "rol": "ambos",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 9 con carrera 37A, Unidad Deportiva Panamericana",
+        "geocode_query": "Coliseo de Hockey Miguel Calero, Unidad Deportiva Panamericana, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Cali - Secretarías de Bienestar Social y de Salud",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Funciona a la vez como albergue temporal, punto de atención en salud y centro de acopio. Ofrece atención psicosocial, equipos de salud y atención a población vulnerable, niñez, víctimas y migrantes. Se anunciaron baños portátiles.",
+        "fuente": {
+          "nombre": "El País (Cali)",
+          "url": "https://www.elpais.com.co/cali/terremoto-en-cali-estos-son-los-lugares-habilitados-para-recibir-a-los-damnificados-1038.html",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5371144,
+          3.4230224
+        ]
+      },
+      "properties": {
+        "id": "cali-unidad-deportiva-jaime-aparicio",
+        "nombre": "Unidad Deportiva Jaime Aparicio",
+        "tipo": "albergue",
+        "rol": "ambos",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Unidad Deportiva Jaime Aparicio",
+        "geocode_query": "Unidad Deportiva Jaime Aparicio, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Cali - Secretaría del Deporte y la Recreación",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "alimentos_no_perecederos": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "aseo_personal": "necesita"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Sirve como albergue para afectados, centro de acopio y alojamiento para socorristas y rescatistas.",
+        "fuente": {
+          "nombre": "El País (Cali)",
+          "url": "https://www.elpais.com.co/cali/terremoto-en-cali-estos-son-los-lugares-habilitados-para-recibir-a-los-damnificados-1038.html",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.534835,
+          3.4550312
+        ]
+      },
+      "properties": {
+        "id": "cali-centro-de-acopio-plazoleta-jairo-varela",
+        "nombre": "Centro de acopio Plazoleta Jairo Varela",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Avenida 2 Norte # 10 Norte-1, contiguo al CAM",
+        "geocode_query": "Plazoleta Jairo Varela, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Cali",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "ropa_calzado": "necesita",
+          "alimento_mascotas": "necesita",
+          "otros": "necesita",
+          "herramientas": "urgente",
+          "agua": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos"
+        ],
+        "sangre": null,
+        "notas": "Prioriza elementos de seguridad industrial para los rescatistas: guantes de construcción, gafas de seguridad y cascos. Según El Tiempo, ningún punto de acopio de Cali recibe medicamentos.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/cali/la-solidaridad-se-moviliza-en-el-valle-del-cauca-habilitan-tres-puntos-clave-en-cali-para-donaciones-tras-el-sismo-de-magnitud-7-3577852",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5238185,
+          3.4577765
+        ]
+      },
+      "properties": {
+        "id": "cali-centro-de-acopio-antigua-licorera-del-valle-ilv",
+        "nombre": "Centro de acopio Antigua Licorera del Valle (ILV)",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Carrera 1 # 26-85",
+        "geocode_query": "Antigua Licorera del Valle, Carrera 1 # 26-85, Cali, Valle del Cauca, Colombia",
+        "horario": "7:00 a.m. - 10:00 p.m., todos los días",
+        "telefono": null,
+        "responsable": "Gobernación del Valle del Cauca",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "ropa_calzado": "necesita",
+          "alimento_mascotas": "necesita",
+          "herramientas": "necesita",
+          "otros": "necesita",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "carpas_plasticos": "urgente",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos"
+        ],
+        "sangre": null,
+        "notas": "Centro principal de la Gobernación del Valle: desde aquí se distribuye a los municipios afectados (El Cairo, El Águila, Roldanillo, Buenaventura). Recibe insumos de seguridad industrial, colchones, frazadas, ropa en buen estado y alimento para mascotas.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/cali/la-solidaridad-se-moviliza-en-el-valle-del-cauca-habilitan-tres-puntos-clave-en-cali-para-donaciones-tras-el-sismo-de-magnitud-7-3577852",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5011016,
+          3.465098
+        ]
+      },
+      "properties": {
+        "id": "cali-centro-comercial-unico-acopio-para-buenaventura",
+        "nombre": "Centro Comercial Único - acopio para Buenaventura",
+        "tipo": "recoleccion",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Centro Comercial Único Outlet, Cali",
+        "geocode_query": "Centro Comercial Único Outlet, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Gobernación del Valle del Cauca",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "ropa_calzado": "necesita",
+          "alimento_mascotas": "necesita",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [
+          "Medicamentos"
+        ],
+        "sangre": null,
+        "notas": "Acopia ayudas destinadas EXCLUSIVAMENTE al municipio de Buenaventura.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/cali/la-solidaridad-se-moviliza-en-el-valle-del-cauca-habilitan-tres-puntos-clave-en-cali-para-donaciones-tras-el-sismo-de-magnitud-7-3577852",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5507539,
+          3.412108
+        ]
+      },
+      "properties": {
+        "id": "cali-petronio-solidario-ciudadela-petronio-alvarez",
+        "nombre": "Petronio Solidario - Ciudadela Petronio Álvarez",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Unidad Deportiva Alberto Galindo, centro-sur de Cali",
+        "geocode_query": "Unidad Deportiva Alberto Galindo, Cali, Valle del Cauca, Colombia",
+        "horario": "Desde el 11 de agosto. CIERRA el viernes 14 de agosto de 2026",
+        "telefono": null,
+        "responsable": "PMU de la Alcaldía de Cali, ProPacífico y Secretaría de Cultura",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Cierra el viernes 14 de agosto.",
+        "necesidades": {
+          "otros": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "El recinto del Festival Petronio Álvarez, cancelado por la emergencia, se convirtió en hub de acopio y distribución hacia Chocó, Valle, Cauca, Nariño, Risaralda, Quindío y Caldas. Donación monetaria: Banco de Occidente ahorros 001280353. Teletón por Telepacífico el 13 y 14 de agosto, 6:00 p.m. a 1:00 a.m.",
+        "fuente": {
+          "nombre": "El País (Cali)",
+          "url": "https://www.elpais.com.co/cali/petronio-solidario-asi-funcionara-el-nuevo-centro-de-acopio-en-cali-tras-el-terremoto-1208.html",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5370157,
+          3.4263251
+        ]
+      },
+      "properties": {
+        "id": "cali-centro-de-acopio-escuela-nacional-del-deporte",
+        "nombre": "Centro de acopio Escuela Nacional del Deporte",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 9 # 34-01",
+        "geocode_query": "Calle 9 # 34-01, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Alcaldía de Cali",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Fuentes contradictorias sobre si recibe medicamentos.",
+        "necesidades": {
+          "aseo_personal": "necesita",
+          "medicamentos": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "colchonetas_cobijas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Voluntarios arman y distribuyen kits de alimentos. La fuente menciona necesidad de gasas y vendas, aunque El Tiempo afirma que los puntos de Cali no reciben medicamentos: confirmar antes de llevar insumos médicos.",
+        "fuente": {
+          "nombre": "El País (Cali)",
+          "url": "https://www.elpais.com.co/cali/alcaldia-habilita-nuevos-espacios-para-recibir-ayudas-y-atender-a-afectados-en-cali-1154.html",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5205006,
+          3.454777
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-alimentos-de-cali",
+        "nombre": "Banco de Alimentos de Cali",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 24 # 6-103",
+        "geocode_query": "Calle 24 # 6-103, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Banco de Alimentos de Cali",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "medicamentos": "necesita",
+          "alimentos_no_perecederos": "urgente",
+          "agua": "urgente"
+        },
+        "no_recibe": [
+          "Objetos no solicitados"
+        ],
+        "sangre": null,
+        "notas": "Recibe alimentos no perecederos, agua embotellada y elementos de primeros auxilios.",
+        "fuente": {
+          "nombre": "Infobae",
+          "url": "https://www.infobae.com/colombia/2026/08/10/centros-de-acopio-habilitados-en-colombia-tras-el-terremoto-guia-por-ciudad-para-donar-y-ayudar-a-las-victimas/",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5187463,
+          3.374757
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-alimentos-del-choco-sede-cali",
+        "nombre": "Banco de Alimentos del Chocó - sede Cali",
+        "tipo": "acopio",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 45 # 94-45, casa 7, sector Calicanto, barrio Valle del Lili, comuna 17",
+        "geocode_query": "Calle 45 # 94-45, casa 7, sector Calicanto, barrio Valle del Lili, comuna 17, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": "302 237 1423",
+        "responsable": "Fundación Banco de Alimentos del Chocó",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": "Escribir al WhatsApp 302 237 1423 antes de ir.",
+        "necesidades": {
+          "medicamentos": "necesita",
+          "colchonetas_cobijas": "necesita",
+          "carpas_plasticos": "necesita",
+          "alimento_mascotas": "necesita",
+          "agua": "urgente",
+          "alimentos_no_perecederos": "urgente",
+          "aseo_personal": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Punto en Cali para enviar ayuda AL CHOCÓ. Escribir por WhatsApp al 302 237 1423 antes de ir.",
+        "fuente": {
+          "nombre": "Banco de Alimentos del Chocó (sitio oficial)",
+          "url": "https://bancoalimentoschoco.org/",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5375339,
+          3.447175
+        ]
+      },
+      "properties": {
+        "id": "cali-olla-comunitaria-artefacto-social-olla-rodante",
+        "nombre": "Olla comunitaria Artefacto Social - Olla Rodante",
+        "tipo": "comedor",
+        "rol": "ambos",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Carrera 9 # 4-25, sector San Antonio",
+        "geocode_query": "Carrera 9 # 4-25, sector San Antonio, Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Artefacto Social (organización comunitaria)",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "herramientas": "necesita",
+          "otros": "necesita",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Requiere arroz, aceite, lentejas, pasta, zanahoria, fríjol, panela, huevos, atún, recipientes refrigerados e implementos de cocina. Iniciativa ciudadana, no institucional.",
+        "fuente": {
+          "nombre": "Revista Diners",
+          "url": "https://revistadiners.com.co/gastronomia/donde-comer/ollas-comunitarias-terremoto-cali",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.545114,
+          3.427189
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-sangre-cruz-roja-colombiana-seccional-valle-del-cauca",
+        "nombre": "Banco de sangre Cruz Roja Colombiana Seccional Valle del Cauca",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Carrera 38 bis # 5-91, barrio San Fernando",
+        "geocode_query": "Carrera 38 bis # 5-91, barrio San Fernando, Cali, Valle del Cauca, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": "311 625 8815",
+        "responsable": "Cruz Roja Colombiana Seccional Valle del Cauca",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "O+",
+            "O-",
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "AB+",
+            "AB-"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre permanente, activo. Al 12 de agosto el Hospital Universitario del Valle solicitaba con urgencia TODOS los tipos de sangre.",
+        "fuente": {
+          "nombre": "Cruz Roja Colombiana",
+          "url": "https://www.cruzrojacolombiana.org/cruz-roja-colombiana-despliega-capacidades-para-dar-respuesta-tras-las-afectaciones-por-sismo-en-colombia/",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5448537,
+          3.4300309
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-sangre-hospital-universitario-del-valle-huv",
+        "nombre": "Banco de sangre Hospital Universitario del Valle (HUV)",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 5 # 36-08, urgencias del Hospital Universitario del Valle",
+        "geocode_query": "Calle 5 # 36-08, urgencias del Hospital Universitario del Valle, Cali, Valle del Cauca, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": null,
+        "responsable": "Hospital Universitario del Valle Evaristo García E.S.E.",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "O+",
+            "O-",
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "AB+",
+            "AB-"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre permanente, activo. Al 12 de agosto el Hospital Universitario del Valle solicitaba con urgencia TODOS los tipos de sangre.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5204389,
+          3.4746898
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-sangre-hemolife",
+        "nombre": "Banco de sangre Hemolife",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Calle 38 N # 3N-21, Prados del Norte",
+        "geocode_query": "Calle 38 N # 3N-21, Prados del Norte, Cali, Valle del Cauca, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": null,
+        "responsable": "Hemolife",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "O+",
+            "O-",
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "AB+",
+            "AB-"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre permanente, activo. Al 12 de agosto el Hospital Universitario del Valle solicitaba con urgencia TODOS los tipos de sangre.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5256296,
+          3.3727365
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-sangre-fundacion-valle-del-lili",
+        "nombre": "Banco de sangre Fundación Valle del Lili",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Sede principal Fundación Valle del Lili, torre 2, piso 4",
+        "geocode_query": "Sede principal Fundación Valle del Lili, torre 2, piso 4, Cali, Valle del Cauca, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": null,
+        "responsable": "Fundación Valle del Lili",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "O+",
+            "O-",
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "AB+",
+            "AB-"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre permanente, activo. Al 12 de agosto el Hospital Universitario del Valle solicitaba con urgencia TODOS los tipos de sangre.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.54475,
+          3.4251473
+        ]
+      },
+      "properties": {
+        "id": "cali-banco-de-sangre-clinica-imbanaco",
+        "nombre": "Banco de sangre Clínica Imbanaco",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Carrera 38 bis # 5B2-04, barrio Santa Isabel",
+        "geocode_query": "Carrera 38 bis # 5B2-04, barrio Santa Isabel, Cali, Valle del Cauca, Colombia",
+        "horario": "8:00 a.m. - 6:00 p.m.",
+        "telefono": null,
+        "responsable": "Clínica Imbanaco",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": {
+          "tipos_prioritarios": [
+            "Todos los tipos"
+          ],
+          "tipos_aceptados": [
+            "O+",
+            "O-",
+            "A+",
+            "A-",
+            "B+",
+            "B-",
+            "AB+",
+            "AB-"
+          ],
+          "requisitos": "18 a 65 años, más de 50 kg, documento de identidad original, buen estado de salud",
+          "espera_estimada": null
+        },
+        "notas": "Banco de sangre permanente, activo. Al 12 de agosto el Hospital Universitario del Valle solicitaba con urgencia TODOS los tipos de sangre.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "aproximada",
+        "nota_ubicacion": "Ubicación a nivel de barrio o sector: el punto exacto no está publicado. Afinar a mano si es posible."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5321732,
+          3.4510298
+        ]
+      },
+      "properties": {
+        "id": "cali-punto-temporal-de-donacion-de-sangre-plaza-de-cayzedo",
+        "nombre": "Punto temporal de donación de sangre Plaza de Cayzedo",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Plaza de Cayzedo, centro de Cali",
+        "geocode_query": "Plaza de Cayzedo, centro de Cali, Cali, Valle del Cauca, Colombia",
+        "horario": "Martes 11 de agosto, 9:00 a.m. - 5:00 p.m. — JORNADA FINALIZADA",
+        "telefono": null,
+        "responsable": null,
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": false,
+        "alerta": "CERRADO. Redirigir a los bancos permanentes (HUV, Hemolife, Cruz Roja Valle, Valle del Lili, Imbanaco).",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Jornada extraordinaria de un solo día. No se encontró publicación que la extienda al 12 o 13 de agosto.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.5341021,
+          3.4541264
+        ]
+      },
+      "properties": {
+        "id": "cali-punto-temporal-de-donacion-de-sangre-plazoleta-del-cam",
+        "nombre": "Punto temporal de donación de sangre Plazoleta del CAM",
+        "tipo": "sangre",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Plazoleta del CAM (Centro Administrativo Municipal)",
+        "geocode_query": "Plazoleta del CAM (Centro Administrativo Municipal), Cali, Valle del Cauca, Colombia",
+        "horario": "Martes 11 de agosto, 9:00 a.m. - 5:00 p.m. — JORNADA FINALIZADA",
+        "telefono": null,
+        "responsable": null,
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": false,
+        "alerta": "CERRADO. Redirigir a los bancos permanentes (HUV, Hemolife, Cruz Roja Valle, Valle del Lili, Imbanaco).",
+        "necesidades": {},
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Jornada extraordinaria de un solo día. No se encontró publicación que la extienda al 12 o 13 de agosto.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/colombia/otras-ciudades/como-ayudar-tras-terremoto-de-7-4-en-colombia-estos-son-los-centros-de-acopio-bancos-de-sangre-y-alimentos-canales-oficiales-y-puntos-de-donacion-3577631",
+          "fecha_publicacion": "2026-08-11"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.533115,
+          3.3310392
+        ]
+      },
+      "properties": {
+        "id": "cali-laika-punto-de-acopio-para-mascotas-sedes-capri-y-pance",
+        "nombre": "Laika - punto de acopio para mascotas (sedes Capri y Pance)",
+        "tipo": "animal",
+        "rol": "punto_donacion",
+        "municipio": "Cali",
+        "departamento": "Valle del Cauca",
+        "direccion": "Sedes de Capri y Pance (direcciones exactas no publicadas)",
+        "geocode_query": "Sedes de Capri y Pance (direcciones exactas no publicadas), Cali, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Laika",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "insumos_veterinarios": "necesita",
+          "medicamentos": "necesita",
+          "guacales_correas": "necesita",
+          "alimento_mascotas": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Recibe concentrado, comida húmeda, snacks, medicamentos y guacales. Apoyo veterinario remoto gratuito 24/7 de Fixit: 333 602 5800 / 601 438 7525.",
+        "fuente": {
+          "nombre": "El Tiempo",
+          "url": "https://www.eltiempo.com/cultura/gente/como-donar-comida-y-otras-ayudas-para-los-animales-victimas-del-terremoto-en-colombia-3577903",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.0420259,
+          4.9084594
+        ]
+      },
+      "properties": {
+        "id": "el-aguila-campana-el-aguila-nos-necesita-casa-de-la-cultura",
+        "nombre": "Campaña El Águila nos Necesita - Casa de la Cultura",
+        "tipo": "acopio",
+        "rol": "ambos",
+        "municipio": "El Águila",
+        "departamento": "Valle del Cauca",
+        "direccion": "Casa de la Cultura de El Águila",
+        "geocode_query": "Casa de la Cultura de El Águila, El Águila, Valle del Cauca, Colombia",
+        "horario": null,
+        "telefono": null,
+        "responsable": "Corpoáguila",
+        "verificado": false,
+        "nivel_verificacion": "prensa",
+        "vigente": "desconocido",
+        "alerta": null,
+        "necesidades": {
+          "agua": "necesita",
+          "herramientas": "necesita",
+          "colchonetas_cobijas": "urgente",
+          "carpas_plasticos": "urgente",
+          "aseo_personal": "urgente",
+          "alimentos_no_perecederos": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Punto EN la zona de impacto del norte del Valle. Recibe donaciones para las familias del propio municipio y organiza la recolección de escombros. Cuenta de ahorros 4-692-63-00426-2. Iniciativa local, no institucional.",
+        "fuente": {
+          "nombre": "El País (Cali)",
+          "url": "https://www.elpais.com.co/valle/el-aguila-el-cairo-buenaventura-y-roldanillo-entre-los-mas-afectados-asi-puede-ayudar-1233.html",
+          "fecha_publicacion": "2026-08-12"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.0662193,
+          4.6640413
+        ]
+      },
+      "properties": {
+        "id": "bogota-cruz-roja-colombiana-canal-nacional-de-donacion-y-busqueda-de-f",
+        "nombre": "Cruz Roja Colombiana - canal nacional de donación y búsqueda de familiares",
+        "tipo": "institucion",
+        "rol": "ambos",
+        "municipio": "Bogotá",
+        "departamento": "Bogotá D.C.",
+        "direccion": "Avenida carrera 68 # 68B-31 (sede nacional)",
+        "geocode_query": "Avenida carrera 68 # 68B-31 (sede nacional), Bogotá, Bogotá D.C., Colombia",
+        "horario": null,
+        "telefono": "321 213 9525",
+        "responsable": "Cruz Roja Colombiana",
+        "verificado": true,
+        "nivel_verificacion": "institucional",
+        "vigente": true,
+        "alerta": null,
+        "necesidades": {
+          "otros": "urgente"
+        },
+        "no_recibe": [],
+        "sangre": null,
+        "notas": "Donación monetaria: cuenta corriente Davivienda 0560455069996490, Daviplata y ayuda.cruzrojacolombiana.org. Correo: donaciones@cruzrojacolombiana.org. Restablecimiento de Contactos Familiares (personas desaparecidas): rcf@cruzrojacolombiana.org o WhatsApp 321 213 9525.",
+        "fuente": {
+          "nombre": "Cruz Roja Colombiana",
+          "url": "https://www.cruzrojacolombiana.org/cruz-roja-colombiana-despliega-capacidades-para-dar-respuesta-tras-las-afectaciones-por-sismo-en-colombia/",
+          "fecha_publicacion": "2026-08-10"
+        },
+        "fecha_verificacion": "2026-08-13",
+        "precision_ubicacion": "exacta",
+        "nota_ubicacion": null
+      }
+    }
+  ]
+}

@@ -47,6 +47,16 @@ export type CentroPublico = {
   telefono: string | null;
   horario: string | null;
   notas: string | null;
+  /** Aviso corto que cambia si vale la pena ir: "no llevar alimentos por ahora". */
+  alerta: string | null;
+  /** Qué NO recibe, separado por " · ". Evita el viaje perdido. */
+  no_recibe: string | null;
+  /** El punto es el del municipio, no el de la puerta. */
+  ubicacion_aproximada: boolean;
+  /** De dónde salió el dato cuando no lo publicó quien administra el lugar. */
+  fuente_nombre: string | null;
+  fuente_url: string | null;
+  fuente_fecha: string | null;
   estado: "pendiente" | "verificado" | "cerrado";
   es_demo: boolean;
   actualizado_en: string;

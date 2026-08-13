@@ -106,6 +106,17 @@ export default async function DetalleAcopio({
           {centro.ciudad_nombre}, {centro.departamento}
           {centro.horario ? ` · ${centro.horario}` : ""}
         </p>
+        {centro.ubicacion_aproximada && (
+          <p className="mt-1 text-sm font-medium text-amber-800">
+            📍 Ubicación aproximada: el punto del mapa es el del municipio, no
+            el de la puerta. Confirma la dirección antes de ir.
+          </p>
+        )}
+        {centro.alerta && (
+          <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 font-medium text-red-900">
+            ⚠️ {centro.alerta}
+          </p>
+        )}
         {centro.atiende && (
           <p className="mt-2 text-slate-800">
             <strong>Atiende a {centro.atiende}.</strong>
@@ -224,6 +235,15 @@ export default async function DetalleAcopio({
         )}
       </section>
 
+      {centro.no_recibe && (
+        <section className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Qué NO recibe
+          </h2>
+          <p className="mt-1 text-sm text-slate-700">{centro.no_recibe}</p>
+        </section>
+      )}
+
       {centro.notas && (
         <section className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
           <h2 className="text-sm font-semibold text-slate-900">
@@ -233,6 +253,30 @@ export default async function DetalleAcopio({
             {centro.notas}
           </p>
         </section>
+      )}
+
+      {/* Decir de dónde salió el dato es lo que separa "no lo hemos
+          comprobado" de "nos lo inventamos". */}
+      {centro.fuente_nombre && (
+        <p className="mt-4 text-xs text-slate-500">
+          {centro.estado === "verificado" ? "Publicado por " : "Dato tomado de "}
+          {centro.fuente_url ? (
+            <a
+              href={centro.fuente_url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="font-medium text-blue-700 underline"
+            >
+              {centro.fuente_nombre} ↗
+            </a>
+          ) : (
+            <span className="font-medium">{centro.fuente_nombre}</span>
+          )}
+          .{" "}
+          {centro.estado === "verificado"
+            ? "Viene de una fuente oficial, pero nadie de este sitio llamó a confirmar que hoy siga igual."
+            : "Este sitio no lo confirmó."}
+        </p>
       )}
 
       <section className="mt-6">

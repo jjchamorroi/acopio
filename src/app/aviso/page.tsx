@@ -66,13 +66,30 @@ export default function Aviso() {
           registran por su cuenta. No la generamos nosotros.
         </p>
         <p>
-          La marca <strong>“Verificado”</strong> significa únicamente que
-          alguien del equipo se comunicó con ese lugar en algún momento y
-          confirmó que existía y estaba recibiendo. <strong>No</strong> es una
+          La marca <strong>“Verificado”</strong> significa una de dos cosas, y
+          nada más: que alguien del equipo se comunicó con ese lugar en algún
+          momento y confirmó que existía y estaba recibiendo, o que el dato lo
+          publicó una <strong>fuente institucional</strong> —una alcaldía, una
+          gobernación, la Cruz Roja, la UNGRD, la Defensa Civil, los bomberos,
+          MinSalud o una universidad pública—. <strong>No</strong> es una
           certificación, ni una auditoría, ni una garantía de que hoy siga
           abierto, ni un aval sobre cómo administra lo que recibe. Lo que
           aparece como <strong>“Sin verificar”</strong> no ha sido comprobado
           por nadie.
+        </p>
+        <p>
+          Parte de la información la recogimos de <strong>prensa</strong> y de
+          comunicados oficiales, no de quien administra el lugar. En esos casos
+          la ficha dice de dónde salió el dato y enlaza la publicación
+          original, para que puedas comprobarlo por tu cuenta en vez de
+          creernos.
+        </p>
+        <p>
+          Cuando una ficha avisa que la{" "}
+          <strong>ubicación es aproximada</strong>, el punto del mapa es el del
+          municipio y no el de la puerta: la entidad anunció el lugar sin
+          publicar la dirección exacta. Sirve para saber que existe, no para
+          llegar.
         </p>
       </Seccion>
 
