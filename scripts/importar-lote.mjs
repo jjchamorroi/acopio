@@ -237,8 +237,8 @@ async function main() {
            estado, recibe_donaciones, entrega_ayuda, acepta_mascotas,
            tipos_sangre, ubicacion_aproximada,
            fuente_nombre, fuente_url, fuente_fecha, admin_token_hash,
-           es_alerta, capacidad, ocupacion, servicios, requisitos_ingreso
-         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28)
+           es_alerta, capacidad, ocupacion, servicios, requisitos_ingreso, dato_de
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)
          ON CONFLICT (origen_id) WHERE origen_id IS NOT NULL DO UPDATE SET
            nombre = EXCLUDED.nombre,
            direccion = EXCLUDED.direccion,
@@ -278,6 +278,11 @@ async function main() {
            ocupacion = COALESCE(EXCLUDED.ocupacion, centro_acopio.ocupacion),
            servicios = COALESCE(EXCLUDED.servicios, centro_acopio.servicios),
            requisitos_ingreso = COALESCE(EXCLUDED.requisitos_ingreso, centro_acopio.requisitos_ingreso),
+           -- En una ficha curada a mano manda la fecha que ya tenía: alguien
+           -- la confirmó, y el lote no puede envejecer esa confirmación.
+           dato_de = CASE WHEN centro_acopio.edicion_manual
+                       THEN centro_acopio.dato_de
+                       ELSE COALESCE(EXCLUDED.dato_de, centro_acopio.dato_de) END,
            actualizado_en = now()
          RETURNING id, (xmax = 0) AS creado, edicion_manual`,
         [
@@ -309,6 +314,8 @@ async function main() {
           lugar.ocupacion ?? null,
           lugar.servicios?.length ? lugar.servicios.join(" · ") : null,
           lugar.requisitos_ingreso ?? null,
+          // De cuándo es el dato, NO cuándo corrí el script.
+          lugar.fuente?.fecha_publicacion ?? lugar.fecha_verificacion ?? null,
         ]
       );
 

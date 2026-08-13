@@ -170,6 +170,27 @@ ALTER TABLE centro_acopio
 ALTER TABLE centro_acopio
   ADD COLUMN IF NOT EXISTS es_alerta boolean NOT NULL DEFAULT false;
 
+-- DE CUÁNDO ES la información, que no es lo mismo que cuándo se tocó la fila.
+--
+-- `actualizado_en` se movía cada vez que corría el importador, así que los 275
+-- lugares del lote decían "confirmado hace 2 horas" mientras el dato salía de
+-- un artículo del 11 de agosto. La ficha se contradecía sola: al lado mostraba
+-- "según La Patria, 11 ago".
+--
+-- Y el rediseño era explícito en que la frescura pesa más que el sello de
+-- verificado — "hace 20 min" dice si el dato sirve HOY, "verificado" solo dice
+-- que alguien llamó alguna vez. Si la frescura miente, miente lo que más pesa.
+--
+-- La pone el importador con la fecha de publicación de la fuente, y cualquier
+-- edición humana la lleva a hoy, que para eso es una confirmación de verdad.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS dato_de timestamptz;
+
+-- Las filas que ya existen no tienen de dónde sacarla salvo la fuente.
+UPDATE centro_acopio
+   SET dato_de = COALESCE(fuente_fecha::timestamptz, creado_en)
+ WHERE dato_de IS NULL;
+
 -- Datos de albergue. Llegan en pocas fichas porque casi ninguna alcaldía los
 -- publica, y justo por eso valen: son las tres preguntas que hay que hacer
 -- antes de trasladarse con una familia a cuestas.

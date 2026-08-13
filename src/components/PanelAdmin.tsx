@@ -4,6 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
 import { categoria as buscarCategoria } from "@/lib/categorias";
+import { frescura, haceCuanto } from "@/lib/frescura";
+import FiltrosAdmin, {
+  filtrar,
+  FILTROS_VACIOS,
+  type EstadoFiltros,
+} from "./FiltrosAdmin";
 
 /**
  * El token se guarda en sessionStorage, no en localStorage ni en una cookie:
@@ -17,6 +23,7 @@ export default function PanelAdmin() {
   const [autenticado, setAutenticado] = useState(false);
   const [centros, setCentros] = useState<CentroPublico[]>([]);
   const [convocatorias, setConvocatorias] = useState<ConvocatoriaPublica[]>([]);
+  const [filtros, setFiltros] = useState<EstadoFiltros>(FILTROS_VACIOS);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -183,8 +190,7 @@ export default function PanelAdmin() {
     );
   }
 
-  const pendientes = centros.filter((c) => c.estado === "pendiente");
-  const resto = centros.filter((c) => c.estado !== "pendiente");
+  const visibles = filtrar(centros, filtros);
 
   function Fila({ c }: { c: CentroPublico }) {
     const urgentes = c.necesidades.filter((n) => n.nivel === "urgente");
@@ -216,9 +222,23 @@ export default function PanelAdmin() {
               </p>
             )}
           </div>
-          <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-700">
-            {c.estado}
-          </span>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-700">
+              {c.estado}
+            </span>
+            {/* La edad del dato es el criterio de orden, así que tiene que
+                verse en cada fila o el orden parece arbitrario. */}
+            <span
+              className={`text-xs font-semibold ${
+                frescura(c.dato_de).viejo ? "text-red-700" : "text-slate-500"
+              }`}
+            >
+              {haceCuanto(c.dato_de)}
+            </span>
+            {c.ubicacion_aproximada && (
+              <span className="text-xs text-amber-700">ubic. aproximada</span>
+            )}
+          </div>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
@@ -373,29 +393,28 @@ export default function PanelAdmin() {
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-amber-800">
-          Por verificar ({pendientes.length})
+        <h2 className="mb-2 text-sm font-semibold text-slate-700">
+          Lugares ({centros.length})
         </h2>
-        {pendientes.length === 0 ? (
-          <p className="text-sm text-slate-500">Nada pendiente.</p>
+
+        <FiltrosAdmin
+          centros={centros}
+          valor={filtros}
+          onCambio={setFiltros}
+          mostrados={visibles.length}
+        />
+
+        {visibles.length === 0 ? (
+          <p className="mt-4 rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+            Ningún lugar coincide con esos filtros.
+          </p>
         ) : (
-          <div className="space-y-3">
-            {pendientes.map((c) => (
+          <div className="mt-3 space-y-3">
+            {visibles.map((c) => (
               <Fila key={c.id} c={c} />
             ))}
           </div>
         )}
-      </section>
-
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-slate-700">
-          Resto ({resto.length})
-        </h2>
-        <div className="space-y-3">
-          {resto.map((c) => (
-            <Fila key={c.id} c={c} />
-          ))}
-        </div>
       </section>
     </div>
   );

@@ -58,6 +58,11 @@ export type CentroPublico = {
    * Se publica por las necesidades que arrastra, nunca como sitio al que ir.
    */
   es_alerta: boolean;
+  /**
+   * De cuándo es la INFORMACIÓN. Distinto de `actualizado_en`, que se mueve
+   * cada vez que corre el importador aunque el dato siga siendo del martes.
+   */
+  dato_de: string;
   /** Cupo del albergue, en texto libre: "Copada", "amplían a 2.500". */
   capacidad: string | null;
   /** Cuánta gente hay dentro, con su fecha: "249 personas al 13 de agosto". */

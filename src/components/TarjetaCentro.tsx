@@ -29,7 +29,10 @@ export default function TarjetaCentro({
   const restantes = pedidas.length - visibles.length;
 
   const abierto = estaAbierto(centro.horario);
-  const fresco = frescura(centro.actualizado_en);
+  // De cuándo es el dato, no cuándo se tocó la fila: el importador movía
+  // `actualizado_en` en cada corrida y la ficha decía "confirmado hace 2
+  // horas" justo al lado de "según La Patria, 11 ago".
+  const fresco = frescura(centro.dato_de);
 
   // Nota 05: la distancia y el estado son lo que decide si alguien se mueve.
   const distancia =
@@ -281,7 +284,7 @@ export default function TarjetaCentro({
           {centro.estado === "verificado" ? "✓ Verificado" : "Sin verificar"}
         </span>
         <span aria-hidden>·</span>
-        <span className={fresco.clase}>Confirmado {fresco.texto}</span>
+        <span className={fresco.clase}>Dato de {fresco.texto}</span>
 
         {/* Decir de dónde salió el dato es lo que separa "no lo hemos
             comprobado" de "nos lo inventamos". Quien duda va y comprueba. */}

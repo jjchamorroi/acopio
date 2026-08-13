@@ -51,6 +51,10 @@ const SELECT_CENTRO = `
     c.alerta, c.no_recibe, c.ubicacion_aproximada,
     c.fuente_nombre, c.fuente_url, c.fuente_fecha,
     c.es_alerta, c.capacidad, c.ocupacion, c.servicios, c.requisitos_ingreso,
+    -- De cuándo es la información, no cuándo se tocó la fila. Ver dato_de en
+    -- el esquema: sin esto la ficha decía "confirmado hace 2 horas" con un
+    -- dato de un artículo de hace tres días.
+    COALESCE(c.dato_de, c.actualizado_en) AS dato_de,
     COALESCE(
       (SELECT json_agg(json_build_object(
                 'categoria', n.categoria,
