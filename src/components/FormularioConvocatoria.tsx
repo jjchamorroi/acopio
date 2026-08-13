@@ -152,7 +152,7 @@ export default function FormularioConvocatoria({
   return (
     <form onSubmit={enviar} className="space-y-6">
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           1. Qué hay que hacer
         </legend>
 
@@ -208,7 +208,7 @@ export default function FormularioConvocatoria({
       </fieldset>
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           2. Cuándo y cuántos
         </legend>
 
@@ -271,7 +271,7 @@ export default function FormularioConvocatoria({
       </fieldset>
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           3. Dónde se encuentran
         </legend>
 
@@ -311,7 +311,7 @@ export default function FormularioConvocatoria({
       </fieldset>
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           4. Qué necesita quien vaya
         </legend>
 

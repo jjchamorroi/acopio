@@ -223,7 +223,7 @@ export default function FormularioDonacion({
   return (
     <form onSubmit={enviar} className="space-y-6">
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           1. Qué tienes para donar
         </legend>
 
@@ -283,7 +283,7 @@ export default function FormularioDonacion({
       </fieldset>
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           2. Dónde está
         </legend>
 
@@ -317,7 +317,7 @@ export default function FormularioDonacion({
       </fieldset>
 
       <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
-        <legend className="px-1 text-sm font-semibold text-slate-900">
+        <legend className="float-left mb-2 w-full p-0 text-sm font-semibold text-slate-900">
           3. Cómo te contactan
         </legend>
 

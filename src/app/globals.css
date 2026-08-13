@@ -67,6 +67,21 @@ body {
   min-width: 200px;
 }
 
+/* Los títulos numerados de los formularios quedaban corridos respecto a sus
+   campos.
+
+   La causa: el navegador monta el <legend> ENCIMA del borde superior del
+   <fieldset>, fuera de su relleno. Con el fieldset en p-4, el título empezaba
+   a 4 px del borde y todo lo de abajo a 16 px — doce píxeles de desfase que se
+   ven en cada bloque del formulario.
+
+   Sacarlo del <legend> costaría la accesibilidad: es lo que le pone nombre al
+   grupo de campos para un lector de pantalla. El float lo devuelve al flujo
+   normal, alineado con el contenido, sin tocar la semántica. */
+fieldset > legend ~ * {
+  clear: both;
+}
+
 /* Los popups con ficha completa son más altos que el mapa en móvil, y cuando
    eso pasa el autoPan de Leaflet no puede salvarlos: se quedan cortados por el
    borde del recuadro. Con `maxHeight` Leaflet mete el contenido en un
