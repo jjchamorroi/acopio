@@ -109,11 +109,15 @@ export default function FormularioRegistro({
     return (
       <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-5">
         <h2 className="text-lg font-semibold text-emerald-900">
-          Acopio registrado
+          Recibimos tu postulación
         </h2>
+        {/* Se dice claro que TODAVÍA NO está publicado. Si dijéramos "listo",
+            alguien lo compartiría por WhatsApp y quien abriera el enlace no
+            encontraría nada. */}
         <p className="mt-2 text-sm text-emerald-900">
-          Ya aparece en el mapa marcado como <strong>sin verificar</strong>.
-          Alguien del equipo lo va a confirmar por teléfono.
+          <strong>Todavía no aparece en el mapa.</strong> Alguien del equipo lo
+          revisa y lo publica: así evitamos mandar gente a direcciones que nadie
+          comprobó. Si algo no cuadra, verás el motivo en tu enlace privado.
         </p>
 
         <div className="mt-4 rounded-md border border-emerald-300 bg-white p-4">
@@ -141,7 +145,7 @@ export default function FormularioRegistro({
 
         <div className="mt-4 flex gap-3 text-sm">
           <Link href={urlPanel} className="font-medium text-emerald-800 underline">
-            Ir al panel
+            Ir al panel y ver el estado
           </Link>
           <Link href="/" className="font-medium text-emerald-800 underline">
             Ver el mapa
@@ -451,7 +455,8 @@ export default function FormularioRegistro({
 
       <p className="rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
         Al registrar el lugar confirmas que los datos son ciertos y autorizas
-        su publicación en el mapa. Puedes corregirlos o retirarlos cuando
+        su publicación en el mapa una vez revisado. Puedes corregirlos o
+        retirarlos cuando
         quieras con el enlace privado que recibes.{" "}
         <Link href="/aviso" className="font-medium text-slate-700 underline">
           Aviso legal
@@ -463,7 +468,7 @@ export default function FormularioRegistro({
         disabled={enviando}
         className="w-full rounded-md bg-slate-900 px-6 py-3 font-medium text-white transition hover:bg-slate-700 disabled:opacity-50 sm:w-auto"
       >
-        {enviando ? "Registrando…" : "Registrar acopio"}
+        {enviando ? "Enviando…" : "Enviar para revisión"}
       </button>
     </form>
   );

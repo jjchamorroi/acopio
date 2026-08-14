@@ -186,6 +186,43 @@ CREATE TABLE IF NOT EXISTS dano_municipio (
 CREATE INDEX IF NOT EXISTS dano_municipio_gravedad_idx
   ON dano_municipio (gravedad DESC);
 
+-- ---------------------------------------------------------------------------
+-- Moderación: lo que llega por el formulario ya no se publica solo.
+--
+--   postulado  -> alguien lo propuso; NO es público. Espera decisión.
+--   pendiente  -> publicado, sin que nadie del equipo lo haya confirmado.
+--   verificado -> publicado y confirmado (llamada o fuente institucional).
+--   rechazado  -> revisado y descartado. No es público y no se borra, para
+--                 que no vuelva a colarse el mismo error dos veces.
+--   cerrado    -> existió y ya no opera.
+--
+-- Los lotes importados NO pasan por moderación: vienen revisados a mano y
+-- entran directo como pendiente o verificado. La cola es para el formulario
+-- abierto, que es por donde entra lo que nadie ha mirado.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'centro_acopio_estado_check'
+       AND pg_get_constraintdef(oid) NOT LIKE '%postulado%'
+  ) THEN
+    ALTER TABLE centro_acopio DROP CONSTRAINT centro_acopio_estado_check;
+  END IF;
+END $$;
+
+ALTER TABLE centro_acopio
+  ADD CONSTRAINT centro_acopio_estado_check
+  CHECK (estado IN ('postulado', 'pendiente', 'verificado', 'rechazado', 'cerrado'));
+
+-- Por qué se rechazó. Se le muestra a quien postuló, en su enlace privado:
+-- que le digan "duplicado, ya existe" le sirve; que su lugar desaparezca sin
+-- explicación lo deja pensando que el sitio no funciona.
+ALTER TABLE centro_acopio
+  ADD COLUMN IF NOT EXISTS motivo_rechazo text;
+
+CREATE INDEX IF NOT EXISTS centro_acopio_postulado_idx
+  ON centro_acopio (creado_en) WHERE estado = 'postulado';
+
 -- "Una persona curó esta ficha; el lote la complementa pero no la pisa."
 --
 -- Nace de un error real: se fusionaron tres fichas del mismo acopio a mano

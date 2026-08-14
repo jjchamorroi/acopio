@@ -99,13 +99,24 @@ export async function POST(req: Request) {
     // dejar de alojar gente.
     const porDefecto = tipoLugar(d.tipo);
 
+    // Entra como POSTULACIÓN, no como lugar publicado.
+    //
+    // Antes el formulario publicaba directo en el mapa. Con un formulario
+    // abierto y sin cuentas eso significa que un error de dedo, un duplicado o
+    // una broma salen a producción y mandan gente a una dirección que nadie
+    // miró. Ahora espera a que alguien lo revise.
+    //
+    // El coste es real y va en la dirección contraria: un acopio de verdad
+    // puede quedarse sin publicar mientras nadie entre al panel. Por eso la
+    // cola va arriba del admin y con el contador a la vista.
     const { rows } = await cliente.query(
       `INSERT INTO centro_acopio
          (nombre, direccion, ciudad_slug, lat, lng, responsable, telefono,
           horario, notas, admin_token_hash,
           tipo, recibe_donaciones, entrega_ayuda, acepta_mascotas, atiende,
-          tipos_sangre)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+          tipos_sangre, estado, dato_de)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,
+               'postulado', now())
        RETURNING id`,
       [
         d.nombre,

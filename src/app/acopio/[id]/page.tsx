@@ -64,7 +64,12 @@ export default async function DetalleAcopio({
   if (!UUID.test(id)) notFound();
 
   const centro = await obtenerCentro(id);
-  if (!centro || centro.estado === "cerrado") notFound();
+  // Lista blanca, igual que en los listados: una postulación tiene un id real
+  // y quien la creó podría compartir la URL antes de que nadie la revise.
+  // Rechazar solo 'cerrado' la habría dejado visible.
+  if (!centro || !["pendiente", "verificado"].includes(centro.estado)) {
+    notFound();
+  }
 
   const porNivel = (nivel: keyof typeof NIVELES) =>
     centro.necesidades.filter((n) => n.nivel === nivel);

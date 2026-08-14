@@ -17,6 +17,20 @@ const TTL_LISTADOS = 20;
 const TTL_CIUDADES = 600; // Casi estático: cambia cuando agregamos una ciudad.
 
 /**
+ * Qué estados son PÚBLICOS. Lista blanca, y en un solo sitio.
+ *
+ * Antes cada consulta decía `estado <> 'cerrado'`, que es una lista negra: al
+ * añadir el estado `postulado` para la moderación, todas habrían empezado a
+ * publicar las postulaciones sin que nadie tocara esas consultas. Un lugar sin
+ * revisar en un mapa de emergencia manda gente a una dirección que nadie
+ * comprobó.
+ *
+ * Con lista blanca, el estado nuevo es invisible hasta que alguien lo agregue
+ * acá a propósito. El fallo por defecto es no publicar, que es el correcto.
+ */
+const ESTADOS_PUBLICOS = `('pendiente', 'verificado')`;
+
+/**
  * Columnas publicables de una donación.
  *
  * Fijate que NO están `lat` ni `lng`: solo las aproximadas. La dirección real
@@ -46,7 +60,7 @@ const SELECT_CENTRO = `
     c.id, c.nombre, c.direccion, c.ciudad_slug,
     ci.nombre AS ciudad_nombre, ci.departamento,
     c.lat, c.lng, c.responsable, c.telefono, c.horario, c.notas,
-    c.estado, c.es_demo, c.actualizado_en,
+    c.estado, c.motivo_rechazo, c.es_demo, c.actualizado_en,
     c.tipo, c.recibe_donaciones, c.entrega_ayuda, c.acepta_mascotas, c.atiende, c.tipos_sangre,
     c.alerta, c.no_recibe, c.ubicacion_aproximada,
     c.fuente_nombre, c.fuente_url, c.fuente_fecha,
@@ -90,7 +104,7 @@ export async function listarCiudadesConLugares(): Promise<Ciudad[]> {
       `SELECT ci.slug, ci.nombre, ci.departamento, ci.lat, ci.lng, ci.prioridad
          FROM ciudad ci
         WHERE EXISTS (SELECT 1 FROM centro_acopio c
-                       WHERE c.ciudad_slug = ci.slug AND c.estado <> 'cerrado')
+                       WHERE c.ciudad_slug = ci.slug AND c.estado IN ${ESTADOS_PUBLICOS})
         ORDER BY ci.prioridad, ci.nombre`
     )
   );
@@ -159,7 +173,7 @@ async function listarCentrosSinCache(
   const params: unknown[] = [];
 
   if (!filtros.incluirCerrados) {
-    condiciones.push(`c.estado <> 'cerrado'`);
+    condiciones.push(`c.estado IN ${ESTADOS_PUBLICOS}`);
   }
   if (filtros.ciudad) {
     params.push(filtros.ciudad);
@@ -295,7 +309,7 @@ export async function centrosCercanos(
             ) AS distancia_m
        FROM (
          ${SELECT_CENTRO}
-         WHERE c.estado <> 'cerrado'
+         WHERE c.estado IN ${ESTADOS_PUBLICOS}
            AND ST_DWithin(c.geom, ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography, $3)
            ${filtroCategoria}
            ${filtroModo}
@@ -464,7 +478,7 @@ export async function ultimaActualizacion(): Promise<string | null> {
   return conCache("ultima-actualizacion", 60, async () => {
     const filas = await query<{ ultima: string | null }>(
       `SELECT max(actualizado_en) AS ultima FROM centro_acopio
-        WHERE estado <> 'cerrado'`
+        WHERE estado IN ${ESTADOS_PUBLICOS}`
     );
     return filas[0]?.ultima ?? null;
   });
@@ -509,10 +523,10 @@ export async function brechaAtencion(): Promise<BrechaMunicipio[]> {
               d.incomunicado, d.sin_ayuda, d.etnico, d.gravedad, d.nota, d.fuente,
               (SELECT count(*) FROM centro_acopio c
                 WHERE c.ciudad_slug = d.ciudad_slug
-                  AND NOT c.es_alerta AND c.estado <> 'cerrado')::int AS puntos,
+                  AND NOT c.es_alerta AND c.estado IN ${ESTADOS_PUBLICOS})::int AS puntos,
               (SELECT count(*) FROM centro_acopio c
                 WHERE c.ciudad_slug = d.ciudad_slug AND c.tipo = 'albergue'
-                  AND NOT c.es_alerta AND c.estado <> 'cerrado')::int AS albergues
+                  AND NOT c.es_alerta AND c.estado IN ${ESTADOS_PUBLICOS})::int AS albergues
          FROM dano_municipio d
          JOIN ciudad ci ON ci.slug = d.ciudad_slug
         ORDER BY d.gravedad DESC NULLS LAST, ci.nombre`

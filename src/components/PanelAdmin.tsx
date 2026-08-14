@@ -140,7 +140,11 @@ export default function PanelAdmin() {
     await cargar(token);
   }
 
-  async function cambiarEstado(id: string, estado: string) {
+  async function cambiarEstado(
+    id: string,
+    estado: string,
+    motivo_rechazo?: string
+  ) {
     setError(null);
     const res = await fetch(`/api/acopios/${id}`, {
       method: "PATCH",
@@ -148,7 +152,9 @@ export default function PanelAdmin() {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ estado }),
+      body: JSON.stringify(
+        motivo_rechazo === undefined ? { estado } : { estado, motivo_rechazo }
+      ),
     });
     if (!res.ok) {
       const datos = await res.json().catch(() => ({}));
@@ -190,7 +196,30 @@ export default function PanelAdmin() {
     );
   }
 
-  const visibles = filtrar(centros, filtros);
+  // La cola va aparte del listado y por orden de llegada: es una fila de
+  // espera, no un catálogo. Lo más viejo primero porque es lo que lleva más
+  // tiempo sin publicarse.
+  const postulaciones = centros
+    .filter((c) => c.estado === "postulado")
+    .sort(
+      (a, b) =>
+        new Date(a.actualizado_en).getTime() -
+        new Date(b.actualizado_en).getTime()
+    );
+
+  const visibles = filtrar(
+    centros.filter((c) => c.estado !== "postulado"),
+    filtros
+  );
+
+  async function rechazar(c: CentroPublico) {
+    const motivo = prompt(
+      `¿Por qué se rechaza "${c.nombre}"?\n\nQuien lo postuló va a ver este texto en su enlace privado. Sé concreto: "ya existe, mira el de la calle 5" sirve; "no aplica" no.`,
+      ""
+    );
+    if (motivo === null) return;
+    await cambiarEstado(c.id, "rechazado", motivo.trim() || "Sin motivo");
+  }
 
   function Fila({ c }: { c: CentroPublico }) {
     const urgentes = c.necesidades.filter((n) => n.nivel === "urgente");
@@ -392,13 +421,72 @@ export default function PanelAdmin() {
         </section>
       )}
 
+      {/* Arriba de todo y siempre visible, incluso vacía: es lo único del
+          panel donde alguien está esperando. Si se esconde cuando está en
+          cero, se olvida que existe. */}
+      <section>
+        <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-900">
+          Postulaciones por revisar
+          <span
+            className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+              postulaciones.length
+                ? "bg-amber-100 text-amber-900"
+                : "bg-slate-100 text-slate-500"
+            }`}
+          >
+            {postulaciones.length}
+          </span>
+        </h2>
+
+        {postulaciones.length === 0 ? (
+          <p className="rounded-lg border border-dashed border-slate-300 p-4 text-sm text-slate-500">
+            Nada por revisar. Lo que se registre desde el formulario aparece
+            acá y no se publica hasta que lo apruebes.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {postulaciones.map((c) => (
+              <div
+                key={c.id}
+                className="rounded-lg border-[1.5px] border-amber-300 bg-amber-50/60 p-4"
+              >
+                <Fila c={c} />
+                <div className="mt-3 flex flex-wrap gap-2 border-t border-amber-200 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => cambiarEstado(c.id, "pendiente")}
+                    className="rounded-md bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-700"
+                  >
+                    Publicar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => cambiarEstado(c.id, "verificado")}
+                    className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800"
+                  >
+                    Publicar y verificar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => rechazar(c)}
+                    className="rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-50"
+                  >
+                    Rechazar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <section>
         <h2 className="mb-2 text-sm font-semibold text-slate-700">
-          Lugares ({centros.length})
+          Lugares publicados ({centros.length - postulaciones.length})
         </h2>
 
         <FiltrosAdmin
-          centros={centros}
+          centros={centros.filter((c) => c.estado !== "postulado")}
           valor={filtros}
           onCambio={setFiltros}
           mostrados={visibles.length}

@@ -4,6 +4,7 @@ import { obtenerCentro } from "@/lib/consultas";
 import { invalidarCache } from "@/lib/cache";
 import { esquemaActualizacion } from "@/lib/tipos";
 import { hashToken, tokensCoinciden, esAdmin } from "@/lib/tokens";
+import { autorizarLugar } from "@/lib/autorizacion";
 import { consumirLimite, respuesta429 } from "@/lib/limite";
 import { instantanea, describirCambio } from "@/lib/cambios";
 import { tipoLugar } from "@/lib/tipos-lugar";
@@ -18,8 +19,11 @@ const VENTANA_SEGUNDOS = 3600;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/** Estados que puede ver cualquiera. Los demás exigen credencial. */
+const PUBLICOS = new Set(["pendiente", "verificado", "cerrado"]);
+
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -30,6 +34,17 @@ export async function GET(
   if (!centro) {
     return NextResponse.json({ error: "No encontrado" }, { status: 404 });
   }
+
+  // Una postulación solo la ve quien la hizo (su enlace privado) o el equipo.
+  // Si no, bastaría con tener el id para leer un lugar que nadie ha revisado
+  // —y el propio panel enseña ese id en la URL que la persona comparte.
+  if (!PUBLICOS.has(centro.estado)) {
+    const auth = await autorizarLugar(req, id);
+    if (!auth.ok) {
+      return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+    }
+  }
+
   return NextResponse.json({ centro });
 }
 
@@ -137,6 +152,20 @@ export async function PATCH(
     );
   }
 
+  // Publicar y rechazar son decisiones de moderación: si quien postuló pudiera
+  // sacar su propio lugar de la cola con su enlace privado, la cola no serviría
+  // de nada. Solo puede editar el contenido mientras espera.
+  if (
+    !admin &&
+    (d.estado === "pendiente" || d.estado === "rechazado" ||
+      d.motivo_rechazo !== undefined)
+  ) {
+    return NextResponse.json(
+      { error: "Solo un administrador puede aprobar o rechazar una postulación" },
+      { status: 403 }
+    );
+  }
+
   // Se toma el estado previo ANTES de tocar nada: es lo que queda en el
   // historial y lo que se reescribe si hay que revertir.
   const centroAntes = await obtenerCentro(id);
@@ -177,6 +206,7 @@ export async function PATCH(
       "horario",
       "notas",
       "estado",
+      "motivo_rechazo",
       "atiende",
       "tipos_sangre",
     ] as const) {

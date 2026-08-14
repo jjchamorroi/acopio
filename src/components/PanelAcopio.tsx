@@ -50,7 +50,7 @@ export default function PanelAcopio({
     let vivo = true;
     (async () => {
       try {
-        const res = await fetch(`/api/acopios/${id}`);
+        const res = await fetch(`/api/acopios/${id}`, { headers: cabeceras() });
         if (!res.ok) throw new Error("No se encontró el acopio");
         const { centro } = (await res.json()) as { centro: CentroPublico };
         if (!vivo) return;
@@ -231,13 +231,44 @@ export default function PanelAcopio({
         <p className="text-sm text-slate-600">
           {centro.direccion} · {centro.ciudad_nombre}
         </p>
-        <Link
-          href={`/acopio/${centro.id}`}
-          className="text-sm text-blue-700 hover:underline"
-        >
-          Ver la ficha pública →
-        </Link>
+        {/* La ficha pública no existe mientras esté en cola: enlazarla daría
+            un 404 justo cuando la persona quiere comprobar que quedó bien. */}
+        {centro.estado !== "postulado" && centro.estado !== "rechazado" && (
+          <Link
+            href={`/acopio/${centro.id}`}
+            className="text-sm text-blue-700 hover:underline"
+          >
+            Ver la ficha pública →
+          </Link>
+        )}
       </header>
+
+      {centro.estado === "postulado" && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p>
+            <strong>En revisión — todavía no está en el mapa.</strong> Alguien
+            del equipo lo revisa antes de publicarlo, para no mandar gente a
+            direcciones que nadie comprobó.
+          </p>
+          <p className="mt-1">
+            Mientras tanto puedes seguir corrigiendo lo que haga falta desde
+            acá: cuanto más completo esté, más rápido se publica.
+          </p>
+        </div>
+      )}
+
+      {centro.estado === "rechazado" && (
+        <div className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+          <p>
+            <strong>No se publicó.</strong>
+            {centro.motivo_rechazo ? ` Motivo: ${centro.motivo_rechazo}` : ""}
+          </p>
+          <p className="mt-1">
+            Si crees que fue un error o ya corregiste lo que faltaba,
+            escríbenos por el mismo medio por el que llegaste al sitio.
+          </p>
+        </div>
+      )}
 
       {modoAdmin && (
         <p className="rounded-md border border-blue-300 bg-blue-50 px-4 py-3 text-sm text-blue-900">

@@ -75,7 +75,9 @@ export type CentroPublico = {
   fuente_nombre: string | null;
   fuente_url: string | null;
   fuente_fecha: string | null;
-  estado: "pendiente" | "verificado" | "cerrado";
+  estado: "postulado" | "pendiente" | "verificado" | "rechazado" | "cerrado";
+  /** Por qué se rechazó. Solo se muestra a quien postuló, en su enlace privado. */
+  motivo_rechazo: string | null;
   es_demo: boolean;
   actualizado_en: string;
   necesidades: NecesidadPublica[];
@@ -182,7 +184,8 @@ export const esquemaActualizacion = z.object({
     .nullable(),
   horario: z.string().trim().max(120).optional().nullable(),
   notas: z.string().trim().max(500).optional().nullable(),
-  estado: z.enum(["pendiente", "verificado", "cerrado"]).optional(),
+  estado: z.enum(["postulado", "pendiente", "verificado", "rechazado", "cerrado"]).optional(),
+  motivo_rechazo: z.string().trim().max(300).optional().nullable(),
   recibe_donaciones: z.boolean().optional(),
   entrega_ayuda: z.boolean().optional(),
   acepta_mascotas: z.boolean().nullable().optional(),
