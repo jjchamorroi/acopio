@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { listarCentros, brechaAtencion } from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import siluetas from "@/lib/geo/siluetas.json";
+import QRCode from "qrcode";
 
 export const runtime = "nodejs";
 
@@ -34,8 +35,8 @@ const ALTO = 1920;
  * afectada abarca ~2,4° de latitud y ~2,6° de longitud. El espacio que libera
  * lo usan las cifras, que van al lado.
  */
-const MAPA_ANCHO = 300;
-const MAPA_ALTO = 300;
+const MAPA_ANCHO = 272;
+const MAPA_ALTO = 272;
 
 /**
  * Recuadro localizador, abajo a la derecha del mapa.
@@ -47,6 +48,9 @@ const MAPA_ALTO = 300;
  * grande, y aparte un recuadro chico que dice en qué parte del país es.
  */
 const INSET = 96;
+
+/** Lado del QR. Menos de 150 px y las cámaras empiezan a fallar. */
+const QR_LADO = 170;
 
 const TESELA = 256;
 
@@ -254,6 +258,43 @@ function aRuta(
   );
 }
 
+/**
+ * Código QR, dibujado como rectángulos.
+ *
+ * Es lo más cerca de "un enlace dentro de la imagen" que existe: un PNG es
+ * una cuadrícula de píxeles y no tiene zonas clicables — ninguna API de
+ * Instagram cambia eso. El QR se escanea con la cámara desde otro teléfono y
+ * funciona igual en el feed que en la historia, que es justo donde el sticker
+ * de enlace NO existe.
+ *
+ * Se pinta con `rect` y no como imagen para no depender de un canvas ni de
+ * generar un PNG intermedio dentro de otro PNG.
+ *
+ * Corrección de errores M (~15 %): el cartel puede acabar recomprimido por
+ * Instagram, y con L el patrón se degrada hasta dejar de leerse.
+ */
+function dibujarQR(texto: string, lado: number) {
+  try {
+    const qr = QRCode.create(texto, { errorCorrectionLevel: "M" });
+    const n = qr.modules.size;
+    const datos = qr.modules.data;
+    // Zona tranquila de 2 módulos: sin margen, muchos lectores no lo detectan.
+    const margen = 2;
+    const paso = lado / (n + margen * 2);
+    const celdas: { x: number; y: number }[] = [];
+    for (let f = 0; f < n; f++) {
+      for (let c = 0; c < n; c++) {
+        if (datos[f * n + c]) {
+          celdas.push({ x: (c + margen) * paso, y: (f + margen) * paso });
+        }
+      }
+    }
+    return { celdas, paso };
+  } catch {
+    return null;
+  }
+}
+
 const TINTA = "#10151c";
 const ROJO = "#c02b1c";
 const HUESO = "#f4f5f1";
@@ -297,6 +338,17 @@ export async function GET(req: Request) {
   let totalAlbergues = 0;
 
   const negrita = await cargarFuente();
+
+  // El QR lleva a la vista concreta que se está compartiendo, no a la portada:
+  // quien escanea el cartel de Manizales quiere Manizales.
+  const destino =
+    `https://${host}` +
+    (ciudadSlug
+      ? `/?ciudad=${ciudadSlug}`
+      : depto
+        ? `/?departamento=${encodeURIComponent(depto)}`
+        : "");
+  const qr = dibujarQR(destino, QR_LADO);
 
   try {
     if (variante === "brecha") {
@@ -514,7 +566,7 @@ export async function GET(req: Request) {
                   dice cuánta cobertura hay. */}
               {/* Mapa y cifras en la misma fila: el mapa cuadrado deja libre
                   media anchura, y las cifras la ocupan sin alargar el cartel. */}
-              <div style={{ display: "flex", alignItems: "center", marginTop: 28 }}>
+              <div style={{ display: "flex", alignItems: "center", marginTop: 24 }}>
                 <div
                   style={{
                     display: "flex",
@@ -606,16 +658,16 @@ export async function GET(req: Request) {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", marginLeft: 56 }}>
-                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 18 }}>
-                    <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 12 }}>
+                    <div style={{ display: "flex", fontSize: 74, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>
                       {totalLugares}
                     </div>
                     <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
                       lugares
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 18 }}>
-                    <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: ROJO, lineHeight: 1 }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 12 }}>
+                    <div style={{ display: "flex", fontSize: 74, fontWeight: 800, color: ROJO, lineHeight: 1 }}>
                       {cifra}
                     </div>
                     <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
@@ -624,7 +676,7 @@ export async function GET(req: Request) {
                   </div>
                   {totalAlbergues > 0 && (
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
+                      <div style={{ display: "flex", fontSize: 74, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
                         {totalAlbergues}
                       </div>
                       <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
@@ -640,13 +692,61 @@ export async function GET(req: Request) {
 
         {/* El enlace tiene que leerse de lejos: en Instagram no se puede tocar,
             hay que poder teclearlo. */}
-        <div style={{ display: "flex", flexDirection: "column", borderTop: "3px solid #2b3442", paddingTop: 40 }}>
-          <div style={{ display: "flex", fontSize: 34, color: "#8f98a8" }}>
-            Mira qué necesita cada lugar antes de salir de la casa
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            borderTop: "3px solid #2b3442",
+            paddingTop: 36,
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+            <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
+              Mira qué necesita cada lugar antes de ir
+            </div>
+            <div style={{ display: "flex", fontSize: 58, fontWeight: 800, marginTop: 10 }}>
+              {host}
+            </div>
+            {qr && (
+              <div style={{ display: "flex", fontSize: 26, color: "#8f98a8", marginTop: 6 }}>
+                Escanea el código →
+              </div>
+            )}
           </div>
-          <div style={{ display: "flex", fontSize: 62, fontWeight: 800, marginTop: 12 }}>
-            {host}
-          </div>
+
+          {/* Sobre blanco y con margen: un QR sobre fondo oscuro o pegado al
+              borde no lo lee ninguna cámara. */}
+          {qr && (
+            <div
+              style={{
+                display: "flex",
+                position: "relative",
+                width: QR_LADO,
+                height: QR_LADO,
+                background: "#ffffff",
+                borderRadius: 12,
+                marginLeft: 28,
+              }}
+            >
+              <svg
+                width={QR_LADO}
+                height={QR_LADO}
+                viewBox={`0 0 ${QR_LADO} ${QR_LADO}`}
+                style={{ position: "absolute", left: 0, top: 0 }}
+              >
+                {qr.celdas.map((c, i) => (
+                  <rect
+                    key={i}
+                    x={c.x}
+                    y={c.y}
+                    width={qr.paso}
+                    height={qr.paso}
+                    fill={TINTA}
+                  />
+                ))}
+              </svg>
+            </div>
+          )}
         </div>
       </div>
     ),
