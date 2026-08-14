@@ -24,13 +24,29 @@ const VENTANA_SEGUNDOS = 3600;
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const modo = searchParams.get("modo");
+
+  // Pedir el listado completo con una clave inválida devuelve 401 y no la
+  // lista pública.
+  //
+  // Antes se degradaba en silencio: `todos=1 && esAdmin(req)` daba 200 con los
+  // datos públicos, así que el panel te dejaba ENTRAR con cualquier clave y
+  // solo fallaba al intentar hacer algo. El error aparecía tres pantallas
+  // después del sitio donde estaba la causa.
+  const pidioTodos = searchParams.get("todos") === "1";
+  if (pidioTodos && !esAdmin(req)) {
+    return NextResponse.json(
+      { error: "Clave de administración incorrecta" },
+      { status: 401 }
+    );
+  }
+
   const centros = await listarCentros({
     ciudad: searchParams.get("ciudad") ?? undefined,
     categoria: searchParams.get("categoria") ?? undefined,
     modo: modo === "donar" || modo === "ayuda" ? modo : undefined,
     tipo: searchParams.get("tipo") ?? undefined,
     soloAceptaMascotas: searchParams.get("mascotas") === "1",
-    incluirCerrados: searchParams.get("todos") === "1" && esAdmin(req),
+    incluirCerrados: pidioTodos,
   });
   return NextResponse.json(
     { centros },

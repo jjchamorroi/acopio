@@ -35,6 +35,14 @@ export default function PanelAdmin() {
       const res = await fetch("/api/acopios?todos=1", {
         headers: { authorization: `Bearer ${tk}` },
       });
+      if (res.status === 401) {
+        // Se borra la clave guardada: si no, al recargar la página el panel
+        // volvería a intentar entrar con la misma que acaba de fallar.
+        sessionStorage.removeItem(CLAVE);
+        throw new Error(
+          "Clave incorrecta. Es la variable ADMIN_TOKEN del servidor."
+        );
+      }
       if (!res.ok) throw new Error("No se pudo cargar el listado");
       const { centros } = (await res.json()) as { centros: CentroPublico[] };
       setCentros(centros);
