@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { listarCentros, brechaAtencion } from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
+import siluetas from "@/lib/geo/siluetas.json";
 
 export const runtime = "nodejs";
 
@@ -33,8 +34,8 @@ const ALTO = 1920;
  * afectada abarca ~2,4° de latitud y ~2,6° de longitud. El espacio que libera
  * lo usan las cifras, que van al lado.
  */
-const MAPA_ANCHO = 340;
-const MAPA_ALTO = 340;
+const MAPA_ANCHO = 300;
+const MAPA_ALTO = 300;
 
 const TESELA = 256;
 
@@ -137,6 +138,66 @@ async function cargarFuente(): Promise<ArrayBuffer | null> {
   }
 }
 
+const normalizarNombre = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim();
+
+type Anillos = number[][][];
+const SILUETAS = siluetas as { departamentos: Record<string, Anillos> };
+
+/**
+ * Qué silueta se dibuja y sobre cuál se encuadra.
+ *
+ * Solo hay geometría de DEPARTAMENTOS, no de municipios: la fuente que traía
+ * los 1.122 municipios tenía el `transform` corrupto y los colocaba en
+ * Canadá. Con departamentos alcanza — al filtrar por ciudad se ve su
+ * departamento con los puntos agrupados donde está la ciudad, que se
+ * reconoce igual y evita el recuadro en blanco.
+ *
+ * A escala nacional se encuadran los PUNTOS y no el país: con Amazonas y San
+ * Andrés dentro, la zona afectada quedaba del tamaño de una uña.
+ */
+function geografiaDe(
+  centros: { departamento: string }[],
+  ciudadSlug: string,
+  depto: string
+) {
+  const todas = Object.values(SILUETAS.departamentos);
+
+  const nombre = normalizarNombre(
+    depto || (ciudadSlug ? (centros[0]?.departamento ?? "") : "")
+  );
+  const propio = nombre ? SILUETAS.departamentos[nombre] : undefined;
+
+  return {
+    // Siempre se dibujan todos: los departamentos vecinos son los que dan la
+    // referencia de dónde queda el que importa.
+    formas: todas,
+    // El encuadre se ciñe al departamento cuando hay filtro; si no, a los datos.
+    encuadre: propio ?? null,
+  };
+}
+
+/** Convierte un anillo a un atributo `d` de SVG en coordenadas de la caja. */
+function aRuta(
+  anillo: number[][],
+  z: number,
+  origenX: number,
+  origenY: number
+): string {
+  return (
+    anillo
+      .map((p, i) => {
+        const px = aPixeles(p[1], p[0], z);
+        return `${i === 0 ? "M" : "L"}${(px.x - origenX).toFixed(1)} ${(px.y - origenY).toFixed(1)}`;
+      })
+      .join("") + "Z"
+  );
+}
+
 const TINTA = "#10151c";
 const ROJO = "#c02b1c";
 const HUESO = "#f4f5f1";
@@ -173,6 +234,7 @@ export async function GET(req: Request) {
 
   /** Puntos del mapa, ya normalizados a 0–1 dentro de su propio encuadre. */
   let puntos: { x: number; y: number; urgente: boolean }[] = [];
+  let rutas: string[] = [];
   let totalLugares = 0;
   let totalAlbergues = 0;
 
@@ -248,7 +310,16 @@ export async function GET(req: Request) {
       // comparte no debería depender de un tercero que puede bloquearnos. Con
       // 282 puntos, la nube dibuja sola el occidente colombiano.
       if (centros.length > 0) {
-        const enc = encuadrar(centros, MAPA_ANCHO, MAPA_ALTO);
+        const { formas, encuadre } = geografiaDe(centros, ciudadSlug, depto);
+
+        const referencia = encuadre
+          ? encuadre.flat().map(([lng, lat]) => ({ lat, lng }))
+          : centros;
+
+        const enc = encuadrar(referencia, MAPA_ANCHO, MAPA_ALTO);
+        rutas = formas
+          .flat()
+          .map((anillo) => aRuta(anillo, enc.z, enc.origenX, enc.origenY));
 
         puntos = centros
           .map((c) => {
@@ -369,46 +440,38 @@ export async function GET(req: Request) {
                     width: MAPA_ANCHO,
                     height: MAPA_ALTO,
                     borderRadius: 28,
-                    // Claro y no oscuro: un rectángulo negro en medio del
-                    // cartel se lee como un hueco, no como un mapa.
-                    background: HUESO,
+                    // Azul pálido = fuera de tierra. El relleno de los
+                    // departamentos va casi blanco encima, y ese contraste es
+                    // lo único que hace visible la silueta: antes el relleno
+                    // era casi del mismo color que el fondo y no se veía nada.
+                    background: "#c9d6e0",
                     border: "2px solid #2b3442",
                     // Recorta lo que se salga: sin esto, un punto cerca del
                     // borde se dibujaba medio fuera de la caja.
                     overflow: "hidden",
                   }}
                 >
-                  {/* Retícula tenue. No son meridianos de verdad; están para
-                      que el recuadro se lea como un mapa y no como un cuadro
-                      de color con manchas encima. */}
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={`v${i}`}
-                      style={{
-                        display: "flex",
-                        position: "absolute",
-                        left: (MAPA_ANCHO / 4) * i,
-                        top: 0,
-                        width: 1,
-                        height: MAPA_ALTO,
-                        background: "#d8d5cd",
-                      }}
-                    />
-                  ))}
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={`h${i}`}
-                      style={{
-                        display: "flex",
-                        position: "absolute",
-                        left: 0,
-                        top: (MAPA_ALTO / 4) * i,
-                        width: MAPA_ANCHO,
-                        height: 1,
-                        background: "#d8d5cd",
-                      }}
-                    />
-                  ))}
+                  {/* La silueta real: municipio, departamento o país según el
+                      filtro. Es lo que convierte un recuadro con manchas en un
+                      mapa que se reconoce. */}
+                  {rutas.length > 0 && (
+                    <svg
+                      width={MAPA_ANCHO}
+                      height={MAPA_ALTO}
+                      viewBox={`0 0 ${MAPA_ANCHO} ${MAPA_ALTO}`}
+                      style={{ position: "absolute", left: 0, top: 0 }}
+                    >
+                      {rutas.map((d, i) => (
+                        <path
+                          key={i}
+                          d={d}
+                          fill="#f6f4ef"
+                          stroke="#8d97a3"
+                          strokeWidth={1.4}
+                        />
+                      ))}
+                    </svg>
+                  )}
                   {puntos.map((p, i) => (
                     <div
                       key={i}
@@ -430,16 +493,16 @@ export async function GET(req: Request) {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", marginLeft: 56 }}>
-                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 26 }}>
-                    <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 18 }}>
+                    <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>
                       {totalLugares}
                     </div>
                     <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
                       lugares
                     </div>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 26 }}>
-                    <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: ROJO, lineHeight: 1 }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 18 }}>
+                    <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: ROJO, lineHeight: 1 }}>
                       {cifra}
                     </div>
                     <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
@@ -448,7 +511,7 @@ export async function GET(req: Request) {
                   </div>
                   {totalAlbergues > 0 && (
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
+                      <div style={{ display: "flex", fontSize: 86, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
                         {totalAlbergues}
                       </div>
                       <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
