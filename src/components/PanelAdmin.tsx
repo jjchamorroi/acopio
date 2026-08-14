@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { frescura, haceCuanto } from "@/lib/frescura";
+import AdminNoticias from "./AdminNoticias";
 import FiltrosAdmin, {
   filtrar,
   FILTROS_VACIOS,
@@ -420,6 +421,8 @@ export default function PanelAdmin() {
           </div>
         </section>
       )}
+
+      <AdminNoticias token={token} />
 
       {/* Arriba de todo y siempre visible, incluso vacía: es lo único del
           panel donde alguien está esperando. Si se esconde cuando está en

@@ -8,11 +8,13 @@ import UrgentesDestacados from "@/components/UrgentesDestacados";
 import Filtros from "@/components/Filtros";
 import EnlaceMascotas from "@/components/EnlaceMascotas";
 import AvisoRecopilacion from "@/components/AvisoRecopilacion";
+import Noticias from "@/components/Noticias";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import TarjetaConvocatoria from "@/components/TarjetaConvocatoria";
 import {
   listarCentros,
   listarCiudadesConLugares,
+  listarNoticias,
   listarConvocatorias,
   centrosCercanos,
 } from "@/lib/consultas";
@@ -130,8 +132,10 @@ export default async function Home({
     ? await listarConvocatorias({ ciudad: p.ciudad })
     : [];
 
-  const [ciudades, todosLosAlbergues, centrosCrudos] = await Promise.all([
+  const [ciudades, noticias, todosLosAlbergues, centrosCrudos] =
+    await Promise.all([
     listarCiudadesConLugares(),
+    listarNoticias(),
     // Sin filtro de modo, a propósito: ver el comentario de `albergues`.
     listarCentros({ ciudad: p.ciudad, tipo: "albergue" }),
     esVoluntarios
@@ -258,6 +262,16 @@ export default async function Home({
 
       {/* Antes del listado, no al pie: un aviso que se lee después de haber
           salido de la casa llega tarde. */}
+      {/* Los avisos van arriba del listado: uno que hay que buscar no es un
+          aviso. Pero por debajo del mapa y de las acciones, que es a lo que
+          entra la gente — si un banner empuja el mapa fuera de la pantalla en
+          un teléfono, el sitio deja de servir para lo que sirve. */}
+      {noticias.length > 0 && (
+        <div className="mt-5">
+          <Noticias noticias={noticias} />
+        </div>
+      )}
+
       <AvisoRecopilacion className="mt-5" compacto />
 
       {!esVoluntarios && (

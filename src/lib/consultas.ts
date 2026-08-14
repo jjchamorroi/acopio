@@ -6,6 +6,7 @@ import type {
   ConvocatoriaPublica,
   DonacionPublica,
   ProfesionalPublico,
+  NoticiaPublica,
 } from "./tipos";
 
 /**
@@ -530,6 +531,27 @@ export async function brechaAtencion(): Promise<BrechaMunicipio[]> {
          FROM dano_municipio d
          JOIN ciudad ci ON ci.slug = d.ciudad_slug
         ORDER BY d.gravedad DESC NULLS LAST, ci.nombre`
+    )
+  );
+}
+
+/**
+ * Avisos visibles de la portada.
+ *
+ * El filtro de vencimiento va en SQL y no en JS para que un aviso caducado
+ * deje de salir aunque nadie entre al admin a bajarlo: una jornada del sábado
+ * no debería seguir anunciada el lunes.
+ */
+export async function listarNoticias(): Promise<NoticiaPublica[]> {
+  return conCache("noticias", 60, () =>
+    query<NoticiaPublica>(
+      `SELECT id, titulo, cuerpo, enlace, enlace_texto, urgente, activa,
+              vence_en, orden, creado_en,
+              (imagen IS NOT NULL) AS tiene_imagen
+         FROM noticia
+        WHERE activa AND (vence_en IS NULL OR vence_en > now())
+        ORDER BY orden DESC, creado_en DESC
+        LIMIT 5`
     )
   );
 }

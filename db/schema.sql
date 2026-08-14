@@ -601,3 +601,40 @@ INSERT INTO ciudad (slug, nombre, departamento, lat, lng, prioridad) VALUES
   ('barranquilla', 'Barranquilla', 'Atlántico',      10.9685,  -74.7813, 4),
   ('bucaramanga',  'Bucaramanga',  'Santander',       7.1193,  -73.1227, 4)
 ON CONFLICT (slug) DO NOTHING;
+
+-- ---------------------------------------------------------------------------
+-- Avisos de la portada.
+--
+-- Para lo que el mapa no puede decir porque no es un lugar: "el sábado hay
+-- jornada en el Coliseo", "la Alcaldía pidió no llevar más ropa", "cambió el
+-- punto de entrega". En una emergencia eso caduca en días, así que cada aviso
+-- puede llevar fecha de vencimiento y se apaga solo.
+--
+-- La IMAGEN va en la base y no en disco a propósito: el disco del servidor es
+-- efímero y se borra en cada despliegue, así que un archivo subido hoy
+-- desaparecería con el próximo cambio de código. En la base sobrevive, entra
+-- en los respaldos y no depende de ningún servicio externo.
+CREATE TABLE IF NOT EXISTS noticia (
+  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  titulo         text NOT NULL,
+  cuerpo         text,
+  -- Imagen opcional. `imagen_tipo` guarda el MIME para poder servirla bien.
+  imagen         bytea,
+  imagen_tipo    text,
+  -- A dónde lleva, si lleva a algún lado. Puede ser interno (/guia) o externo.
+  enlace         text,
+  enlace_texto   text,
+  -- Un aviso urgente se pinta en rojo. No todos lo son, y si todos gritan
+  -- ninguno se oye.
+  urgente        boolean NOT NULL DEFAULT false,
+  activa         boolean NOT NULL DEFAULT true,
+  -- Deja de mostrarse solo. Una jornada del sábado no debería seguir anunciada
+  -- el lunes, y nadie se acuerda de bajar los avisos a tiempo.
+  vence_en       timestamptz,
+  orden          int NOT NULL DEFAULT 0,
+  creado_en      timestamptz NOT NULL DEFAULT now(),
+  actualizado_en timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS noticia_visible_idx
+  ON noticia (orden DESC, creado_en DESC) WHERE activa;

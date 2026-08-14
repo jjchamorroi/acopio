@@ -366,3 +366,22 @@ export const esquemaProfesionalActualizacion = z.object({
   registro: z.string().trim().max(60).optional().nullable(),
   estado: z.enum(["pendiente", "verificado", "cerrado"]).optional(),
 });
+
+/**
+ * Aviso de la portada. Sin la columna `imagen`: el binario nunca viaja en el
+ * JSON, se pide por su propia ruta. `tiene_imagen` es lo único que hace falta
+ * saber para decidir si se pinta.
+ */
+export type NoticiaPublica = {
+  id: string;
+  titulo: string;
+  cuerpo: string | null;
+  enlace: string | null;
+  enlace_texto: string | null;
+  urgente: boolean;
+  activa: boolean;
+  vence_en: string | null;
+  orden: number;
+  creado_en: string;
+  tiene_imagen: boolean;
+};
