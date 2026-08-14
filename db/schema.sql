@@ -649,3 +649,41 @@ CREATE TABLE IF NOT EXISTS noticia (
 
 CREATE INDEX IF NOT EXISTS noticia_visible_idx
   ON noticia (orden DESC, creado_en DESC) WHERE activa;
+
+-- ---------------------------------------------------------------------------
+-- Visitas.
+--
+-- Se guarda AGREGADO por día, no una fila por visita: con el sitio en
+-- televisión, una fila por carga son cientos de miles de filas al día en una
+-- base pequeña, y para responder "cuánta gente entra" no hacen falta.
+--
+-- No se guarda la IP, ni el navegador, ni nada que identifique a una persona.
+-- La huella de `visitante_dia` es un hash irreversible que además LLEVA EL DÍA
+-- DENTRO: la de hoy y la de mañana de la misma persona no se parecen, así que
+-- no se puede seguir a nadie de un día para otro ni aunque se quisiera. Sirve
+-- solo para no contar cinco veces a quien abre cinco páginas.
+CREATE TABLE IF NOT EXISTS visita_dia (
+  fecha   date NOT NULL,
+  ruta    text NOT NULL,
+  visitas int  NOT NULL DEFAULT 0,
+  PRIMARY KEY (fecha, ruta)
+);
+
+CREATE TABLE IF NOT EXISTS visitante_dia (
+  fecha   date NOT NULL,
+  huella  text NOT NULL,
+  PRIMARY KEY (fecha, huella)
+);
+
+-- De dónde llega la gente. Solo el dominio, nunca la URL completa: la ruta de
+-- origen puede llevar términos de búsqueda o identificadores de campaña.
+CREATE TABLE IF NOT EXISTS referido_dia (
+  fecha   date NOT NULL,
+  origen  text NOT NULL,
+  visitas int  NOT NULL DEFAULT 0,
+  PRIMARY KEY (fecha, origen)
+);
+
+-- Las visitas viejas se borran solas: para saber si el sitio sirve basta con
+-- un par de meses, y guardar más es acumular por acumular.
+CREATE INDEX IF NOT EXISTS visita_dia_fecha_idx ON visita_dia (fecha DESC);

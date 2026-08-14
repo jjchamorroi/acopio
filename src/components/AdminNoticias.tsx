@@ -419,7 +419,7 @@ export default function AdminNoticias({ token }: { token: string }) {
                 />
               )}
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-slate-900">
+                <p className="break-words font-semibold text-slate-900">
                   {n.urgente && <span className="text-red-700">⚠ </span>}
                   {n.titulo}
                 </p>
@@ -429,10 +429,20 @@ export default function AdminNoticias({ token }: { token: string }) {
                   {n.vence_en && !vencida(n)
                     ? ` · hasta ${new Date(n.vence_en).toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" })}`
                     : ""}
-                  {n.enlace ? ` · enlaza a ${n.enlace}` : ""}
                 </p>
+                {/* El enlace va en su propia línea y truncado: una URL larga no
+                    tiene espacios donde partirse, así que estirada rompía la
+                    fila entera y empujaba los botones fuera de la tarjeta. */}
+                {n.enlace && (
+                  <p
+                    className="truncate text-xs text-slate-500"
+                    title={n.enlace}
+                  >
+                    enlaza a {n.enlace}
+                  </p>
+                )}
               </div>
-              <div className="flex gap-2">
+              <div className="flex shrink-0 flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => editar(n)}

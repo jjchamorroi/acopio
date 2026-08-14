@@ -6,6 +6,7 @@ import type { CentroPublico, ConvocatoriaPublica } from "@/lib/tipos";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import { frescura, haceCuanto } from "@/lib/frescura";
 import AdminNoticias from "./AdminNoticias";
+import AdminVisitas from "./AdminVisitas";
 import FiltrosAdmin, {
   filtrar,
   FILTROS_VACIOS,
@@ -429,6 +430,8 @@ export default function PanelAdmin() {
           </div>
         </section>
       )}
+
+      <AdminVisitas token={token} />
 
       <AdminNoticias token={token} />
 

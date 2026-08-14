@@ -555,3 +555,70 @@ export async function listarNoticias(): Promise<NoticiaPublica[]> {
     )
   );
 }
+
+export type ResumenVisitas = {
+  hoy: { visitas: number; personas: number };
+  ayer: { visitas: number; personas: number };
+  semana: { visitas: number; personas: number };
+  paginas: { ruta: string; visitas: number }[];
+  origenes: { origen: string; visitas: number }[];
+  porDia: { fecha: string; visitas: number; personas: number }[];
+};
+
+/**
+ * Resumen de visitas para el panel.
+ *
+ * Todo sale de tablas agregadas por día, así que son unas pocas filas aunque
+ * el sitio reciba cien mil visitas: no hay una fila por visita que recorrer.
+ */
+export async function resumenVisitas(): Promise<ResumenVisitas> {
+  const [totales, paginas, origenes, porDia] = await Promise.all([
+    query<{ periodo: string; visitas: string; personas: string }>(
+      `WITH v AS (
+         SELECT fecha, sum(visitas)::int AS visitas FROM visita_dia GROUP BY fecha
+       ), p AS (
+         SELECT fecha, count(*)::int AS personas FROM visitante_dia GROUP BY fecha
+       )
+       SELECT 'hoy' AS periodo,
+              COALESCE((SELECT visitas FROM v WHERE fecha = current_date), 0)::text AS visitas,
+              COALESCE((SELECT personas FROM p WHERE fecha = current_date), 0)::text AS personas
+       UNION ALL
+       SELECT 'ayer',
+              COALESCE((SELECT visitas FROM v WHERE fecha = current_date - 1), 0)::text,
+              COALESCE((SELECT personas FROM p WHERE fecha = current_date - 1), 0)::text
+       UNION ALL
+       SELECT 'semana',
+              COALESCE((SELECT sum(visitas) FROM v WHERE fecha > current_date - 7), 0)::text,
+              COALESCE((SELECT sum(personas) FROM p WHERE fecha > current_date - 7), 0)::text`
+    ),
+    query<{ ruta: string; visitas: number }>(
+      `SELECT ruta, sum(visitas)::int AS visitas FROM visita_dia
+        WHERE fecha > current_date - 7 GROUP BY ruta ORDER BY 2 DESC LIMIT 12`
+    ),
+    query<{ origen: string; visitas: number }>(
+      `SELECT origen, sum(visitas)::int AS visitas FROM referido_dia
+        WHERE fecha > current_date - 7 AND origen <> 'interno'
+        GROUP BY origen ORDER BY 2 DESC LIMIT 10`
+    ),
+    query<{ fecha: string; visitas: number; personas: number }>(
+      `SELECT v.fecha::text, sum(v.visitas)::int AS visitas,
+              COALESCE((SELECT count(*) FROM visitante_dia p WHERE p.fecha = v.fecha), 0)::int AS personas
+         FROM visita_dia v WHERE v.fecha > current_date - 14
+        GROUP BY v.fecha ORDER BY v.fecha DESC`
+    ),
+  ]);
+
+  const de = (p: string) => {
+    const f = totales.find((t) => t.periodo === p);
+    return { visitas: Number(f?.visitas ?? 0), personas: Number(f?.personas ?? 0) };
+  };
+
+  return {
+    hoy: de("hoy"),
+    ayer: de("ayer"),
+    semana: de("semana"),
+    paginas,
+    origenes,
+    porDia,
+  };
+}

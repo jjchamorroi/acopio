@@ -4,6 +4,7 @@ import Link from "next/link";
 import { urlBase } from "@/lib/url";
 import { ultimaActualizacion } from "@/lib/consultas";
 import { haceCuanto } from "@/lib/frescura";
+import ContadorVisitas from "@/components/ContadorVisitas";
 import "./globals.css";
 
 /**
@@ -145,6 +146,8 @@ export default async function RootLayout({
             </div>
           </div>
         </header>
+
+        <ContadorVisitas />
 
         <main className="flex-1">{children}</main>
 
