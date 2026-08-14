@@ -27,6 +27,18 @@ const ANCHO = 1080;
 const ALTO = 1920;
 
 /**
+ * Caja del mapa, en píxeles.
+ *
+ * Cuadrada y a media anchura porque los datos también lo son: la zona
+ * afectada abarca ~2,4° de latitud y ~2,6° de longitud. Con una caja ancha y
+ * la proporción respetada, los puntos ocupaban un tercio y sobraban dos
+ * tercios de vacío a los lados. Al hacerla cuadrada, el mapa queda lleno y el
+ * espacio que libera lo usan las cifras, que van al lado.
+ */
+const MAPA_ANCHO = 380;
+const MAPA_ALTO = 380;
+
+/**
  * Fuente en negrita de verdad.
  *
  * Sin datos de fuente, satori dibuja todo con el mismo peso y `fontWeight:800`
@@ -66,8 +78,24 @@ const VERDE = "#1f7a4d";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const ciudadSlug = searchParams.get("ciudad") ?? "";
+  const depto = searchParams.get("departamento") ?? "";
   const variante = searchParams.get("v") ?? "falta";
-  const host = new URL(req.url).host;
+  /**
+   * El dominio, escrito para que alguien lo pueda TECLEAR desde Instagram.
+   *
+   * `new URL(req.url).host` devolvía "[::]:3000" dentro del contenedor, que es
+   * la dirección IPv6 de escucha. Se prefiere el dominio configurado; si no,
+   * la cabecera del proxy; y se limpian corchetes y "www.".
+   */
+  const host = (
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/^https?:\/\//, "") ||
+    req.headers.get("x-forwarded-host") ||
+    req.headers.get("host") ||
+    new URL(req.url).host
+  )
+    .replace(/^\[|\]$/g, "")
+    .replace(/^www\./, "")
+    .replace(/\/$/, "");
 
   let titulo = "";
   let subtitulo = "";
@@ -75,6 +103,11 @@ export async function GET(req: Request) {
   let sobra: string[] = [];
   let cifra = "";
   let cifraPie = "";
+
+  /** Puntos del mapa, ya normalizados a 0–1 dentro de su propio encuadre. */
+  let puntos: { x: number; y: number; urgente: boolean }[] = [];
+  let totalLugares = 0;
+  let totalAlbergues = 0;
 
   const negrita = await cargarFuente();
 
@@ -87,13 +120,14 @@ export async function GET(req: Request) {
       titulo = "Nadie está llegando";
       subtitulo = "Sismo del 10 de agosto";
     } else {
-      const centros = await listarCentros(
-        ciudadSlug ? { ciudad: ciudadSlug } : {}
-      );
+      const centros = await listarCentros({
+        ...(ciudadSlug ? { ciudad: ciudadSlug } : {}),
+        ...(depto ? { departamento: depto } : {}),
+      });
       const lugar = centros[0];
       titulo = ciudadSlug
         ? (lugar?.ciudad_nombre ?? "Colombia")
-        : "Colombia";
+        : depto || "Colombia";
       // Corto a propósito: más largo se parte en dos líneas y el nombre de la
       // ciudad pierde el sitio de honor.
       subtitulo = "Qué llevar y qué no";
@@ -108,13 +142,18 @@ export async function GET(req: Request) {
           if (m) m.set(n.categoria, (m.get(n.categoria) ?? 0) + 1);
         }
       }
+      // "Otros" queda fuera: en un cartel que le dice a alguien qué meter en
+      // el carro, "otros" no le dice nada.
       const top = (m: Map<string, number>, n: number) =>
         [...m.entries()]
+          .filter(([cat]) => cat !== "otros")
           .sort((a, b) => b[1] - a[1])
           .slice(0, n)
           .map(([cat]) => buscarCategoria(cat)?.label ?? cat);
 
-      falta = top(urgentes, 5);
+      // Cuatro y no cinco: con cinco, el cartel se desbordaba por abajo y las
+      // cifras se montaban sobre el pie.
+      falta = top(urgentes, 4);
 
       // Una categoría no puede salir en las dos listas.
       //
@@ -131,6 +170,45 @@ export async function GET(req: Request) {
       sobra = top(sobrantes, 4).filter((s) => !enFalta.has(s)).slice(0, 3);
       cifra = String(centros.filter((c) => c.necesidades.some((n) => n.nivel === "urgente")).length);
       cifraPie = "lugares necesitan algo URGENTE";
+
+      totalLugares = centros.length;
+      totalAlbergues = centros.filter((c) => c.tipo === "albergue").length;
+
+      // Mapa dibujado con los puntos reales, sin pedirle tiles a nadie.
+      //
+      // No hay servicio de mapas estáticos en OpenStreetMap y los que existen
+      // piden clave; además, una imagen que se genera cada vez que alguien la
+      // comparte no debería depender de un tercero que puede bloquearnos. Con
+      // 282 puntos, la nube dibuja sola el occidente colombiano.
+      if (centros.length > 1) {
+        const lats = centros.map((c) => c.lat);
+        const lngs = centros.map((c) => c.lng);
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+        const minLng = Math.min(...lngs);
+        const maxLng = Math.max(...lngs);
+        // Margen mínimo para que un municipio con los puntos muy juntos no
+        // salga con todo amontonado en una esquina.
+        const spanLat = Math.max(maxLat - minLat, 0.02);
+        const spanLng = Math.max(maxLng - minLng, 0.02);
+
+        // Se conserva la PROPORCIÓN geográfica. Estirando cada eje por su
+        // cuenta para llenar la caja, Colombia salía aplastada y los puntos
+        // parecían una mancha horizontal; con la escala común, la silueta del
+        // occidente se reconoce.
+        const escala = Math.min(MAPA_ANCHO / spanLng, MAPA_ALTO / spanLat);
+        const anchoUsado = spanLng * escala;
+        const altoUsado = spanLat * escala;
+        const offX = (MAPA_ANCHO - anchoUsado) / 2;
+        const offY = (MAPA_ALTO - altoUsado) / 2;
+
+        puntos = centros.map((c) => ({
+          x: offX + (c.lng - minLng) * escala,
+          // La latitud se invierte: en pantalla el norte está arriba.
+          y: offY + (maxLat - c.lat) * escala,
+          urgente: c.necesidades.some((n) => n.nivel === "urgente"),
+        }));
+      }
     }
   } catch {
     titulo = "Red de Acopio";
@@ -214,12 +292,67 @@ export async function GET(req: Request) {
                 </div>
               )}
 
-              <div style={{ display: "flex", alignItems: "baseline", marginTop: 46 }}>
-                <div style={{ display: "flex", fontSize: 130, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
-                  {cifra}
+              {/* El mapa con los puntos reales del filtro. Es lo que hace que
+                  el cartel se reconozca como "de este sitio" y de un vistazo
+                  dice cuánta cobertura hay. */}
+              {/* Mapa y cifras en la misma fila: el mapa cuadrado deja libre
+                  media anchura, y las cifras la ocupan sin alargar el cartel. */}
+              <div style={{ display: "flex", alignItems: "center", marginTop: 36 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    position: "relative",
+                    width: MAPA_ANCHO,
+                    height: MAPA_ALTO,
+                    borderRadius: 28,
+                    background: "#182130",
+                    border: "2px solid #2b3442",
+                  }}
+                >
+                  {puntos.map((p, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        position: "absolute",
+                        left: p.x - (p.urgente ? 10 : 6),
+                        top: p.y - (p.urgente ? 10 : 6),
+                        width: p.urgente ? 20 : 12,
+                        height: p.urgente ? 20 : 12,
+                        borderRadius: 999,
+                        background: p.urgente ? ROJO : "#5f9e7e",
+                      }}
+                    />
+                  ))}
                 </div>
-                <div style={{ display: "flex", fontSize: 40, color: "#d5dae2", marginLeft: 22 }}>
-                  {cifraPie}
+
+                <div style={{ display: "flex", flexDirection: "column", marginLeft: 56 }}>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 26 }}>
+                    <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>
+                      {totalLugares}
+                    </div>
+                    <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
+                      lugares
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", marginBottom: 26 }}>
+                    <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: ROJO, lineHeight: 1 }}>
+                      {cifra}
+                    </div>
+                    <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
+                      con algo urgente
+                    </div>
+                  </div>
+                  {totalAlbergues > 0 && (
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", fontSize: 96, fontWeight: 800, color: VERDE, lineHeight: 1 }}>
+                        {totalAlbergues}
+                      </div>
+                      <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
+                        albergues
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

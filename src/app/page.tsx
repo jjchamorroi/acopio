@@ -372,14 +372,31 @@ export default async function Home({
             zoom={ubicado || ciudadSel ? 13 : centroDepto ? 9 : 8}
             miUbicacion={ubicado ? [lat, lng] : undefined}
           />
-          <BotonCompartir
-            className="mt-3"
-            texto={
-              urgentes > 0
-                ? `Mapa de acopios y albergues por el sismo: ${centros.length} lugares, ${urgentes} necesitan algo urgente. Mira qué falta antes de salir de la casa:`
-                : "Mapa de acopios y albergues por el sismo. Mira qué necesita cada uno antes de salir de la casa:"
-            }
-          />
+          {/* Los dos modos de compartir, juntos y al pie del mapa: es donde
+              alguien acaba de ver el panorama y decide pasarlo. WhatsApp lleva
+              el enlace; Instagram no admite enlaces, así que lleva la imagen
+              con las cifras del filtro que la persona tiene puesto. */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <BotonCompartir
+              texto={
+                urgentes > 0
+                  ? `Mapa de acopios y albergues por el sismo: ${centros.length} lugares, ${urgentes} necesitan algo urgente. Mira qué falta antes de salir de la casa:`
+                  : "Mapa de acopios y albergues por el sismo. Mira qué necesita cada uno antes de salir de la casa:"
+              }
+            />
+            <Link
+              href={`/compartir${
+                p.ciudad
+                  ? `?ciudad=${p.ciudad}`
+                  : p.departamento
+                    ? `?departamento=${encodeURIComponent(p.departamento)}`
+                    : ""
+              }`}
+              className="inline-flex items-center gap-1.5 rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-4 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)]"
+            >
+              📷 Imagen para Instagram
+            </Link>
+          </div>
         </section>
       </div>
 
@@ -391,6 +408,7 @@ export default async function Home({
           <EnlaceMascotas />
         </div>
       )}
+
     </div>
   );
 }

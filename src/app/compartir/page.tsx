@@ -26,15 +26,17 @@ export const metadata: Metadata = {
 export default async function Compartir({
   searchParams,
 }: {
-  searchParams: Promise<{ ciudad?: string }>;
+  searchParams: Promise<{ ciudad?: string; departamento?: string }>;
 }) {
-  const { ciudad } = await searchParams;
+  const { ciudad, departamento } = await searchParams;
   const ciudades = await listarCiudadesConLugares();
   const sel = ciudades.find((c) => c.slug === ciudad);
 
   const url = ciudad
     ? `/api/imagen?v=falta&ciudad=${ciudad}`
-    : `/api/imagen?v=falta`;
+    : departamento
+      ? `/api/imagen?v=falta&departamento=${encodeURIComponent(departamento)}`
+      : "/api/imagen?v=falta";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
