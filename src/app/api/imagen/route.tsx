@@ -37,6 +37,17 @@ const ALTO = 1920;
 const MAPA_ANCHO = 300;
 const MAPA_ALTO = 300;
 
+/**
+ * Recuadro localizador, abajo a la derecha del mapa.
+ *
+ * Al filtrar por una ciudad, el mapa se acerca hasta ver los acopios
+ * repartidos —que es la información útil— y a esa escala no queda dentro
+ * ninguna frontera: el recuadro se veía blanco. El localizador resuelve las
+ * dos cosas a la vez, que es lo que hacen los mapas impresos: el detalle
+ * grande, y aparte un recuadro chico que dice en qué parte del país es.
+ */
+const INSET = 96;
+
 const TESELA = 256;
 
 /** Proyección Web Mercator: de grados a píxeles absolutos en un zoom dado. */
@@ -97,6 +108,11 @@ function encuadrar(
   }
   // Un solo punto no tiene extensión: se le da un zoom de barrio.
   if (puntos.length === 1) z = 13;
+
+  // Tope de acercamiento. Sin esto, un municipio con todos sus acopios en
+  // cuatro manzanas salía con un zoom de calle donde no se ve ninguna
+  // referencia y los puntos flotan en el vacío.
+  if (z > 12) z = 12;
 
   const centro = aPixeles((minLat + maxLat) / 2, (minLng + maxLng) / 2, z);
   // Píxel absoluto de la esquina superior izquierda de la caja.
@@ -167,16 +183,20 @@ function geografiaDe(
 ) {
   const todas = Object.values(SILUETAS.departamentos);
 
-  const nombre = normalizarNombre(
-    depto || (ciudadSlug ? (centros[0]?.departamento ?? "") : "")
-  );
+  // Solo el filtro de DEPARTAMENTO encuadra la silueta.
+  //
+  // Con un municipio no: encuadrando Caldas entera, los nueve acopios de
+  // Manizales caen en el mismo píxel y el mapa dice "hay algo por aquí" en vez
+  // de "están repartidos por la ciudad". Encuadrando los puntos se ven los
+  // nueve, que es la información que importa; la silueta sale detrás si el
+  // encuadre la alcanza, y si no, el mapa sigue diciendo dónde está cada uno.
+  const nombre = depto ? normalizarNombre(depto) : "";
   const propio = nombre ? SILUETAS.departamentos[nombre] : undefined;
 
   return {
     // Siempre se dibujan todos: los departamentos vecinos son los que dan la
     // referencia de dónde queda el que importa.
     formas: todas,
-    // El encuadre se ciñe al departamento cuando hay filtro; si no, a los datos.
     encuadre: propio ?? null,
   };
 }
@@ -235,6 +255,8 @@ export async function GET(req: Request) {
   /** Puntos del mapa, ya normalizados a 0–1 dentro de su propio encuadre. */
   let puntos: { x: number; y: number; urgente: boolean }[] = [];
   let rutas: string[] = [];
+  /** Recuadro localizador: el departamento y un punto donde está la ciudad. */
+  let inset: { rutas: string[]; x: number; y: number } | null = null;
   let totalLugares = 0;
   let totalAlbergues = 0;
 
@@ -339,6 +361,30 @@ export async function GET(req: Request) {
               p.y >= 8 &&
               p.y <= MAPA_ALTO - 8
           );
+
+        // Localizador: solo cuando el mapa grande está tan cerca que no cabe
+        // ninguna frontera. A escala nacional o departamental sobra, porque
+        // la silueta ya se ve en el mapa principal.
+        // Solo con filtro de CIUDAD. En la vista nacional o departamental el
+        // mapa grande ya muestra la silueta y el localizador sería un duplicado.
+        if (ciudadSlug) {
+          const todos = Object.values(SILUETAS.departamentos).flat();
+          const encI = encuadrar(
+            todos.flat().map(([lng, lat]) => ({ lat, lng })),
+            INSET,
+            INSET
+          );
+          const medioLat =
+            centros.reduce((s, c) => s + c.lat, 0) / centros.length;
+          const medioLng =
+            centros.reduce((s, c) => s + c.lng, 0) / centros.length;
+          const px = aPixeles(medioLat, medioLng, encI.z);
+          inset = {
+            rutas: todos.map((a) => aRuta(a, encI.z, encI.origenX, encI.origenY)),
+            x: px.x - encI.origenX,
+            y: px.y - encI.origenY,
+          };
+        }
       }
     }
   } catch {
@@ -472,6 +518,37 @@ export async function GET(req: Request) {
                       ))}
                     </svg>
                   )}
+                  {/* Localizador. Va encima del mapa, esquina inferior
+                      derecha, como en cualquier mapa impreso. */}
+                  {inset && (
+                    <div
+                      style={{
+                        display: "flex",
+                        position: "absolute",
+                        right: 8,
+                        bottom: 8,
+                        width: INSET,
+                        height: INSET,
+                        borderRadius: 10,
+                        background: "#c9d6e0",
+                        border: "2px solid #6b7683",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <svg
+                        width={INSET}
+                        height={INSET}
+                        viewBox={`0 0 ${INSET} ${INSET}`}
+                        style={{ position: "absolute", left: 0, top: 0 }}
+                      >
+                        {inset.rutas.map((d, i) => (
+                          <path key={i} d={d} fill="#f6f4ef" stroke="#b0b7c0" strokeWidth={0.7} />
+                        ))}
+                        <circle cx={inset.x} cy={inset.y} r={7} fill={ROJO} stroke="#ffffff" strokeWidth={2.5} />
+                      </svg>
+                    </div>
+                  )}
+
                   {puntos.map((p, i) => (
                     <div
                       key={i}
