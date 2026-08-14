@@ -162,7 +162,32 @@ const normalizarNombre = (s: string) =>
     .trim();
 
 type Anillos = number[][][];
-const SILUETAS = siluetas as { departamentos: Record<string, Anillos> };
+const SILUETAS = siluetas as {
+  departamentos: Record<string, Anillos>;
+  municipios: { b: number[]; a: Anillos }[];
+};
+
+/**
+ * El municipio que contiene un punto.
+ *
+ * Se busca por COORDENADA y no por nombre: la fuente solo trae `shapeName`,
+ * sin departamento, y hay nombres repetidos —"San Rafael" está en cuatro
+ * departamentos—. Por coordenada no hay ambigüedad ni problemas de tildes.
+ */
+function municipioEn(lat: number, lng: number): Anillos | null {
+  const dentro = SILUETAS.municipios.filter(
+    (m) => lng >= m.b[0] && lng <= m.b[2] && lat >= m.b[1] && lat <= m.b[3]
+  );
+  if (dentro.length === 0) return null;
+  if (dentro.length === 1) return dentro[0].a;
+  // Con varias cajas solapadas gana la más pequeña, que es la que de verdad
+  // contiene el punto y no el vecino grande que lo roza.
+  return dentro.sort(
+    (x, y) =>
+      (x.b[2] - x.b[0]) * (x.b[3] - x.b[1]) -
+      (y.b[2] - y.b[0]) * (y.b[3] - y.b[1])
+  )[0].a;
+}
 
 /**
  * Qué silueta se dibuja y sobre cuál se encuadra.
@@ -177,7 +202,7 @@ const SILUETAS = siluetas as { departamentos: Record<string, Anillos> };
  * Andrés dentro, la zona afectada quedaba del tamaño de una uña.
  */
 function geografiaDe(
-  centros: { departamento: string }[],
+  centros: { departamento: string; lat: number; lng: number }[],
   ciudadSlug: string,
   depto: string
 ) {
@@ -190,6 +215,16 @@ function geografiaDe(
   // de "están repartidos por la ciudad". Encuadrando los puntos se ven los
   // nueve, que es la información que importa; la silueta sale detrás si el
   // encuadre la alcanza, y si no, el mapa sigue diciendo dónde está cada uno.
+  // Con filtro de CIUDAD se dibuja y encuadra su municipio: es el contorno
+  // que la persona reconoce como "su ciudad". Los puntos quedan agrupados
+  // dentro, que además es cierto — los acopios están en el casco urbano.
+  if (ciudadSlug && centros.length) {
+    const lat = centros.reduce((s, c) => s + c.lat, 0) / centros.length;
+    const lng = centros.reduce((s, c) => s + c.lng, 0) / centros.length;
+    const muni = municipioEn(lat, lng);
+    if (muni) return { formas: [muni], encuadre: muni, esMunicipio: true };
+  }
+
   const nombre = depto ? normalizarNombre(depto) : "";
   const propio = nombre ? SILUETAS.departamentos[nombre] : undefined;
 
@@ -198,6 +233,7 @@ function geografiaDe(
     // referencia de dónde queda el que importa.
     formas: todas,
     encuadre: propio ?? null,
+    esMunicipio: false,
   };
 }
 

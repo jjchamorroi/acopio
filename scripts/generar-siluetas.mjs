@@ -46,7 +46,7 @@ function area(r) {
   return Math.abs(s / 2);
 }
 
-function anillosDe(geom) {
+function anillosDe(geom, maximo = MAX_PUNTOS) {
   const poligonos =
     geom.type === "Polygon"
       ? [geom.coordinates]
@@ -61,7 +61,7 @@ function anillosDe(geom) {
     .sort((a, b) => area(b) - area(a))
     // Las islas diminutas ensucian sin aportar.
     .slice(0, 3)
-    .map((r) => simplificar(r).map(redondear));
+    .map((r) => simplificar(r, maximo).map(redondear));
 }
 
 const normalizar = (s) =>
@@ -78,9 +78,43 @@ const ALIAS = {
     "archipielago de san andres",
 };
 
+/**
+ * Los municipios se identifican por su CAJA, no por su nombre.
+ *
+ * La fuente (geoBoundaries) solo trae `shapeName`, sin departamento, y hay
+ * nombres repetidos en varios departamentos —"San Rafael" está en cuatro—.
+ * Buscando por nombre habría que adivinar cuál; buscando por coordenada, el
+ * municipio correcto es simplemente el que contiene el punto. No hay ambigüedad
+ * ni problemas de tildes o grafías.
+ */
+function municipiosDe(geo) {
+  const salida = [];
+  for (const f of geo.features) {
+    const anillos = anillosDe(f.geometry, 30);
+    if (!anillos.length) continue;
+    const pts = anillos.flat();
+    const lngs = pts.map((p) => p[0]);
+    const lats = pts.map((p) => p[1]);
+    salida.push({
+      // [oeste, sur, este, norte], redondeado: solo sirve para descartar.
+      b: [
+        Number(Math.min(...lngs).toFixed(3)),
+        Number(Math.min(...lats).toFixed(3)),
+        Number(Math.max(...lngs).toFixed(3)),
+        Number(Math.max(...lats).toFixed(3)),
+      ],
+      a: anillos,
+    });
+  }
+  return salida;
+}
+
 const archivo = process.argv[2];
+const archivoMunicipios = process.argv[3];
 if (!archivo) {
-  console.error("uso: node scripts/generar-siluetas.mjs <geojson>");
+  console.error(
+    "uso: node scripts/generar-siluetas.mjs <departamentos.geojson> [municipios.geojson]"
+  );
   process.exit(1);
 }
 
@@ -117,11 +151,17 @@ if (fuera > 0) {
   process.exit(1);
 }
 
+const municipios = archivoMunicipios
+  ? municipiosDe(JSON.parse(readFileSync(archivoMunicipios, "utf8")))
+  : [];
+
 mkdirSync("src/lib/geo", { recursive: true });
-const salida = { departamentos };
+const salida = { departamentos, municipios };
 writeFileSync("src/lib/geo/siluetas.json", JSON.stringify(salida));
 
-console.log(`departamentos: ${Object.keys(departamentos).length}`);
+console.log(
+  `departamentos: ${Object.keys(departamentos).length} · municipios: ${municipios.length}`
+);
 console.log(
   `src/lib/geo/siluetas.json — ${(JSON.stringify(salida).length / 1024).toFixed(0)} KB`
 );
