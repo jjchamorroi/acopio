@@ -211,6 +211,21 @@ export default async function Home({
   // todo el país hay dos. La cifra responde "¿cuántos albergues hay?", que no
   // depende de si vine a donar o a pedir ayuda.
   const albergues = todosLosAlbergues.length;
+
+  // Compartir: mismos datos para el bloque de móvil y el de escritorio, para
+  // que no se desincronicen si se cambia uno.
+  const textoCompartir =
+    urgentes > 0
+      ? `Mapa de acopios y albergues por el sismo: ${centros.length} lugares, ${urgentes} necesitan algo urgente. Mira qué falta antes de salir de la casa:`
+      : "Mapa de acopios y albergues por el sismo. Mira qué necesita cada uno antes de salir de la casa:";
+  const urlImagen = `/api/imagen?v=falta${
+    p.ciudad
+      ? `&ciudad=${p.ciudad}`
+      : p.departamento
+        ? `&departamento=${encodeURIComponent(p.departamento)}`
+        : ""
+  }`;
+  const nombreImagen = `red-de-acopio-${p.ciudad || p.departamento || "colombia"}.png`;
   const plazas = convocatorias.reduce(
     (n, c) => n + (c.cupo === null ? 0 : Math.max(0, c.cupo - c.inscritos)),
     0
@@ -227,6 +242,17 @@ export default async function Home({
             <p className="text-[17px] leading-snug text-[var(--color-apagado)]">
               {copia.bajada}
             </p>
+
+            {/* En móvil los compartir van arriba, pegados al título y SOLO con
+                iconos: ahí caben sin robarle sitio a "tengo algo para donar",
+                que es la acción principal. En escritorio esto se oculta y van
+                encima del mapa, con etiqueta, donde sí hay espacio. */}
+            {!esVoluntarios && (
+              <div className="flex items-center gap-2 lg:hidden">
+                <BotonCompartir compacto texto={textoCompartir} />
+                <BotonInstagram compacto url={urlImagen} nombre={nombreImagen} />
+              </div>
+            )}
           </div>
           <AccionesRapidas modo={modo} />
         </div>
@@ -373,24 +399,9 @@ export default async function Home({
 
               WhatsApp lleva el enlace; Instagram no admite enlaces, así que
               lleva la imagen con las cifras del filtro que esté puesto. */}
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <BotonCompartir
-              texto={
-                urgentes > 0
-                  ? `Mapa de acopios y albergues por el sismo: ${centros.length} lugares, ${urgentes} necesitan algo urgente. Mira qué falta antes de salir de la casa:`
-                  : "Mapa de acopios y albergues por el sismo. Mira qué necesita cada uno antes de salir de la casa:"
-              }
-            />
-            <BotonInstagram
-              url={`/api/imagen?v=falta${
-                p.ciudad
-                  ? `&ciudad=${p.ciudad}`
-                  : p.departamento
-                    ? `&departamento=${encodeURIComponent(p.departamento)}`
-                    : ""
-              }`}
-              nombre={`red-de-acopio-${p.ciudad || p.departamento || "colombia"}.png`}
-            />
+          <div className="mb-3 hidden flex-wrap items-center gap-2 lg:flex">
+            <BotonCompartir texto={textoCompartir} />
+            <BotonInstagram url={urlImagen} nombre={nombreImagen} />
           </div>
 
           <MapaClient

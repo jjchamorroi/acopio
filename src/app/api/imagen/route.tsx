@@ -30,13 +30,80 @@ const ALTO = 1920;
  * Caja del mapa, en píxeles.
  *
  * Cuadrada y a media anchura porque los datos también lo son: la zona
- * afectada abarca ~2,4° de latitud y ~2,6° de longitud. Con una caja ancha y
- * la proporción respetada, los puntos ocupaban un tercio y sobraban dos
- * tercios de vacío a los lados. Al hacerla cuadrada, el mapa queda lleno y el
- * espacio que libera lo usan las cifras, que van al lado.
+ * afectada abarca ~2,4° de latitud y ~2,6° de longitud. El espacio que libera
+ * lo usan las cifras, que van al lado.
  */
-const MAPA_ANCHO = 380;
-const MAPA_ALTO = 380;
+const MAPA_ANCHO = 340;
+const MAPA_ALTO = 340;
+
+const TESELA = 256;
+
+/** Proyección Web Mercator: de grados a píxeles absolutos en un zoom dado. */
+function aPixeles(lat: number, lng: number, z: number) {
+  const n = 2 ** z;
+  const x = ((lng + 180) / 360) * n * TESELA;
+  const rad = (lat * Math.PI) / 180;
+  const y =
+    ((1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2) *
+    n *
+    TESELA;
+  return { x, y };
+}
+
+/**
+ * Calcula el encuadre del mapa.
+ *
+ * SE INTENTÓ dibujar el mapa real con las teselas de OpenStreetMap y su
+ * servidor lo rechaza: devuelve "Access blocked — App is not following the
+ * tile usage policy". Su política prohíbe la descarga automatizada desde un
+ * servidor, y con razón: son máquinas mantenidas por voluntarios. Buscarle la
+ * vuelta —cambiando la cabecera, repartiendo entre réplicas— sería abusar de
+ * un bien común, así que el mapa se dibuja con los puntos propios.
+ *
+ * Para un mapa de verdad haría falta un proveedor con clave (MapTiler,
+ * Stadia, Mapbox), que tienen capa gratuita. Es media hora de trabajo y una
+ * cuenta más que mantener.
+ *
+ * La proyección sigue siendo Web Mercator y no una regla de tres: es la que
+ * usa el mapa del sitio, así que la nube de puntos tiene la misma forma que
+ * la que la persona acaba de ver en pantalla.
+ */
+function encuadrar(
+  puntos: { lat: number; lng: number }[],
+  ancho: number,
+  alto: number
+) {
+  const lats = puntos.map((p) => p.lat);
+  const lngs = puntos.map((p) => p.lng);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+
+  // Margen del 12 % para que ningún punto quede pegado al borde.
+  const margen = 0.12;
+
+  let z = 13;
+  for (; z >= 4; z--) {
+    const a = aPixeles(maxLat, minLng, z);
+    const b = aPixeles(minLat, maxLng, z);
+    if (
+      Math.abs(b.x - a.x) <= ancho * (1 - margen * 2) &&
+      Math.abs(b.y - a.y) <= alto * (1 - margen * 2)
+    ) {
+      break;
+    }
+  }
+  // Un solo punto no tiene extensión: se le da un zoom de barrio.
+  if (puntos.length === 1) z = 13;
+
+  const centro = aPixeles((minLat + maxLat) / 2, (minLng + maxLng) / 2, z);
+  // Píxel absoluto de la esquina superior izquierda de la caja.
+  const origenX = centro.x - ancho / 2;
+  const origenY = centro.y - alto / 2;
+
+  return { z, origenX, origenY };
+}
 
 /**
  * Fuente en negrita de verdad.
@@ -180,34 +247,27 @@ export async function GET(req: Request) {
       // piden clave; además, una imagen que se genera cada vez que alguien la
       // comparte no debería depender de un tercero que puede bloquearnos. Con
       // 282 puntos, la nube dibuja sola el occidente colombiano.
-      if (centros.length > 1) {
-        const lats = centros.map((c) => c.lat);
-        const lngs = centros.map((c) => c.lng);
-        const minLat = Math.min(...lats);
-        const maxLat = Math.max(...lats);
-        const minLng = Math.min(...lngs);
-        const maxLng = Math.max(...lngs);
-        // Margen mínimo para que un municipio con los puntos muy juntos no
-        // salga con todo amontonado en una esquina.
-        const spanLat = Math.max(maxLat - minLat, 0.02);
-        const spanLng = Math.max(maxLng - minLng, 0.02);
+      if (centros.length > 0) {
+        const enc = encuadrar(centros, MAPA_ANCHO, MAPA_ALTO);
 
-        // Se conserva la PROPORCIÓN geográfica. Estirando cada eje por su
-        // cuenta para llenar la caja, Colombia salía aplastada y los puntos
-        // parecían una mancha horizontal; con la escala común, la silueta del
-        // occidente se reconoce.
-        const escala = Math.min(MAPA_ANCHO / spanLng, MAPA_ALTO / spanLat);
-        const anchoUsado = spanLng * escala;
-        const altoUsado = spanLat * escala;
-        const offX = (MAPA_ANCHO - anchoUsado) / 2;
-        const offY = (MAPA_ALTO - altoUsado) / 2;
-
-        puntos = centros.map((c) => ({
-          x: offX + (c.lng - minLng) * escala,
-          // La latitud se invierte: en pantalla el norte está arriba.
-          y: offY + (maxLat - c.lat) * escala,
-          urgente: c.necesidades.some((n) => n.nivel === "urgente"),
-        }));
+        puntos = centros
+          .map((c) => {
+            const px = aPixeles(c.lat, c.lng, enc.z);
+            return {
+              x: px.x - enc.origenX,
+              y: px.y - enc.origenY,
+              urgente: c.necesidades.some((n) => n.nivel === "urgente"),
+            };
+          })
+          // Fuera lo que caiga fuera de la caja. Un punto medio recortado en
+          // el borde se lee como un fallo de dibujo, no como un lugar.
+          .filter(
+            (p) =>
+              p.x >= 8 &&
+              p.x <= MAPA_ANCHO - 8 &&
+              p.y >= 8 &&
+              p.y <= MAPA_ALTO - 8
+          );
       }
     }
   } catch {
@@ -301,7 +361,7 @@ export async function GET(req: Request) {
                   dice cuánta cobertura hay. */}
               {/* Mapa y cifras en la misma fila: el mapa cuadrado deja libre
                   media anchura, y las cifras la ocupan sin alargar el cartel. */}
-              <div style={{ display: "flex", alignItems: "center", marginTop: 36 }}>
+              <div style={{ display: "flex", alignItems: "center", marginTop: 28 }}>
                 <div
                   style={{
                     display: "flex",
@@ -309,22 +369,61 @@ export async function GET(req: Request) {
                     width: MAPA_ANCHO,
                     height: MAPA_ALTO,
                     borderRadius: 28,
-                    background: "#182130",
+                    // Claro y no oscuro: un rectángulo negro en medio del
+                    // cartel se lee como un hueco, no como un mapa.
+                    background: HUESO,
                     border: "2px solid #2b3442",
+                    // Recorta lo que se salga: sin esto, un punto cerca del
+                    // borde se dibujaba medio fuera de la caja.
+                    overflow: "hidden",
                   }}
                 >
+                  {/* Retícula tenue. No son meridianos de verdad; están para
+                      que el recuadro se lea como un mapa y no como un cuadro
+                      de color con manchas encima. */}
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={`v${i}`}
+                      style={{
+                        display: "flex",
+                        position: "absolute",
+                        left: (MAPA_ANCHO / 4) * i,
+                        top: 0,
+                        width: 1,
+                        height: MAPA_ALTO,
+                        background: "#d8d5cd",
+                      }}
+                    />
+                  ))}
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={`h${i}`}
+                      style={{
+                        display: "flex",
+                        position: "absolute",
+                        left: 0,
+                        top: (MAPA_ALTO / 4) * i,
+                        width: MAPA_ANCHO,
+                        height: 1,
+                        background: "#d8d5cd",
+                      }}
+                    />
+                  ))}
                   {puntos.map((p, i) => (
                     <div
                       key={i}
                       style={{
                         display: "flex",
                         position: "absolute",
-                        left: p.x - (p.urgente ? 10 : 6),
-                        top: p.y - (p.urgente ? 10 : 6),
-                        width: p.urgente ? 20 : 12,
-                        height: p.urgente ? 20 : 12,
+                        left: p.x - (p.urgente ? 11 : 8),
+                        top: p.y - (p.urgente ? 11 : 8),
+                        width: p.urgente ? 22 : 16,
+                        height: p.urgente ? 22 : 16,
                         borderRadius: 999,
-                        background: p.urgente ? ROJO : "#5f9e7e",
+                        background: p.urgente ? ROJO : VERDE,
+                        // Aro blanco: sobre las calles claras del mapa, un
+                        // punto sin borde se confunde con un edificio.
+                        border: "3px solid #ffffff",
                       }}
                     />
                   ))}

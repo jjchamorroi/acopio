@@ -18,11 +18,14 @@ export default function BotonInstagram({
   url,
   nombre = "red-de-acopio.png",
   className = "",
+  compacto = false,
 }: {
   /** Ruta de la imagen generada, ya con los filtros aplicados. */
   url: string;
   nombre?: string;
   className?: string;
+  /** Solo el icono, sin etiqueta. Para el encabezado en móvil. */
+  compacto?: boolean;
 }) {
   const [estado, setEstado] = useState<"listo" | "cargando" | "descargada">(
     "listo"
@@ -66,7 +69,7 @@ export default function BotonInstagram({
       disabled={estado === "cargando"}
       title="Compartir la imagen en Instagram y otras redes"
       aria-label="Compartir la imagen en Instagram y otras redes"
-      className={`inline-flex items-center gap-2 rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-3.5 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)] disabled:opacity-60 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white text-sm font-bold transition hover:bg-[var(--color-hueso)] disabled:opacity-60 ${compacto ? "px-2.5 py-2" : "px-3.5 py-2.5"} ${className}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden className="size-5">
         <rect
@@ -89,11 +92,15 @@ export default function BotonInstagram({
         />
         <circle cx="17.6" cy="6.4" r="1.4" fill="currentColor" />
       </svg>
-      {estado === "cargando"
-        ? "Generando…"
-        : estado === "descargada"
-          ? "¡Descargada!"
-          : "Instagram"}
+      {compacto
+        ? estado === "cargando"
+          ? "…"
+          : ""
+        : estado === "cargando"
+          ? "Generando…"
+          : estado === "descargada"
+            ? "¡Descargada!"
+            : "Instagram"}
     </button>
   );
 }
