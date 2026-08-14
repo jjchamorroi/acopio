@@ -93,7 +93,7 @@ export default function BotonInstagram({
         ? "Generando…"
         : estado === "descargada"
           ? "¡Descargada!"
-          : "Imagen"}
+          : "Instagram"}
     </button>
   );
 }

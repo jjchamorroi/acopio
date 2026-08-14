@@ -366,18 +366,14 @@ export default async function Home({
         </section>
 
         <section className="order-1 lg:sticky lg:top-[188px] lg:order-2">
-          <MapaClient
-            centros={centros}
-            convocatorias={convocatorias}
-            centro={centroMapa}
-            zoom={ubicado || ciudadSel ? 13 : centroDepto ? 9 : 8}
-            miUbicacion={ubicado ? [lat, lng] : undefined}
-          />
-          {/* Los dos modos de compartir, juntos y al pie del mapa: es donde
-              alguien acaba de ver el panorama y decide pasarlo. WhatsApp lleva
-              el enlace; Instagram no admite enlaces, así que lleva la imagen
-              con las cifras del filtro que la persona tiene puesto. */}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          {/* Encima del mapa y no debajo: así se ven al llegar, sin tener que
+              pasar el mapa de largo. Y siguen lejos del encabezado, donde
+              competirían con "tengo algo para donar" y "necesito ayuda", que
+              es a lo que la gente entra.
+
+              WhatsApp lleva el enlace; Instagram no admite enlaces, así que
+              lleva la imagen con las cifras del filtro que esté puesto. */}
+          <div className="mb-3 flex flex-wrap items-center gap-2">
             <BotonCompartir
               texto={
                 urgentes > 0
@@ -396,6 +392,14 @@ export default async function Home({
               nombre={`red-de-acopio-${p.ciudad || p.departamento || "colombia"}.png`}
             />
           </div>
+
+          <MapaClient
+            centros={centros}
+            convocatorias={convocatorias}
+            centro={centroMapa}
+            zoom={ubicado || ciudadSel ? 13 : centroDepto ? 9 : 8}
+            miUbicacion={ubicado ? [lat, lng] : undefined}
+          />
         </section>
       </div>
 
