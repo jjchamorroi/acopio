@@ -290,7 +290,11 @@ function dibujarQR(texto: string, lado: number) {
       }
     }
     return { celdas, paso };
-  } catch {
+  } catch (e) {
+    // Se registra en vez de tragárselo. El QR desapareció en producción y
+    // funcionaba en local, y con el catch mudo no quedaba ni rastro de por
+    // qué: el cartel salía "bien", solo que sin código.
+    console.error("✗ No se pudo generar el QR para", texto, e);
     return null;
   }
 }
