@@ -9,6 +9,7 @@ import Filtros from "@/components/Filtros";
 import EnlaceMascotas from "@/components/EnlaceMascotas";
 import AvisoRecopilacion from "@/components/AvisoRecopilacion";
 import Noticias from "@/components/Noticias";
+import BotonInstagram from "@/components/BotonInstagram";
 import TarjetaCentro from "@/components/TarjetaCentro";
 import TarjetaConvocatoria from "@/components/TarjetaConvocatoria";
 import {
@@ -384,18 +385,16 @@ export default async function Home({
                   : "Mapa de acopios y albergues por el sismo. Mira qué necesita cada uno antes de salir de la casa:"
               }
             />
-            <Link
-              href={`/compartir${
+            <BotonInstagram
+              url={`/api/imagen?v=falta${
                 p.ciudad
-                  ? `?ciudad=${p.ciudad}`
+                  ? `&ciudad=${p.ciudad}`
                   : p.departamento
-                    ? `?departamento=${encodeURIComponent(p.departamento)}`
+                    ? `&departamento=${encodeURIComponent(p.departamento)}`
                     : ""
               }`}
-              className="inline-flex items-center gap-1.5 rounded-lg border-[1.5px] border-[var(--color-borde-fuerte)] bg-white px-4 py-2.5 text-sm font-bold transition hover:bg-[var(--color-hueso)]"
-            >
-              📷 Imagen para Instagram
-            </Link>
+              nombre={`red-de-acopio-${p.ciudad || p.departamento || "colombia"}.png`}
+            />
           </div>
         </section>
       </div>

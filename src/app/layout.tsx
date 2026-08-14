@@ -58,7 +58,6 @@ const ENLACES = [
   { href: "/guia", texto: "Perdí mi vivienda" },
   { href: "/brecha", texto: "Quién queda por fuera" },
   { href: "/donaciones", texto: "Donaciones ofrecidas" },
-  { href: "/compartir", texto: "Compartir en redes" },
 ];
 
 export default async function RootLayout({

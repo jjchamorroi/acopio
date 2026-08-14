@@ -286,8 +286,12 @@ export async function GET(req: Request) {
                       </div>
                     ))}
                   </div>
+                  {/* Nada de lo que alguien lleva de buena fe "estorba". Lo
+                      que se dice es que de eso ya hay, y que lo de arriba
+                      hace más falta — que es la misma información sin
+                      reprocharle nada a quien iba a ayudar. */}
                   <div style={{ display: "flex", fontSize: 32, color: "#6b7280", marginTop: 14 }}>
-                    Ya tienen de sobra. Llevarlo estorba.
+                    Ya tienen suficiente. Lo de arriba hace más falta.
                   </div>
                 </div>
               )}
