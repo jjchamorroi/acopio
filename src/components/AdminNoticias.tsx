@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { NoticiaPublica } from "@/lib/tipos";
 
 /**
@@ -34,6 +34,43 @@ export default function AdminNoticias({ token }: { token: string }) {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [abierto, setAbierto] = useState(false);
+  const [vistaPrevia, setVistaPrevia] = useState<string | null>(null);
+  const [errorImagen, setErrorImagen] = useState<string | null>(null);
+  const [yaTieneImagen, setYaTieneImagen] = useState(false);
+  const [quitar, setQuitar] = useState(false);
+  const refArchivo = useRef<HTMLInputElement>(null);
+
+  const MAX = 2 * 1024 * 1024;
+
+  /**
+   * Se valida en el navegador ANTES de subir. Con datos móviles, enterarse de
+   * que la foto pesaba 9 MB después de haberla subido entera es el peor
+   * momento posible para decirlo.
+   */
+  function elegirArchivo(f: File | null) {
+    setErrorImagen(null);
+    if (!f) return;
+    if (f.size > MAX) {
+      setErrorImagen(
+        `Pesa ${(f.size / 1048576).toFixed(1)} MB y el máximo son 2 MB. Redúcela e inténtalo de nuevo.`
+      );
+      if (refArchivo.current) refArchivo.current.value = "";
+      return;
+    }
+    setArchivo(f);
+    setQuitar(false);
+    setVistaPrevia(URL.createObjectURL(f));
+  }
+
+  function quitarImagen() {
+    setArchivo(null);
+    setVistaPrevia(null);
+    setErrorImagen(null);
+    // Si la ficha ya tenía una guardada, hay que decirle al servidor que la
+    // borre; limpiar el input solo evita mandar una nueva.
+    if (yaTieneImagen) setQuitar(true);
+    if (refArchivo.current) refArchivo.current.value = "";
+  }
 
   const cargar = useCallback(async () => {
     try {
@@ -57,6 +94,11 @@ export default function AdminNoticias({ token }: { token: string }) {
     setArchivo(null);
     setEditando(null);
     setError(null);
+    setVistaPrevia(null);
+    setErrorImagen(null);
+    setYaTieneImagen(false);
+    setQuitar(false);
+    if (refArchivo.current) refArchivo.current.value = "";
   }
 
   async function guardar(e: React.FormEvent) {
@@ -74,6 +116,7 @@ export default function AdminNoticias({ token }: { token: string }) {
     datos.set("activa", form.activa ? "1" : "0");
     datos.set("orden", String(form.orden));
     if (archivo) datos.set("imagen", archivo);
+    if (quitar && !archivo) datos.set("quitar_imagen", "1");
 
     try {
       const res = await fetch(
@@ -130,8 +173,12 @@ export default function AdminNoticias({ token }: { token: string }) {
       orden: n.orden,
     });
     setArchivo(null);
+    setVistaPrevia(null);
+    setYaTieneImagen(n.tiene_imagen);
+    setQuitar(false);
     setAbierto(true);
     setError(null);
+    setErrorImagen(null);
   }
 
   const vencida = (n: NoticiaPublica) =>
@@ -189,15 +236,61 @@ export default function AdminNoticias({ token }: { token: string }) {
             <label className="text-sm font-medium text-slate-900">
               Imagen <span className="text-slate-500">(opcional, máx. 2 MB)</span>
             </label>
+
+            {/* El input de archivo nativo va oculto y se dispara desde un
+                botón normal: "Seleccionar archivo · Sin archivos" no se lee
+                como algo en lo que haya que hacer clic. */}
             <input
+              ref={refArchivo}
               type="file"
               accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
-              className="w-full text-sm"
+              onChange={(e) => elegirArchivo(e.target.files?.[0] ?? null)}
+              className="hidden"
             />
-            {editando && !archivo && (
-              <p className="mt-1 text-xs text-slate-500">
-                Si no eliges una nueva, se conserva la que ya tiene.
+
+            <div className="mt-1 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => refArchivo.current?.click()}
+                className="rounded-md border-[1.5px] border-slate-800 bg-white px-4 py-2 text-sm font-bold text-slate-900 hover:bg-slate-50"
+              >
+                {vistaPrevia || (editando && yaTieneImagen)
+                  ? "Cambiar imagen"
+                  : "📷 Subir imagen"}
+              </button>
+
+              {(vistaPrevia || (editando && yaTieneImagen)) && (
+                <button
+                  type="button"
+                  onClick={quitarImagen}
+                  className="text-sm font-semibold text-red-700 underline"
+                >
+                  Quitar
+                </button>
+              )}
+            </div>
+
+            {/* Ver la imagen antes de publicar evita el error más tonto:
+                subir la que no era y enterarse en la portada. */}
+            {(vistaPrevia || (editando && yaTieneImagen)) && (
+              <div className="mt-2 flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={vistaPrevia ?? `/api/noticias/${editando}/imagen`}
+                  alt=""
+                  className="h-20 w-32 rounded border border-slate-200 object-cover"
+                />
+                <span className="text-xs text-slate-600">
+                  {archivo
+                    ? `${archivo.name} · ${(archivo.size / 1024).toFixed(0)} KB`
+                    : "Imagen actual"}
+                </span>
+              </div>
+            )}
+
+            {errorImagen && (
+              <p className="mt-1 text-xs font-semibold text-red-700">
+                {errorImagen}
               </p>
             )}
           </div>

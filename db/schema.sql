@@ -199,6 +199,13 @@ CREATE INDEX IF NOT EXISTS dano_municipio_gravedad_idx
 -- Los lotes importados NO pasan por moderación: vienen revisados a mano y
 -- entran directo como pendiente o verificado. La cola es para el formulario
 -- abierto, que es por donde entra lo que nadie ha mirado.
+-- El DROP y el ADD van juntos dentro del mismo bloque y ambos condicionados.
+--
+-- Antes el ADD estaba fuera y sin condición: la segunda corrida fallaba con
+-- "constraint already exists", y como psql aborta el archivo entero al primer
+-- error, TODO lo que venía después dejaba de aplicarse —incluida la tabla de
+-- avisos, que por eso nunca se creaba en producción—. Un esquema que solo
+-- funciona la primera vez no sirve para migrar nada.
 DO $$
 BEGIN
   IF EXISTS (
@@ -208,11 +215,15 @@ BEGIN
   ) THEN
     ALTER TABLE centro_acopio DROP CONSTRAINT centro_acopio_estado_check;
   END IF;
-END $$;
 
-ALTER TABLE centro_acopio
-  ADD CONSTRAINT centro_acopio_estado_check
-  CHECK (estado IN ('postulado', 'pendiente', 'verificado', 'rechazado', 'cerrado'));
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'centro_acopio_estado_check'
+  ) THEN
+    ALTER TABLE centro_acopio
+      ADD CONSTRAINT centro_acopio_estado_check
+      CHECK (estado IN ('postulado', 'pendiente', 'verificado', 'rechazado', 'cerrado'));
+  END IF;
+END $$;
 
 -- Por qué se rechazó. Se le muestra a quien postuló, en su enlace privado:
 -- que le digan "duplicado, ya existe" le sirve; que su lugar desaparezca sin
