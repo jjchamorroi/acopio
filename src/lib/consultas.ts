@@ -149,6 +149,8 @@ export async function buscarCiudades(texto?: string): Promise<Ciudad[]> {
 
 export type FiltrosCentros = {
   ciudad?: string;
+  /** Nombre del departamento tal como está en la tabla ciudad. */
+  departamento?: string;
   categoria?: string;
   /** "donar" muestra quien recibe donaciones; "ayuda", quien la entrega. */
   modo?: "donar" | "ayuda";
@@ -179,6 +181,12 @@ async function listarCentrosSinCache(
   if (filtros.ciudad) {
     params.push(filtros.ciudad);
     condiciones.push(`c.ciudad_slug = $${params.length}`);
+  }
+  // El departamento se filtra por el JOIN con ciudad, que ya está en la
+  // consulta: no hace falta duplicar el dato en centro_acopio.
+  if (filtros.departamento) {
+    params.push(filtros.departamento);
+    condiciones.push(`ci.departamento = $${params.length}`);
   }
   if (filtros.modo === "donar") {
     condiciones.push("c.recibe_donaciones");

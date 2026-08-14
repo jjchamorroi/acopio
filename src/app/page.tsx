@@ -108,6 +108,7 @@ export default async function Home({
 }: {
   searchParams: Promise<{
     ciudad?: string;
+    departamento?: string;
     categoria?: string;
     modo?: string;
     tipo?: string;
@@ -137,7 +138,7 @@ export default async function Home({
     listarCiudadesConLugares(),
     listarNoticias(),
     // Sin filtro de modo, a propósito: ver el comentario de `albergues`.
-    listarCentros({ ciudad: p.ciudad, tipo: "albergue" }),
+    listarCentros({ ciudad: p.ciudad, departamento: p.departamento, tipo: "albergue" }),
     esVoluntarios
       ? Promise.resolve([])
       : ubicado
@@ -150,6 +151,7 @@ export default async function Home({
           )
         : listarCentros({
             ciudad: p.ciudad,
+            departamento: p.departamento,
             categoria: modo === "donar" ? p.categoria : undefined,
             modo: modoLugares,
             tipo: p.tipo,
@@ -176,11 +178,25 @@ export default async function Home({
     : undefined;
 
   const ciudadSel = ciudades.find((c) => c.slug === p.ciudad);
+
+  // Al filtrar por departamento el mapa se va al centro de sus lugares. Sin
+  // esto, elegir Chocó dejaba la vista en el eje cafetero y los puntos
+  // aparecían fuera de la pantalla: el filtro parecía no haber hecho nada.
+  const delDepartamento = p.departamento
+    ? ciudades.filter((c) => c.departamento === p.departamento)
+    : [];
+  const centroDepto: [number, number] | null = delDepartamento.length
+    ? [
+        delDepartamento.reduce((s, c) => s + c.lat, 0) / delDepartamento.length,
+        delDepartamento.reduce((s, c) => s + c.lng, 0) / delDepartamento.length,
+      ]
+    : null;
+
   const centroMapa: [number, number] = ubicado
     ? [lat, lng]
     : ciudadSel
       ? [ciudadSel.lat, ciudadSel.lng]
-      : CENTRO_POR_DEFECTO;
+      : (centroDepto ?? CENTRO_POR_DEFECTO);
 
   const urgentes = centros.filter((c) =>
     c.necesidades.some((n) => n.nivel === "urgente")
@@ -293,7 +309,9 @@ export default async function Home({
                   ? "Lo más cerca de ti"
                   : ciudadSel
                     ? `${centros.length} en ${ciudadSel.nombre}`
-                    : `${centros.length} ${centros.length === 1 ? "lugar" : "lugares"}`}
+                    : p.departamento
+                      ? `${centros.length} en ${p.departamento}`
+                      : `${centros.length} ${centros.length === 1 ? "lugar" : "lugares"}`}
             </h2>
             {!esVoluntarios && urgentes > 0 && (
               <span className="text-[13px] text-[var(--color-tenue)]">
@@ -351,7 +369,7 @@ export default async function Home({
             centros={centros}
             convocatorias={convocatorias}
             centro={centroMapa}
-            zoom={ubicado || ciudadSel ? 13 : 8}
+            zoom={ubicado || ciudadSel ? 13 : centroDepto ? 9 : 8}
             miUbicacion={ubicado ? [lat, lng] : undefined}
           />
           <BotonCompartir

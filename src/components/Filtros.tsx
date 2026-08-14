@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CATEGORIAS } from "@/lib/categorias";
 import { TIPOS_LUGAR, MODOS, type ModoId } from "@/lib/tipos-lugar";
@@ -123,12 +123,32 @@ export default function Filtros({
   const tiposVisibles = TIPOS_LUGAR.filter((t) => (esDonar ? t.recibe : t.entrega));
 
   const ciudad = params.get("ciudad") ?? "";
+  const departamento = params.get("departamento") ?? "";
+
+  // Los departamentos salen de las ciudades que YA tienen lugares, con su
+  // cuenta: así el selector nunca ofrece un departamento vacío y de paso dice
+  // dónde hay más.
+  const departamentos = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const c of ciudades) m.set(c.departamento, (m.get(c.departamento) ?? 0) + 1);
+    return [...m.entries()]
+      .map(([nombre, lugares]) => ({ nombre, lugares }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+  }, [ciudades]);
+
+  const ciudadesVisibles = useMemo(
+    () =>
+      departamento
+        ? ciudades.filter((c) => c.departamento === departamento)
+        : ciudades,
+    [ciudades, departamento]
+  );
   const categoria = params.get("categoria") ?? "";
   const tipo = params.get("tipo") ?? "";
   const abiertoAhora = params.get("abierto") === "1";
   const mascotas = params.get("mascotas") === "1";
   const hayFiltros =
-    ubicado || !!ciudad || !!categoria || !!tipo || abiertoAhora || mascotas;
+    ubicado || !!ciudad || !!departamento || !!categoria || !!tipo || abiertoAhora || mascotas;
 
   return (
     <div className="flex flex-col gap-3">
@@ -177,13 +197,41 @@ export default function Filtros({
           </button>
         )}
 
+        {/* Departamento antes que municipio: con 67 municipios en 24
+            departamentos, buscar "Quibdó" en una lista alfabética plana es
+            peor que elegir Chocó y ver los siete que hay. */}
+        <ChipSelect
+          valor={departamento}
+          activo={!!departamento}
+          onChange={(v) =>
+            // Al cambiar de departamento se suelta el municipio: dejarlo
+            // puesto daría una combinación imposible (Chocó + Manizales) y
+            // una lista vacía sin explicación.
+            navegar({
+              departamento: v || null,
+              ciudad: null,
+              lat: null,
+              lng: null,
+            })
+          }
+        >
+          <option value="">Departamento</option>
+          {departamentos.map((d) => (
+            <option key={d.nombre} value={d.nombre}>
+              {d.nombre} ({d.lugares})
+            </option>
+          ))}
+        </ChipSelect>
+
         <ChipSelect
           valor={ciudad}
           activo={!!ciudad}
           onChange={(v) => navegar({ ciudad: v || null, lat: null, lng: null })}
         >
-          <option value="">Municipio</option>
-          {ciudades.map((c) => (
+          <option value="">
+            {departamento ? `Municipio de ${departamento}` : "Municipio"}
+          </option>
+          {ciudadesVisibles.map((c) => (
             <option key={c.slug} value={c.slug}>
               {c.nombre}
             </option>
@@ -236,6 +284,7 @@ export default function Filtros({
             onClick={() =>
               navegar({
                 ciudad: null,
+                departamento: null,
                 categoria: null,
                 tipo: null,
                 abierto: null,
