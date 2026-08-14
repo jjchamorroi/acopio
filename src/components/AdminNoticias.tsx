@@ -404,7 +404,10 @@ export default function AdminNoticias({ token }: { token: string }) {
           {noticias.map((n) => (
             <div
               key={n.id}
-              className={`flex flex-wrap items-start gap-3 rounded-lg border p-3 ${
+              // En móvil se apila; solo a partir de sm se pone en fila. Con
+              // flex-wrap a secas, los tres botones y el texto competían por
+              // 360 px y todo salía partido a la mitad.
+              className={`flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-start ${
                 n.activa && !vencida(n)
                   ? "border-slate-200 bg-white"
                   : "border-slate-200 bg-slate-50 opacity-70"
@@ -415,7 +418,7 @@ export default function AdminNoticias({ token }: { token: string }) {
                 <img
                   src={`/api/noticias/${n.id}/imagen`}
                   alt=""
-                  className="h-14 w-20 shrink-0 rounded object-cover"
+                  className="h-28 w-full shrink-0 rounded object-cover sm:h-14 sm:w-20"
                 />
               )}
               <div className="min-w-0 flex-1">
@@ -442,25 +445,25 @@ export default function AdminNoticias({ token }: { token: string }) {
                   </p>
                 )}
               </div>
-              <div className="flex shrink-0 flex-wrap gap-2">
+              <div className="flex shrink-0 flex-wrap gap-2 border-t border-slate-100 pt-2 sm:border-0 sm:pt-0">
                 <button
                   type="button"
                   onClick={() => editar(n)}
-                  className="rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold hover:bg-slate-50"
+                  className="flex-1 whitespace-nowrap rounded border border-slate-300 px-3 py-2 text-xs font-semibold hover:bg-slate-50 sm:flex-none sm:py-1.5"
                 >
                   Editar
                 </button>
                 <button
                   type="button"
                   onClick={() => alternar(n)}
-                  className="rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold hover:bg-slate-50"
+                  className="flex-1 whitespace-nowrap rounded border border-slate-300 px-3 py-2 text-xs font-semibold hover:bg-slate-50 sm:flex-none sm:py-1.5"
                 >
                   {n.activa ? "Ocultar" : "Mostrar"}
                 </button>
                 <button
                   type="button"
                   onClick={() => eliminar(n)}
-                  className="rounded border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-50"
+                  className="flex-1 whitespace-nowrap rounded border border-red-300 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50 sm:flex-none sm:py-1.5"
                 >
                   Eliminar
                 </button>
