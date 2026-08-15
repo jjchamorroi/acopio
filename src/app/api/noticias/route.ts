@@ -35,7 +35,7 @@ export async function GET(req: Request) {
 
   const noticias = await query<NoticiaPublica>(
     `SELECT id, titulo, cuerpo, enlace, enlace_texto, urgente, activa,
-            vence_en, orden, creado_en,
+            vence_en, orden, creado_en, actualizado_en,
             (imagen IS NOT NULL) AS tiene_imagen
        FROM noticia
       ${todas ? "" : "WHERE activa AND (vence_en IS NULL OR vence_en > now())"}

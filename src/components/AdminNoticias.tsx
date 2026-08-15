@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { NoticiaPublica } from "@/lib/tipos";
+import { urlImagenNoticia, type NoticiaPublica } from "@/lib/tipos";
 
 /**
  * Editor de avisos de la portada.
@@ -276,7 +276,7 @@ export default function AdminNoticias({ token }: { token: string }) {
               <div className="mt-2 flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={vistaPrevia ?? `/api/noticias/${editando}/imagen`}
+                  src={vistaPrevia ?? `/api/noticias/${editando}/imagen?v=${Date.now()}`}
                   alt=""
                   className="h-20 w-32 rounded border border-slate-200 object-cover"
                 />
@@ -416,7 +416,7 @@ export default function AdminNoticias({ token }: { token: string }) {
               {n.tiene_imagen && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={`/api/noticias/${n.id}/imagen`}
+                  src={urlImagenNoticia(n)}
                   alt=""
                   className="h-28 w-full shrink-0 rounded object-cover sm:h-14 sm:w-20"
                 />

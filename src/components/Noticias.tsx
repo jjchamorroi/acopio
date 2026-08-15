@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { NoticiaPublica } from "@/lib/tipos";
+import { urlImagenNoticia, type NoticiaPublica } from "@/lib/tipos";
 
 /**
  * Avisos de la portada.
@@ -27,7 +27,7 @@ export default function Noticias({
             {n.tiene_imagen && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={`/api/noticias/${n.id}/imagen`}
+                src={urlImagenNoticia(n)}
                 alt=""
                 className="h-40 w-full shrink-0 rounded-xl object-cover sm:h-auto sm:w-44"
                 loading="lazy"

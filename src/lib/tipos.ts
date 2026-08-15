@@ -383,5 +383,20 @@ export type NoticiaPublica = {
   vence_en: string | null;
   orden: number;
   creado_en: string;
+  /**
+   * Versiona la URL de la imagen. La imagen se cachea un año como inmutable,
+   * pero SÍ puede cambiar: el editor permite reemplazarla. Sin versión, quien
+   * ya vio la URL se queda con la foto vieja —o con el hueco de cuando no
+   * había— durante un año.
+   */
+  actualizado_en: string;
   tiene_imagen: boolean;
 };
+
+/** URL de la imagen de un aviso, versionada para que la caché no la congele. */
+export function urlImagenNoticia(n: {
+  id: string;
+  actualizado_en: string;
+}): string {
+  return `/api/noticias/${n.id}/imagen?v=${Date.parse(n.actualizado_en)}`;
+}
