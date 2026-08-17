@@ -393,10 +393,20 @@ export type NoticiaPublica = {
   tiene_imagen: boolean;
 };
 
-/** URL de la imagen de un aviso, versionada para que la caché no la congele. */
-export function urlImagenNoticia(n: {
-  id: string;
-  actualizado_en: string;
-}): string {
-  return `/api/noticias/${n.id}/imagen?v=${Date.parse(n.actualizado_en)}`;
+/**
+ * URL de la imagen de un aviso, versionada para que la caché no la congele.
+ *
+ * Con `ancho` devuelve la miniatura, que es lo que se pinta en un aviso
+ * plegado: el afiche entero son ~130 KB y la miniatura unos 4 KB. Los anchos
+ * admitidos son los de `ANCHOS` en la ruta; cualquier otro se ignora y se
+ * sirve la imagen original.
+ */
+export function urlImagenNoticia(
+  n: { id: string; actualizado_en: string },
+  ancho?: 96 | 160 | 320
+): string {
+  return (
+    `/api/noticias/${n.id}/imagen?v=${Date.parse(n.actualizado_en)}` +
+    (ancho ? `&ancho=${ancho}` : "")
+  );
 }

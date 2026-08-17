@@ -86,8 +86,28 @@ function Aviso({
           onClick={alternar}
           aria-expanded={abierto}
           aria-controls={panel}
-          className="flex w-full items-start gap-3 px-4 py-3 text-left"
+          className="flex w-full items-center gap-3 p-3 text-left transition hover:bg-[var(--color-hueso)]"
         >
+          {/* Miniatura, también con el aviso cerrado: una lista de puros
+              títulos queda plana y no se distingue un aviso de otro de un
+              vistazo. Es una imagen REDUCIDA en el servidor, no el afiche
+              encogido con CSS — así el aviso plegado cuesta unos 4 KB en vez
+              de 130 KB y el ahorro de datos se mantiene.
+
+              Se encuadra por arriba: en un afiche vertical el titular está
+              siempre en la parte de arriba, y un recorte centrado deja ver
+              justo la parte que no dice nada. */}
+          {n.tiene_imagen && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={urlImagenNoticia(n, 160)}
+              alt=""
+              width={56}
+              height={56}
+              className="size-14 shrink-0 rounded-lg border border-[var(--color-borde)] bg-white object-cover object-top"
+              loading="lazy"
+            />
+          )}
           <span className="min-w-0 flex-1">
             {n.urgente && (
               <span className="mb-1 mr-2 inline-block rounded-md bg-[var(--color-urgente-texto)] px-2 py-0.5 text-[11px] font-extrabold tracking-wide text-white">
@@ -107,7 +127,7 @@ function Aviso({
           <svg
             viewBox="0 0 20 20"
             aria-hidden="true"
-            className={`mt-0.5 h-5 w-5 shrink-0 text-[var(--color-apagado)] transition-transform ${
+            className={`h-5 w-5 shrink-0 text-[var(--color-apagado)] transition-transform ${
               abierto ? "rotate-180" : ""
             }`}
           >
@@ -128,14 +148,17 @@ function Aviso({
       {abierto && (
         <div
           id={panel}
-          className="flex flex-col gap-3 px-4 pb-4 sm:flex-row sm:items-start"
+          className="flex flex-col gap-4 px-3 pb-4 sm:flex-row sm:items-start"
         >
+          {/* Aquí sí el afiche entero y a tamaño de leerse: es lo que la
+              persona acaba de pedir al abrir. `object-contain` porque
+              recortarlo le quitaría justo el texto por el que es un afiche. */}
           {n.tiene_imagen && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={urlImagenNoticia(n)}
               alt=""
-              className="w-full shrink-0 rounded-xl object-contain sm:w-44"
+              className="w-full shrink-0 rounded-xl border border-[var(--color-borde)] object-contain sm:w-60"
               loading="lazy"
             />
           )}

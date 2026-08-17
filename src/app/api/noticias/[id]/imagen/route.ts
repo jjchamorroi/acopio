@@ -1,4 +1,7 @@
+import sharp from "sharp";
 import { query } from "@/lib/db";
+
+export const runtime = "nodejs";
 
 /**
  * Sirve la imagen de un aviso desde la base de datos.
@@ -11,11 +14,25 @@ import { query } from "@/lib/db";
  * aviso. Por eso quien pinta el `<img>` no usa esta ruta a pelo, sino
  * `urlImagenNoticia()`, que le cuelga `?v=<actualizado_en>`. Así la URL cambia
  * cuando cambia la foto y el `immutable` de abajo es cierto.
+ *
+ * Con `?ancho=` devuelve una miniatura. Existe para que la portada pueda
+ * enseñar una miniatura de cada aviso PLEGADO sin descargar el afiche entero:
+ * son ~130 KB por aviso frente a unos 4 KB, y buena parte de quien entra está
+ * con datos móviles en zona afectada.
  */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/**
+ * Anchos permitidos.
+ *
+ * Cerrado a una lista y no a un número libre: si no, cualquiera puede pedir
+ * mil tamaños distintos y poner al servidor a redimensionar imágenes sin parar
+ * mientras la gente intenta consultar el mapa.
+ */
+const ANCHOS = new Set([96, 160, 320]);
+
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -29,11 +46,30 @@ export async function GET(
   const fila = filas[0];
   if (!fila?.imagen) return new Response("No encontrada", { status: 404 });
 
-  return new Response(new Uint8Array(fila.imagen), {
+  let cuerpo: Buffer = fila.imagen;
+  let tipo = fila.imagen_tipo ?? "application/octet-stream";
+
+  const pedido = Number(new URL(req.url).searchParams.get("ancho"));
+  if (ANCHOS.has(pedido)) {
+    try {
+      cuerpo = await sharp(fila.imagen)
+        // `rotate()` sin argumentos aplica la orientación del EXIF. Sin esto,
+        // una foto hecha con el teléfono de lado sale girada en la miniatura
+        // aunque se vea derecha en grande.
+        .rotate()
+        .resize({ width: pedido, withoutEnlargement: true })
+        .jpeg({ quality: 72, mozjpeg: true })
+        .toBuffer();
+      tipo = "image/jpeg";
+    } catch {
+      // Si falla el redimensionado se manda la original. Pesa más, pero un
+      // aviso con la foto grande es mucho mejor que un aviso con un hueco.
+    }
+  }
+
+  return new Response(new Uint8Array(cuerpo), {
     headers: {
-      "content-type": fila.imagen_tipo ?? "application/octet-stream",
-      // La URL va versionada con `actualizado_en`, así que el contenido de
-      // ESTA url sí es inmutable: al cambiar la imagen cambia la url.
+      "content-type": tipo,
       "cache-control": "public, max-age=31536000, immutable",
       // Sin `content-length` a mano. Lo calcula el runtime, y ponerlo aquí es
       // un clásico: si el proxy de delante comprime la respuesta, el número
