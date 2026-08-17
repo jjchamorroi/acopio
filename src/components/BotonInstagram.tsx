@@ -19,6 +19,7 @@ export default function BotonInstagram({
   nombre = "red-de-acopio.png",
   className = "",
   compacto = false,
+  etiqueta = "Instagram",
 }: {
   /** Ruta de la imagen generada, ya con los filtros aplicados. */
   url: string;
@@ -26,6 +27,8 @@ export default function BotonInstagram({
   className?: string;
   /** Solo el icono, sin etiqueta. Para el encabezado en móvil. */
   compacto?: boolean;
+  /** Qué se comparte, cuando no es el mapa: "Compartir avisos". */
+  etiqueta?: string;
 }) {
   const [estado, setEstado] = useState<"listo" | "cargando" | "descargada">(
     "listo"
@@ -100,7 +103,7 @@ export default function BotonInstagram({
           ? "Generando…"
           : estado === "descargada"
             ? "¡Descargada!"
-            : "Instagram"}
+            : etiqueta}
     </button>
   );
 }

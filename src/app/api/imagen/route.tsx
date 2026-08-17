@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { listarCentros, brechaAtencion } from "@/lib/consultas";
+import { listarCentros, brechaAtencion, listarNoticias } from "@/lib/consultas";
 import { categoria as buscarCategoria } from "@/lib/categorias";
 import siluetas from "@/lib/geo/siluetas.json";
 import QRCode from "qrcode";
@@ -51,6 +51,77 @@ const INSET = 96;
 
 /** Lado del QR. Menos de 150 px y las cámaras empiezan a fallar. */
 const QR_LADO = 170;
+
+/** Tipografía de los avisos del cartel, en píxeles. */
+const AVISO_CUERPO = 40;
+const AVISO_TITULO = 46;
+
+/**
+ * Alto que queda para la lista de avisos, en píxeles.
+ *
+ * Medido sobre el cartel ya generado, no calculado a ojo: entre el borde
+ * inferior de la cabecera y la línea del pie hay 1262 px, de los que el
+ * renglón "y N avisos más en el sitio" se lleva 44.
+ */
+const AVISOS_ALTO = 1218;
+
+/** Acolchado vertical y separación de cada tarjeta de aviso, en píxeles. */
+const AVISO_RELLENO = 20;
+const AVISO_SEPARACION = 18;
+
+/**
+ * Elige cuántos avisos caben en el cartel, y los recorta.
+ *
+ * Satori no encoge nada para que quepa: lo que se pasa de largo se sale del
+ * lienzo y desaparece sin avisar. Así que aquí se ESTIMA el alto antes de
+ * dibujar, contando renglones a partir de la longitud del texto, y se dejan
+ * fuera los avisos que no caben.
+ *
+ * La estimación es aproximada por naturaleza —una tipografía proporcional no
+ * tiene ancho fijo de carácter— así que va deliberadamente pesimista: es
+ * preferible dejar un hueco abajo que perder medio aviso por el borde.
+ */
+function avisosQueCaben(
+  avisos: { titulo: string; cuerpo: string | null; urgente: boolean }[],
+  alturaDisponible: number
+) {
+  // Ancho útil del cartel menos el acolchado de cada tarjeta.
+  const ANCHO_UTIL = ANCHO - 160 - 80;
+  // ~0,52 de ancho medio por carácter en una grotesca a este cuerpo.
+  const porLinea = (px: number) => Math.floor(ANCHO_UTIL / (px * 0.52));
+
+  const salida: {
+    titulo: string;
+    cuerpo: string | null;
+    urgente: boolean;
+    alto: number;
+  }[] = [];
+  let usado = 0;
+
+  for (const a of avisos) {
+    // La primera frase del cuerpo, y solo si es corta: el cartel es un
+    // titular, no el aviso entero. Quien quiera el detalle entra al sitio.
+    const primera = a.cuerpo?.split(/(?<=[.:])\s/)[0]?.trim() ?? "";
+    const cuerpo = primera && primera.length <= 120 ? primera : null;
+
+    const lineasTitulo = Math.ceil(a.titulo.length / porLinea(AVISO_TITULO));
+    const lineasCuerpo = cuerpo
+      ? Math.ceil(cuerpo.length / porLinea(AVISO_CUERPO))
+      : 0;
+
+    const alto =
+      AVISO_RELLENO * 2 +
+      lineasTitulo * AVISO_TITULO * 1.25 +
+      (lineasCuerpo ? 12 + lineasCuerpo * AVISO_CUERPO * 1.3 : 0) +
+      AVISO_SEPARACION;
+
+    if (usado + alto > alturaDisponible) break;
+    usado += alto;
+    salida.push({ titulo: a.titulo, cuerpo, urgente: a.urgente, alto });
+  }
+
+  return salida;
+}
 
 const TESELA = 256;
 
@@ -340,6 +411,9 @@ export async function GET(req: Request) {
   let inset: { rutas: string[]; x: number; y: number } | null = null;
   let totalLugares = 0;
   let totalAlbergues = 0;
+  /** Avisos del cartel, ya recortados a los que caben. */
+  let avisos: ReturnType<typeof avisosQueCaben> = [];
+  let avisosOmitidos = 0;
 
   const negrita = await cargarFuente();
 
@@ -361,6 +435,18 @@ export async function GET(req: Request) {
       cifra = String(sin);
       cifraPie = `de ${b.length} municipios con daño documentado no tienen\nun solo punto de acopio, albergue o atención`;
       titulo = "Nadie está llegando";
+      subtitulo = "Sismo del 10 de agosto";
+    } else if (variante === "avisos") {
+      // Los avisos, que es lo que cambia de un día para otro y lo que la
+      // gente reenvía. Los urgentes primero; dentro de eso, el orden que le
+      // dio el admin.
+      const todos = await listarNoticias();
+      avisos = avisosQueCaben(
+        [...todos].sort((a, b) => Number(b.urgente) - Number(a.urgente)),
+        AVISOS_ALTO
+      );
+      avisosOmitidos = todos.length - avisos.length;
+      titulo = "Avisos de hoy";
       subtitulo = "Sismo del 10 de agosto";
     } else {
       const centros = await listarCentros({
@@ -524,6 +610,56 @@ export async function GET(req: Request) {
               <div style={{ display: "flex", fontSize: 46, color: "#d5dae2", marginTop: 40, lineHeight: 1.35, whiteSpace: "pre-line" }}>
                 {cifraPie}
               </div>
+            </div>
+          ) : variante === "avisos" ? (
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 56, flex: 1 }}>
+              {avisos.map((a, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    background: a.urgente ? ROJO : HUESO,
+                    color: a.urgente ? "#ffffff" : TINTA,
+                    borderRadius: 24,
+                    padding: `${AVISO_RELLENO}px 40px`,
+                    marginBottom: AVISO_SEPARACION,
+                  }}
+                >
+                  {a.urgente && (
+                    <div style={{ display: "flex", fontSize: 28, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>
+                      URGENTE
+                    </div>
+                  )}
+                  <div style={{ display: "flex", fontSize: AVISO_TITULO, fontWeight: 800, lineHeight: 1.25 }}>
+                    {a.titulo}
+                  </div>
+                  {a.cuerpo && (
+                    <div
+                      style={{
+                        display: "flex",
+                        fontSize: AVISO_CUERPO,
+                        lineHeight: 1.3,
+                        marginTop: 12,
+                        color: a.urgente ? "#ffe4e0" : "#4b5563",
+                      }}
+                    >
+                      {a.cuerpo}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Si algo se quedó fuera se dice. Un cartel que enseña cuatro
+                  de siete avisos sin avisar hace creer que esos cuatro son
+                  todo lo que hay. */}
+              {avisosOmitidos > 0 && (
+                <div style={{ display: "flex", fontSize: 34, color: "#8f98a8" }}>
+                  {avisosOmitidos === 1
+                    ? "y 1 aviso más en el sitio"
+                    : `y ${avisosOmitidos} avisos más en el sitio`}
+                </div>
+              )}
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", marginTop: 70, flex: 1 }}>
@@ -706,7 +842,9 @@ export async function GET(req: Request) {
         >
           <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
             <div style={{ display: "flex", fontSize: 32, color: "#8f98a8" }}>
-              Mira qué necesita cada lugar antes de ir
+              {variante === "avisos"
+                ? "Todos los avisos y el mapa de acopios en"
+                : "Mira qué necesita cada lugar antes de ir"}
             </div>
             <div style={{ display: "flex", fontSize: 58, fontWeight: 800, marginTop: 10 }}>
               {host}

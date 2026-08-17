@@ -559,7 +559,12 @@ export async function listarNoticias(): Promise<NoticiaPublica[]> {
          FROM noticia
         WHERE activa AND (vence_en IS NULL OR vence_en > now())
         ORDER BY orden DESC, creado_en DESC
-        LIMIT 5`
+        -- El tope era 5 cuando los avisos salían desplegados y más de cinco
+        -- empujaban el mapa fuera de la pantalla. Ahora van plegados y cada
+        -- uno ocupa un renglón, así que puede subir: un aviso publicado que
+        -- no aparece nunca es peor que la lista un poco más larga. El tope
+        -- se queda solo como freno si alguien publica cuarenta.
+        LIMIT 12`
     )
   );
 }
